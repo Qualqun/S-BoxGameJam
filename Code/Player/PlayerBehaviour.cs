@@ -1,8 +1,19 @@
 using Sandbox;
-using static Sandbox.Gizmo;
+public struct PlayerStats
+{
+	public float moveSpeed { get; set; }
+	public float fireRate { get; set; }
+	public float ballSpeed { get; set; }
+}
+
 
 public sealed class PlayerBehaviour : Component
 {
+	[Header( "Stats" )]
+	[Property] public PlayerStats playerStats { get; set; }
+
+	[Property, Group( "Refs" )] GameObject gunPoint { get; set; }
+	[Property, Group( "Refs" )] GameObject bullet { get; set; }
 	[Property, Group( "Refs" )] MPlayerController controller { get; set; }
 
 	protected override void OnStart()
@@ -14,4 +25,17 @@ public sealed class PlayerBehaviour : Component
 			controller.Destroy();
 		}
 	}
+
+	public void Fire()
+	{
+		GameObject newBullet = bullet.Clone( gunPoint.WorldPosition );
+		BulletBehaviour behaviour = newBullet.GetComponent<BulletBehaviour>();
+
+		Vector3 direction = gunPoint.WorldPosition - WorldPosition;
+
+		direction = direction.WithZ( 0 );
+
+		behaviour.InitBall( direction.Normal, playerStats.ballSpeed );
+	}
+
 }

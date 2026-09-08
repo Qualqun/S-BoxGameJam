@@ -30,7 +30,7 @@
         "Locking": {
           "X": false,
           "Y": false,
-          "Z": false,
+          "Z": true,
           "Pitch": true,
           "Yaw": true,
           "Roll": true
@@ -88,7 +88,12 @@
         "__guid": "ac55f1d4-64b7-49be-a7a3-c6e812aa6931",
         "__enabled": true,
         "Flags": 0,
-        "controller": null,
+        "controller": {
+          "_type": "component",
+          "component_id": "34e1818d-5cd0-497b-9b14-52e13135ddc7",
+          "go": "30f4e803-7638-466b-8c25-308351d241f7",
+          "component_type": "MPlayerController"
+        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -102,7 +107,7 @@
         "__guid": "096b6c54-8ae0-450b-aa8c-eac944f61ffc",
         "__version": 2,
         "Flags": 0,
-        "Name": "Visual",
+        "Name": "Body",
         "Position": "0,0,0",
         "Rotation": "0,0,0,1",
         "Scale": "1,1,1",
@@ -119,7 +124,7 @@
             "__guid": "1d2f0ea9-6352-4453-bd44-3e3c7c69f0d0",
             "__version": 2,
             "Flags": 0,
-            "Name": "Body",
+            "Name": "Visual",
             "Position": "0,0,0",
             "Rotation": "0,0,0,1",
             "Scale": "1,1,1",
@@ -223,6 +228,24 @@
                 "SurfaceVelocity": "0,0,0"
               }
             ],
+            "Children": []
+          },
+          {
+            "__guid": "4da7d666-9abb-84c8-8d46-b24dfdbe0ffd",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "GunPoint",
+            "Position": "25,0,40",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
             "Children": []
           }
         ]
@@ -345,7 +368,28 @@
           }
         ]
       }
-    ]
+    ],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
+      }
+    },
+    "__variables": []
   },
   "ResourceVersion": 2,
   "ShowInMenu": false,

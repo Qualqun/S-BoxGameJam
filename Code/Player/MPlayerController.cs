@@ -2,9 +2,8 @@ using Sandbox;
 
 public sealed class MPlayerController : Component
 {
-	[Header( "Stats" )]
-	[Property] float speed { get; set; } = 100000f;
 
+	[Property, Group( "Refs" )] PlayerBehaviour playerBehaviour { get; set; } 
 	[Property, Group( "Refs" )] CameraComponent camera { get; set; }
 	[Property, Group( "Refs" )] GameObject visual { get; set; }
 	[Property, Group( "Refs" )] GameObject pivotCamera { get; set; }
@@ -31,12 +30,8 @@ public sealed class MPlayerController : Component
 		Ray ray = camera.ScreenPixelToRay( Mouse.Position );
 		SceneTraceResult trace = Scene.Trace.Ray( ray.Position, ray.Position + ray.Forward * 5000f ).WithTag("ground").Run();
 
-		Vector3 direction;
+		Vector3 direction = trace.EndPosition - visual.WorldPosition;
 
-		if ( !trace.Hit )
-			return;
-
-		direction = trace.EndPosition - visual.WorldPosition;
 		direction = direction.WithZ( 0f );
 
 		visual.WorldRotation = Rotation.LookAt( direction );
@@ -45,25 +40,31 @@ public sealed class MPlayerController : Component
 	void Inputs()
 	{
 		Vector3 velocity = new Vector3();
-
+		float speed = playerBehaviour.playerStats.moveSpeed * Time.Delta;
+	
 		if ( Input.Down( "Forward" ) )
 		{
-			velocity += Vector3.Forward * speed * Time.Delta;
+			velocity += Vector3.Forward * speed;
 		}
 
 		if ( Input.Down( "Backward" ) )
 		{
-			velocity -= Vector3.Forward * speed * Time.Delta;
+			velocity -= Vector3.Forward * speed;
 		}
 
 		if ( Input.Down( "Left" ) )
 		{
-			velocity -= Vector3.Right * speed * Time.Delta;
+			velocity -= Vector3.Right * speed;
 		}
 
 		if ( Input.Down( "Right" ) )
 		{
-			velocity += Vector3.Right * speed * Time.Delta;
+			velocity += Vector3.Right * speed;
+		}
+
+		if(Input.Down( "Attack1" ) )
+		{
+			playerBehaviour.Fire();
 		}
 
 		rigidbody.Velocity = velocity;
