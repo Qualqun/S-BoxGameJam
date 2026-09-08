@@ -280,7 +280,7 @@
           "Name": "Ground",
           "Position": "0,0,0",
           "Rotation": "0,0,0,1",
-          "Scale": "10,10,10",
+          "Scale": "15,15,15",
           "Tags": "ground",
           "Enabled": true,
           "NetworkMode": 2,
@@ -731,6 +731,14 @@
           },
           {
             "Target": {
+              "Type": "GameObject",
+              "IdValue": "30f4e803-7638-466b-8c25-308351d241f7"
+            },
+            "Property": "Tags",
+            "Value": "player"
+          },
+          {
+            "Target": {
               "Type": "Component",
               "IdValue": "34e1818d-5cd0-497b-9b14-52e13135ddc7"
             },
@@ -773,7 +781,7 @@
             "Value": {
               "moveSpeed": 100000,
               "fireRate": 0.5,
-              "ballSpeed": 100
+              "ballSpeed": 1000
             }
           }
         ],

@@ -3,7 +3,7 @@
     "__guid": "30f4e803-7638-466b-8c25-308351d241f7",
     "__version": 2,
     "Flags": 0,
-    "Name": "Player",
+    "Name": "player",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
@@ -71,13 +71,13 @@
           "_type": "gameobject",
           "go": "283c792e-45c3-426f-8b83-20a9e9218b9f"
         },
+        "playerBehaviour": null,
         "rigidbody": {
           "_type": "component",
           "component_id": "95940cc0-7ac7-4029-859f-d64ce1defec2",
           "go": "30f4e803-7638-466b-8c25-308351d241f7",
           "component_type": "Rigidbody"
         },
-        "speed": 100000,
         "visual": {
           "_type": "gameobject",
           "go": "096b6c54-8ae0-450b-aa8c-eac944f61ffc"
@@ -88,18 +88,25 @@
         "__guid": "ac55f1d4-64b7-49be-a7a3-c6e812aa6931",
         "__enabled": true,
         "Flags": 0,
+        "bullet": null,
         "controller": {
           "_type": "component",
           "component_id": "34e1818d-5cd0-497b-9b14-52e13135ddc7",
           "go": "30f4e803-7638-466b-8c25-308351d241f7",
           "component_type": "MPlayerController"
         },
+        "gunPoint": null,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null
+        "OnComponentUpdate": null,
+        "playerStats": {
+          "moveSpeed": 0,
+          "fireRate": 0,
+          "ballSpeed": 0
+        }
       }
     ],
     "Children": [
