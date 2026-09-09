@@ -6,7 +6,6 @@ public sealed class MPlayerController : Component
 	[Property, Group( "Refs" )] PlayerBehaviour playerBehaviour { get; set; } 
 	[Property, Group( "Refs" )] CameraComponent camera { get; set; }
 	[Property, Group( "Refs" )] GameObject visual { get; set; }
-	[Property, Group( "Refs" )] GameObject pivotCamera { get; set; }
 	[Property, Group( "Refs" )] Rigidbody rigidbody { get; set; }
 
 
@@ -19,9 +18,7 @@ public sealed class MPlayerController : Component
 	}
 	protected override void OnUpdate()
 	{
-		
 		PlayerRotation();
-
 		Inputs();
 	}
 

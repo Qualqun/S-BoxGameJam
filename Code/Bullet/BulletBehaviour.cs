@@ -14,17 +14,20 @@ public sealed class BulletBehaviour: Component
 
 	protected override void OnUpdate()
 	{
-
-
 		LinearDirection();
 	}
 
 	void LinearDirection()
 	{
-		//Vector3
-		//SceneTraceResult traceResult = Scene.Trace.Sphere( 32f * WorldScale.x, startPosition, endPosition ).Run();
+		Vector3 nextStep = WorldPosition + direction * speed * Time.Delta;
+		SceneTraceResult traceResult = Scene.Trace.Sphere( 32f * WorldScale.x, WorldPosition, nextStep ).WithoutTags("player","bullet").Run();
 
+		if( traceResult.Hit)
+		{
+			GameObject.Destroy();
+			return;
+		}
 
-		WorldPosition += direction * speed * Time.Delta;
+		WorldPosition = nextStep;
 	}
 }
