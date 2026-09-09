@@ -427,7 +427,7 @@
           "Position": "-500,0,0",
           "Rotation": "0,0.707106769,0,0.707106769",
           "Scale": "10,10,10",
-          "Tags": "",
+          "Tags": "door",
           "Enabled": true,
           "NetworkMode": 2,
           "NetworkFlags": 0,
@@ -500,7 +500,7 @@
           "Position": "500,0,0",
           "Rotation": "-0.707106769,-3.09086197E-08,0.707106769,-3.09086197E-08",
           "Scale": "10,10,10",
-          "Tags": "",
+          "Tags": "door",
           "Enabled": true,
           "NetworkMode": 2,
           "NetworkFlags": 0,
@@ -573,7 +573,7 @@
           "Position": "0,-500,0",
           "Rotation": "-0.49999997,0.49999997,0.49999997,0.49999997",
           "Scale": "10,10,10",
-          "Tags": "",
+          "Tags": "door",
           "Enabled": true,
           "NetworkMode": 2,
           "NetworkFlags": 0,
@@ -646,7 +646,7 @@
           "Position": "0,500,0",
           "Rotation": "0.49999997,0.49999997,-0.49999997,0.49999997",
           "Scale": "10,10,10",
-          "Tags": "",
+          "Tags": "door",
           "Enabled": true,
           "NetworkMode": 2,
           "NetworkFlags": 0,
@@ -710,6 +710,97 @@
             }
           ],
           "Children": []
+        },
+        {
+          "__guid": "ba9ea8c6-d24c-42b6-8af7-c2d57b7d717c",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "SpawnPoint",
+          "Position": "0,0,0",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": [
+            {
+              "__guid": "e545d229-b60b-4476-ae75-185d45d8d0fd",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Point1",
+              "Position": "0,620,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "b3589dad-5417-427c-9305-791e1810ec62",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Point2",
+              "Position": "0,-620,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "5b1bb9e5-4810-4ee7-810f-c27edcd08154",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Point3",
+              "Position": "620,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "09b8d3ac-2bd9-4732-ad29-1198340949a6",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Point4",
+              "Position": "-620,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          ]
         }
       ]
     },
@@ -736,6 +827,14 @@
             },
             "Property": "Tags",
             "Value": "player"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "95940cc0-7ac7-4029-859f-d64ce1defec2"
+            },
+            "Property": "RigidbodyFlags",
+            "Value": "DisableCollisionSounds"
           },
           {
             "Target": {
@@ -805,6 +904,150 @@
         "e4a36732-8269-43fe-a381-9366446159ab": "0bffee5e-19f2-41c4-88f9-faefbcce6bf4",
         "4da7d666-9abb-84c8-8d46-b24dfdbe0ffd": "9ae2019b-3491-471d-b406-ec20327be3b9"
       }
+    },
+    {
+      "__guid": "1259b333-093a-4c1e-b14f-ee4a92645c17",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Enemy",
+      "Position": "-84.5435028,90.3440018,0.000507943332",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.NavMeshAgent",
+          "__guid": "77a1cd47-f95f-4052-abdf-89839b3c49dd",
+          "__enabled": true,
+          "Flags": 0,
+          "Acceleration": 120,
+          "AllowDefaultArea": true,
+          "AllowedAreas": [],
+          "AutoTraverseLinks": true,
+          "ForbiddenAreas": [],
+          "Height": 64,
+          "MaxSpeed": 120,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Radius": 16,
+          "Separation": 0.25,
+          "UpdatePosition": true,
+          "UpdateRotation": false
+        },
+        {
+          "__type": "EnemyBehaviour",
+          "__guid": "031011f4-2b95-4a34-a1ec-7eed85872f5b",
+          "__enabled": true,
+          "Flags": 0,
+          "agent": {
+            "_type": "component",
+            "component_id": "77a1cd47-f95f-4052-abdf-89839b3c49dd",
+            "go": "1259b333-093a-4c1e-b14f-ee4a92645c17",
+            "component_type": "NavMeshAgent"
+          },
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        }
+      ],
+      "Children": [
+        {
+          "__guid": "f528c74e-9dbc-4956-9b37-5b13a161084a",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Body",
+          "Position": "0,0,0",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": [
+            {
+              "__guid": "2333e3c5-6826-454d-97db-a2c67adf2bdc",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Visual",
+              "Position": "0,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [
+                {
+                  "__type": "Sandbox.SkinnedModelRenderer",
+                  "__guid": "8ebe905e-cae6-4902-ae5a-3a2036ecd7c8",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "AnimationGraph": null,
+                  "BodyGroups": 18446744073709551615,
+                  "BoneMergeTarget": null,
+                  "CreateAttachments": false,
+                  "CreateBoneObjects": false,
+                  "LodOverride": null,
+                  "MaterialGroup": null,
+                  "MaterialOverride": null,
+                  "Materials": null,
+                  "Model": "models/citizen_mannequin/mannequin.vmdl",
+                  "Morphs": {},
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "Parameters": {
+                    "bools": {},
+                    "ints": {},
+                    "floats": {},
+                    "vectors": {},
+                    "rotations": {}
+                  },
+                  "PlaybackRate": 1,
+                  "RenderOptions": {
+                    "GameLayer": true,
+                    "OverlayLayer": false,
+                    "BloomLayer": false,
+                    "AfterUILayer": false
+                  },
+                  "RenderType": "On",
+                  "Sequence": {
+                    "Name": null,
+                    "Looping": true,
+                    "Blending": false
+                  },
+                  "Tint": "1,1,1,1",
+                  "UseAnimGraph": true
+                }
+              ],
+              "Children": []
+            }
+          ]
+        }
+      ]
     }
   ],
   "SceneProperties": {
@@ -815,7 +1058,7 @@
       "Title": "minimal"
     },
     "NavMesh": {
-      "Enabled": false,
+      "Enabled": true,
       "IncludeStaticBodies": true,
       "IncludeKeyframedBodies": true,
       "EditorAutoUpdate": true,
@@ -823,10 +1066,14 @@
       "AgentRadius": 16,
       "AgentStepSize": 18,
       "AgentMaxSlope": 40,
-      "ExcludedBodies": "",
+      "ExcludedBodies": "door",
       "IncludedBodies": "",
       "DeferGeneration": false,
-      "CustomBounds": false
+      "CustomBounds": false,
+      "BakedDataPath": {
+        "$reference_type": "filereference",
+        "path": "scenes/minimal_scene_data/navmesh/baked.navdata"
+      }
     },
     "GameObjectSystems": {
       "Sandbox.Clutter.ClutterGridSystem": {

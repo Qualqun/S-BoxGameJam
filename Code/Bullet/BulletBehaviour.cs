@@ -6,6 +6,7 @@ public sealed class BulletBehaviour: Component
 	Vector3 direction;
 
 
+
 	public void InitBall(Vector3 newDir, float newSpeed)
 	{
 		direction = newDir;
