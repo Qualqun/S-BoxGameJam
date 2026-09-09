@@ -7,7 +7,7 @@
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
-    "Tags": "",
+    "Tags": "player",
     "Enabled": true,
     "NetworkMode": 1,
     "NetworkFlags": 0,
@@ -112,7 +112,7 @@
         "playerStats": {
           "moveSpeed": 1000,
           "fireRate": 1,
-          "ballSpeed": 5000
+          "ballSpeed": 1000
         }
       }
     ],
@@ -286,7 +286,7 @@
             "__version": 2,
             "Flags": 0,
             "Name": "Camera",
-            "Position": "-250,0,300",
+            "Position": "-400,0,450",
             "Rotation": "0,0.382683456,0,0.923879504",
             "Scale": "1,1,1",
             "Tags": "",

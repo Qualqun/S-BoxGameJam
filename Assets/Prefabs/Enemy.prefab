@@ -3,13 +3,13 @@
     "__guid": "550d6052-1a2e-4f07-8865-e53e4716cea7",
     "__version": 2,
     "Flags": 0,
-    "Name": "Enemy",
+    "Name": "enemy",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
-    "Tags": "",
+    "Tags": "enemy",
     "Enabled": true,
-    "NetworkMode": 2,
+    "NetworkMode": 1,
     "NetworkFlags": 0,
     "NetworkOrphaned": 0,
     "NetworkTransmit": true,
@@ -36,20 +36,53 @@
         "Radius": 16,
         "Separation": 0.25,
         "UpdatePosition": true,
-        "UpdateRotation": false
+        "UpdateRotation": true
       },
       {
         "__type": "EnemyBehaviour",
-        "__guid": "d38bfd7c-b2c6-46a4-bc8a-1ef32d53c6c4",
+        "__guid": "f911952d-5b9e-4d8c-a998-040c7b28c106",
         "__enabled": true,
         "Flags": 0,
-        "agent": null,
+        "agent": {
+          "_type": "component",
+          "component_id": "3f407b4f-97bf-4207-a23c-9309ce46c792",
+          "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
+          "component_type": "NavMeshAgent"
+        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null
+        "OnComponentUpdate": null,
+        "repathDistance": 64
+      },
+      {
+        "__type": "Sandbox.CapsuleCollider",
+        "__guid": "c2889749-06cd-4885-baf4-6b6e9d308f12",
+        "__enabled": true,
+        "Flags": 0,
+        "ColliderFlags": 0,
+        "Elasticity": null,
+        "End": "2,0,65",
+        "Friction": null,
+        "IsTrigger": false,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OnObjectTriggerEnter": null,
+        "OnObjectTriggerExit": null,
+        "OnTriggerEnter": null,
+        "OnTriggerExit": null,
+        "Radius": 12,
+        "RollingResistance": null,
+        "Start": "5,0,8",
+        "Static": false,
+        "Surface": null,
+        "SurfaceVelocity": "0,0,0"
       }
     ],
     "Children": [
@@ -133,56 +166,32 @@
               }
             ],
             "Children": []
-          },
-          {
-            "__guid": "94a8a589-c4b2-45f1-b791-e26763957450",
-            "__version": 2,
-            "Flags": 0,
-            "Name": "Collider",
-            "Position": "0,0,0",
-            "Rotation": "0,0,0,1",
-            "Scale": "1,1,1",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 2,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [
-              {
-                "__type": "Sandbox.CapsuleCollider",
-                "__guid": "b8d2d05a-ca3f-49fe-8ec6-9321353e0125",
-                "__enabled": true,
-                "Flags": 0,
-                "ColliderFlags": 0,
-                "Elasticity": null,
-                "End": "2,0,65",
-                "Friction": null,
-                "IsTrigger": false,
-                "OnComponentDestroy": null,
-                "OnComponentDisabled": null,
-                "OnComponentEnabled": null,
-                "OnComponentFixedUpdate": null,
-                "OnComponentStart": null,
-                "OnComponentUpdate": null,
-                "OnObjectTriggerEnter": null,
-                "OnObjectTriggerExit": null,
-                "OnTriggerEnter": null,
-                "OnTriggerExit": null,
-                "Radius": 12,
-                "RollingResistance": null,
-                "Start": "5,0,8",
-                "Static": false,
-                "Surface": null,
-                "SurfaceVelocity": "0,0,0"
-              }
-            ],
-            "Children": []
           }
         ]
       }
-    ]
+    ],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "PhysicsMode": "Physics3D",
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
+      }
+    },
+    "__variables": []
   },
   "ResourceVersion": 2,
   "ShowInMenu": false,

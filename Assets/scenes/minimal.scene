@@ -825,6 +825,7 @@
           "__guid": "2ccac9a4-4081-413f-9f54-2271993ac5c7",
           "__enabled": true,
           "Flags": 0,
+          "BaseSpawnRate": 0.5,
           "EnemyPrefab": {
             "_type": "gameobject",
             "prefab": "prefabs/enemy.prefab"
@@ -863,7 +864,12 @@
               "go": "87e7835a-c9f6-44c5-a367-09d86863f349"
             }
           ],
-          "StartDelay": 2
+          "StartDelay": 2,
+          "StatsGrowth": {
+            "spawnRate": 0.5,
+            "enemyHp": 10,
+            "enemyDamage": 5
+          }
         },
         {
           "__type": "GameState",

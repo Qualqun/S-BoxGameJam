@@ -2,26 +2,38 @@ using Sandbox;
 using System.Threading;
 using System.Threading.Tasks;
 
+public struct StatsPerRound
+{
+	[Description( "Number of enemy in one second" )]
+	public float spawnRate { get; set; }
+	public float enemyHp { get; set; }
+	public float enemyDamage { get; set; }
+}
+
+
 // Run only on the host
 public sealed class GameManager : Component
 {
-	[Property]
-	public GameState GameState { get; set; }
 
-	[Property]
-	public GameObject PlayerPrefab { get; set; }
+	[Property, Group( "Stats" )] public float StartDelay { get; set; } = 2f;
 
-	[Property]
-	public GameObject EnemyPrefab { get; set; }
+	[Description( "Number of enemy in one second" )]
+	[Property, Group( "Stats" )] public float BaseSpawnRate { get; set; } = 1f;
+	[Property, Group( "Stats" )] public StatsPerRound StatsGrowth { get; set; }
 
-	[Property]
-	public float StartDelay { get; set; } = 2f;
 
-	[Property]
-	public List<GameObject> SpawnPoints { get; set; }
+	[Property, Group( "Refs" )] public GameState GameState { get; set; }
+	[Property, Group( "Refs" )] public GameObject PlayerPrefab { get; set; }
+
+	[Property, Group( "Refs" )] public GameObject EnemyPrefab { get; set; }
+	[Property, Group( "Refs" )] public List<GameObject> SpawnPoints { get; set; }
+
+
+	List<GameObject> Players { get; set; } = new List<GameObject>();
+	List<GameObject> Enemies { get; set; } = new List<GameObject>();
 
 	float RoundTimer { get; set; } = 0f;
-	CancellationTokenSource cancellation;
+	CancellationTokenSource Cancellation;
 
 	protected override void OnStart()
 	{
@@ -53,14 +65,21 @@ public sealed class GameManager : Component
 		}
 
 		GameObject player = PlayerPrefab.Clone( WorldTransform );
+		PlayerBehaviour playerBehaviour = player.GetComponent<PlayerBehaviour>();
 
-		GameState.Players.Add( player );
+		Players.Add( player );
+		playerBehaviour.gameManager = this;
 
 		player.NetworkSpawn( connection );
 
+
+		Log.Info( $"Spawned player for {connection.DisplayName}" );
+
+		//Temp need to be launch when the round start
+		Cancellation = new CancellationTokenSource();
+		_ = RoundSpawner( Cancellation.Token );
 		Log.Info( $"[GameManager] Spawned player for {connection.DisplayName}" );
 	}
-
 
 	protected override void OnFixedUpdate()
 	{
@@ -72,17 +91,15 @@ public sealed class GameManager : Component
 			{
 				RoundTimer += 0.02f;
 
-				if( RoundTimer > GameState.TimePerRound )
+				if ( RoundTimer > GameState.TimePerRound )
 				{
-					cancellation?.Cancel();
-					cancellation?.Dispose();
-					cancellation = null;
+					Cancellation?.Cancel();
+					Cancellation?.Dispose();
+					Cancellation = null;
 				}
 			}
 		}
 	}
-
-
 
 	protected override void OnUpdate()
 	{
@@ -95,10 +112,10 @@ public sealed class GameManager : Component
 
 		// example of how to change the game state from the server
 
-		if (GameState.PlayerCount == 2)
+		if ( GameState.PlayerCount == 2 )
 		{
 			// game should start
-			if(GameState.State == GameStateType.WaitingForPlayers )
+			if ( GameState.State == GameStateType.WaitingForPlayers )
 			{
 				GameState.Server_SetGameState( GameStateType.Starting );
 				GameState.Server_SetTimePerRound( 30f );
@@ -115,12 +132,13 @@ public sealed class GameManager : Component
 
 	async Task RoundSpawner( CancellationToken token )
 	{
-		while( !token.IsCancellationRequested )
+		float spawnDelay = 1f / (BaseSpawnRate + StatsGrowth.spawnRate * GameState.CurrentRound);
+
+		while ( !token.IsCancellationRequested )
 		{
-			await Task.DelaySeconds( 1f );
+			await Task.DelaySeconds( spawnDelay );
 
 			SpawnEnemy();
-
 		}
 	}
 
@@ -130,11 +148,23 @@ public sealed class GameManager : Component
 		Vector3 position = SpawnPoints[spawnPoint].WorldPosition;
 
 		GameObject enemy = EnemyPrefab.Clone( position );
-		EnemyBehaviour behaviour = enemy.GetComponent<EnemyBehaviour>();
+		EnemyBehaviour enemyBehaviour = enemy.GetComponent<EnemyBehaviour>();
 
 		enemy.NetworkSpawn();
-		behaviour.Players = GameState.Players;
+
+		enemyBehaviour.SetPlayers( Players );
+		enemyBehaviour.hp += StatsGrowth.enemyHp * GameState.CurrentRound;
+		enemyBehaviour.damage += StatsGrowth.enemyDamage * GameState.CurrentRound;
+
+		Enemies.Add( enemy );
 	}
+
+	[Rpc.Host]
+	public void EnemyTakeDamage( EnemyBehaviour enemy, float amount )
+	{
+		enemy.TakeDamage( amount );
+	}
+
 
 
 	#endregion

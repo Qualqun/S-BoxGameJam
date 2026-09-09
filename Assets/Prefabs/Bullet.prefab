@@ -88,6 +88,7 @@
     "Children": [],
     "__properties": {
       "NetworkInterpolation": true,
+      "PhysicsMode": "Physics3D",
       "TimeScale": 1,
       "WantsSystemScene": true,
       "Metadata": {},

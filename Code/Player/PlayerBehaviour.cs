@@ -4,9 +4,9 @@ public struct PlayerStats
 {
 	public float moveSpeed { get; set; }
 	public float fireRate { get; set; }
+	public float ballDamage { get; set; }
 	public float ballSpeed { get; set; }
 }
-
 
 public sealed class PlayerBehaviour : Component
 {
@@ -16,6 +16,8 @@ public sealed class PlayerBehaviour : Component
 	[Property, Group( "Refs" )] GameObject gunPoint { get; set; }
 	[Property, Group( "Refs" )] GameObject bullet { get; set; }
 	[Property, Group( "Refs" )] MPlayerController controller { get; set; }
+
+	[Sync( SyncFlags.FromHost )] public GameManager gameManager { get; set; }
 
 	bool canShoot = true;
 
@@ -34,13 +36,18 @@ public sealed class PlayerBehaviour : Component
 		if ( canShoot )
 		{
 			GameObject newBullet = bullet.Clone( gunPoint.WorldPosition );
-			BulletBehaviour behaviour = newBullet.GetComponent<BulletBehaviour>();
+			BulletBehaviour bulletBehaviour = newBullet.GetComponent<BulletBehaviour>();
 
 			Vector3 direction = gunPoint.WorldPosition - WorldPosition;
 
 			direction = direction.WithZ( 0 );
 
-			behaviour.InitBall( direction.Normal, playerStats.ballSpeed );
+			bulletBehaviour.speed = playerStats.ballSpeed;
+			bulletBehaviour.damage = playerStats.ballDamage;
+			bulletBehaviour.direction = direction.Normal;
+			bulletBehaviour.gameManager = gameManager;
+
+			newBullet.NetworkSpawn();
 
 			_ = StartTimer();
 		}
