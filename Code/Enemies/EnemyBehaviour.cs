@@ -15,7 +15,19 @@ public sealed class EnemyBehaviour : Component
 
 	public List<GameObject> Players;
 
-	
+	protected override void OnStart()
+	{
+		base.OnStart();
+		if ( IsProxy )
+		{
+			Log.Info( "[EnemyBehaviour] Destroying EnemyBehaviour on proxy." );	
+		}
+		else
+		{
+			Log.Info( "[EnemyBehaviour] Destroying EnemyBehaviour on host." );
+		}
+
+	}
 
 	protected override void OnUpdate()
 	{

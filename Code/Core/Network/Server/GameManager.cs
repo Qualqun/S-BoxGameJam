@@ -35,9 +35,9 @@ public sealed class GameManager : Component
 		}
 
 		// Initial game state.
-		GameState.State = GameStateType.WaitingForPlayers;
-		GameState.PlayerCount = Connection.All.Count;
-		GameState.CurrentRound = 0;
+		GameState.Server_SetGameState( GameStateType.WaitingForPlayers );
+		GameState.Server_SetPlayerCount( Connection.All.Count );
+		GameState.Server_SetCurrentRound( 0 );
 
 		Log.Info( "[GameManager] Initialized." );
 	}
@@ -58,11 +58,7 @@ public sealed class GameManager : Component
 
 		player.NetworkSpawn( connection );
 
-		Log.Info( $"Spawned player for {connection.DisplayName}" );
-
-		//temp need to be launch when the round start
-		//cancellation = new CancellationTokenSource();
-		//_ = RoundSpawner( cancellation.Token );
+		Log.Info( $"[GameManager] Spawned player for {connection.DisplayName}" );
 	}
 
 
@@ -97,7 +93,22 @@ public sealed class GameManager : Component
 		if ( GameState == null )
 			return;
 
-		GameState.PlayerCount = Connection.All.Count;
+		// example of how to change the game state from the server
+
+		if (GameState.PlayerCount == 2)
+		{
+			// game should start
+			if(GameState.State == GameStateType.WaitingForPlayers )
+			{
+				GameState.Server_SetGameState( GameStateType.Starting );
+				GameState.Server_SetTimePerRound( 30f );
+				RoundTimer = 0f;
+				SpawnEnemy();
+				Log.Info( "[GameManager] Game is starting! ." );
+			}
+		}
+
+		GameState.Server_SetPlayerCount( Connection.All.Count );
 	}
 
 	#region Enemies methods
@@ -127,5 +138,6 @@ public sealed class GameManager : Component
 
 
 	#endregion
+
 
 }
