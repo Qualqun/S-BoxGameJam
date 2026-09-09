@@ -35,7 +35,7 @@ public sealed class MPlayerController : Component
 	void Inputs()
 	{
 		Vector3 velocity = new Vector3();
-		float speed = playerBehaviour.playerStats.moveSpeed * Time.Delta;
+		float speed = playerBehaviour.playerStats.moveSpeed;
 	
 		if ( Input.Down( "Forward" ) )
 		{

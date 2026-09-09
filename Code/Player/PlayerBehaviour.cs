@@ -50,7 +50,7 @@ public sealed class PlayerBehaviour : Component
 	{
 		canShoot = false;
 
-		await Task.DelaySeconds( playerStats.fireRate );
+		await Task.DelaySeconds( 1f / playerStats.fireRate );
 
 		canShoot = true;
 	}

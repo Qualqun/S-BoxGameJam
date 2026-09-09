@@ -280,7 +280,7 @@
           "Name": "Ground",
           "Position": "0,0,0",
           "Rotation": "0,0,0,1",
-          "Scale": "10,10,10",
+          "Scale": "12.5,12.5,12.5",
           "Tags": "ground",
           "Enabled": true,
           "NetworkMode": 2,
@@ -427,7 +427,7 @@
           "Position": "-500,0,0",
           "Rotation": "0,0.707106769,0,0.707106769",
           "Scale": "10,10,10",
-          "Tags": "",
+          "Tags": "door",
           "Enabled": true,
           "NetworkMode": 2,
           "NetworkFlags": 0,
@@ -500,7 +500,7 @@
           "Position": "500,0,0",
           "Rotation": "-0.707106769,-3.09086197E-08,0.707106769,-3.09086197E-08",
           "Scale": "10,10,10",
-          "Tags": "",
+          "Tags": "door",
           "Enabled": true,
           "NetworkMode": 2,
           "NetworkFlags": 0,
@@ -573,7 +573,7 @@
           "Position": "0,-500,0",
           "Rotation": "-0.49999997,0.49999997,0.49999997,0.49999997",
           "Scale": "10,10,10",
-          "Tags": "",
+          "Tags": "door",
           "Enabled": true,
           "NetworkMode": 2,
           "NetworkFlags": 0,
@@ -646,7 +646,7 @@
           "Position": "0,500,0",
           "Rotation": "0.49999997,0.49999997,-0.49999997,0.49999997",
           "Scale": "10,10,10",
-          "Tags": "",
+          "Tags": "door",
           "Enabled": true,
           "NetworkMode": 2,
           "NetworkFlags": 0,
@@ -710,50 +710,13 @@
             }
           ],
           "Children": []
-        }
-      ]
-    },
-    {
-      "__guid": "329f88dd-4fe2-4554-ab20-33927cff2224",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "SpawnPoints",
-      "Position": "-44.1076355,6.19262981,115.952118",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [],
-      "Children": [
-        {
-          "__guid": "23d3e111-0a8a-480e-a3fa-82140afe9a91",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "SpawnPoint",
-          "Position": "240.086212,201.793472,0",
-          "Rotation": "0,0,0,1",
-          "Scale": "1,1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [],
-          "Children": []
         },
         {
-          "__guid": "8e37a3e1-3caa-46fb-8eac-3d41174480e4",
+          "__guid": "eb097fb8-705c-4675-a424-aa29a1999473",
           "__version": 2,
           "Flags": 0,
           "Name": "SpawnPoint",
-          "Position": "159.613586,-54.0064735,0.000129699707",
+          "Position": "0,0,0",
           "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
           "Tags": "",
@@ -764,43 +727,80 @@
           "NetworkTransmit": true,
           "OwnerTransfer": 1,
           "Components": [],
-          "Children": []
-        },
-        {
-          "__guid": "84118d61-0cc3-430d-ba5d-59a41239539c",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "SpawnPoint",
-          "Position": "-263.866974,-248.133423,-115.952263",
-          "Rotation": "0,0,0,1",
-          "Scale": "1,1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [],
-          "Children": []
-        },
-        {
-          "__guid": "edf2f1e2-1c8a-4f6b-a7f3-ef62e63beb5d",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "SpawnPoint",
-          "Position": "-250.928253,122.726883,-115.952126",
-          "Rotation": "0,0,0,1",
-          "Scale": "1,1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [],
-          "Children": []
+          "Children": [
+            {
+              "__guid": "3935d6d2-cfdd-4ffa-8dc8-b5c2876b85e9",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Point",
+              "Position": "550,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "e8e82d5f-44b7-4a8e-944f-434af8f16da0",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Point (1)",
+              "Position": "-550,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "d613af4f-65ca-44c9-af3c-d8bedbbb3191",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Point (2)",
+              "Position": "0,-550,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "87e7835a-c9f6-44c5-a367-09d86863f349",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Point (3)",
+              "Position": "0,550,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          ]
         }
       ]
     },
@@ -809,7 +809,7 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Game",
-      "Position": "-22.6120987,175.852905,245.442642",
+      "Position": "0,0,0",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "",
@@ -825,6 +825,10 @@
           "__guid": "2ccac9a4-4081-413f-9f54-2271993ac5c7",
           "__enabled": true,
           "Flags": 0,
+          "EnemyPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/enemy.prefab"
+          },
           "GameState": {
             "_type": "component",
             "component_id": "40841857-4b79-438c-b036-d1581eeedb17",
@@ -841,6 +845,24 @@
             "_type": "gameobject",
             "prefab": "prefabs/player.prefab"
           },
+          "SpawnPoints": [
+            {
+              "_type": "gameobject",
+              "go": "3935d6d2-cfdd-4ffa-8dc8-b5c2876b85e9"
+            },
+            {
+              "_type": "gameobject",
+              "go": "e8e82d5f-44b7-4a8e-944f-434af8f16da0"
+            },
+            {
+              "_type": "gameobject",
+              "go": "d613af4f-65ca-44c9-af3c-d8bedbbb3191"
+            },
+            {
+              "_type": "gameobject",
+              "go": "87e7835a-c9f6-44c5-a367-09d86863f349"
+            }
+          ],
           "StartDelay": 2
         },
         {
@@ -853,7 +875,8 @@
           "OnComponentEnabled": null,
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
-          "OnComponentUpdate": null
+          "OnComponentUpdate": null,
+          "TimePerRound": 0
         },
         {
           "__type": "ClientManager",
@@ -886,7 +909,7 @@
       "Title": "minimal"
     },
     "NavMesh": {
-      "Enabled": false,
+      "Enabled": true,
       "IncludeStaticBodies": true,
       "IncludeKeyframedBodies": true,
       "EditorAutoUpdate": true,
@@ -894,10 +917,14 @@
       "AgentRadius": 16,
       "AgentStepSize": 18,
       "AgentMaxSlope": 40,
-      "ExcludedBodies": "",
+      "ExcludedBodies": "door",
       "IncludedBodies": "",
       "DeferGeneration": false,
-      "CustomBounds": false
+      "CustomBounds": false,
+      "BakedDataPath": {
+        "$reference_type": "filereference",
+        "path": "scenes/minimal_scene_data/navmesh/baked.navdata"
+      }
     },
     "GameObjectSystems": {
       "Sandbox.Clutter.ClutterGridSystem": {

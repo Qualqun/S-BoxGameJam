@@ -8,6 +8,11 @@ public enum GameStateType
 	GameOver
 }
 
+public struct RoundGrowth
+{
+
+}
+
 public sealed class GameState : Component
 {
 	[Sync( SyncFlags.FromHost )]
@@ -17,5 +22,13 @@ public sealed class GameState : Component
 	public int PlayerCount { get; set; }
 
 	[Sync( SyncFlags.FromHost )]
-	public int CurrentRoom { get; set; }
+	public int CurrentRound { get; set; }
+
+
+	[Sync( SyncFlags.FromHost ), Property]
+	public float TimePerRound { get; set; }
+
+
+	public List<GameObject> Players { get; set; } = new List<GameObject>();
+	public List<GameObject> Enemies { get; set; } = new List<GameObject>();
 }

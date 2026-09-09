@@ -9,7 +9,7 @@
     "Scale": "1,1,1",
     "Tags": "",
     "Enabled": true,
-    "NetworkMode": 2,
+    "NetworkMode": 1,
     "NetworkFlags": 0,
     "NetworkOrphaned": 0,
     "NetworkTransmit": true,
@@ -46,7 +46,7 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "OverrideMassCenter": false,
-        "RigidbodyFlags": 0,
+        "RigidbodyFlags": "DisableCollisionSounds",
         "SleepThreshold": 2,
         "StartAsleep": false
       },
@@ -67,11 +67,12 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "pivotCamera": {
-          "_type": "gameobject",
-          "go": "283c792e-45c3-426f-8b83-20a9e9218b9f"
+        "playerBehaviour": {
+          "_type": "component",
+          "component_id": "ac55f1d4-64b7-49be-a7a3-c6e812aa6931",
+          "go": "30f4e803-7638-466b-8c25-308351d241f7",
+          "component_type": "PlayerBehaviour"
         },
-        "playerBehaviour": null,
         "rigidbody": {
           "_type": "component",
           "component_id": "95940cc0-7ac7-4029-859f-d64ce1defec2",
@@ -88,14 +89,20 @@
         "__guid": "ac55f1d4-64b7-49be-a7a3-c6e812aa6931",
         "__enabled": true,
         "Flags": 0,
-        "bullet": null,
+        "bullet": {
+          "_type": "gameobject",
+          "prefab": "prefabs/bullet.prefab"
+        },
         "controller": {
           "_type": "component",
           "component_id": "34e1818d-5cd0-497b-9b14-52e13135ddc7",
           "go": "30f4e803-7638-466b-8c25-308351d241f7",
           "component_type": "MPlayerController"
         },
-        "gunPoint": null,
+        "gunPoint": {
+          "_type": "gameobject",
+          "go": "4da7d666-9abb-84c8-8d46-b24dfdbe0ffd"
+        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -103,9 +110,9 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "playerStats": {
-          "moveSpeed": 0,
-          "fireRate": 0,
-          "ballSpeed": 0
+          "moveSpeed": 1000,
+          "fireRate": 1,
+          "ballSpeed": 5000
         }
       }
     ],
@@ -378,6 +385,7 @@
     ],
     "__properties": {
       "NetworkInterpolation": true,
+      "PhysicsMode": "Physics3D",
       "TimeScale": 1,
       "WantsSystemScene": true,
       "Metadata": {},
