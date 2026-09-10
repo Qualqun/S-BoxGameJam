@@ -1,4 +1,5 @@
 using Sandbox;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,6 +7,7 @@ public struct StatsPerRound
 {
 	[Description( "Number of enemy in one second" )]
 	public float spawnRate { get; set; }
+
 	public float enemyHp { get; set; }
 	public float enemyDamage { get; set; }
 }
@@ -14,26 +16,40 @@ public struct StatsPerRound
 // Run only on the host
 public sealed class GameManager : Component
 {
+	[Property, Group( "Refs" )]
+	public BoxCollider StartZone { get; set; }
 
-	[Property, Group( "Stats" )] public float StartDelay { get; set; } = 2f;
+	[Property, Group( "Stats" )]
+	public float StartDelay { get; set; } = 5f;
 
 	[Description( "Number of enemy in one second" )]
-	[Property, Group( "Stats" )] public float BaseSpawnRate { get; set; } = 1f;
-	[Property, Group( "Stats" )] public StatsPerRound StatsGrowth { get; set; }
+	[Property, Group( "Stats" )]
+	public float BaseSpawnRate { get; set; } = 1f;
 
+	[Property, Group( "Stats" )]
+	public StatsPerRound StatsGrowth { get; set; }
 
-	[Property, Group( "Refs" )] public GameState GameState { get; set; }
-	[Property, Group( "Refs" )] public GameObject PlayerPrefab { get; set; }
+	[Property, Group( "Refs" )]
+	public GameState GameState { get; set; }
 
-	[Property, Group( "Refs" )] public GameObject EnemyPrefab { get; set; }
-	[Property, Group( "Refs" )] public List<GameObject> SpawnPoints { get; set; }
+	[Property, Group( "Refs" )]
+	public GameObject PlayerPrefab { get; set; }
+
+	[Property, Group( "Refs" )]
+	public GameObject EnemyPrefab { get; set; }
+
+	[Property, Group( "Refs" )]
+	public List<GameObject> SpawnPoints { get; set; }
 
 
 	List<GameObject> Players { get; set; } = new List<GameObject>();
 	List<GameObject> Enemies { get; set; } = new List<GameObject>();
 
+	float StartTimer { get; set; } = 0f;
 	float RoundTimer { get; set; } = 0f;
+
 	CancellationTokenSource Cancellation;
+
 
 	protected override void OnStart()
 	{
@@ -51,8 +67,13 @@ public sealed class GameManager : Component
 		GameState.Server_SetPlayerCount( Connection.All.Count );
 		GameState.Server_SetCurrentRound( 0 );
 
+		StartTimer = 0f;
+		RoundTimer = 0f;
+
 		Log.Info( "[GameManager] Initialized." );
 	}
+
+
 	public void SpawnPlayer( Connection connection )
 	{
 		if ( !Networking.IsHost )
@@ -72,78 +93,188 @@ public sealed class GameManager : Component
 
 		player.NetworkSpawn( connection );
 
-
-		Log.Info( $"Spawned player for {connection.DisplayName}" );
-
-		//Temp need to be launch when the round start
-		Cancellation = new CancellationTokenSource();
-		_ = RoundSpawner( Cancellation.Token );
 		Log.Info( $"[GameManager] Spawned player for {connection.DisplayName}" );
 	}
+
 
 	protected override void OnFixedUpdate()
 	{
 		base.OnFixedUpdate();
 
+		if ( GameState == null )
+			return;
+
+		const float FixedDeltaTime = 0.02f;
+
+		if ( GameState.State == GameStateType.Starting )
+		{
+			StartTimer += FixedDeltaTime;
+
+			if ( StartTimer >= StartDelay )
+			{
+				StartTimer = 0f;
+
+				GameState.Server_SetGameState( GameStateType.Playing );
+
+				Log.Info( "[GameManager] Game officially started!" );
+
+				StartRoundSpawner();
+			}
+		}
+
+
 		if ( GameState.State == GameStateType.Playing )
 		{
-			if ( RoundTimer <= GameState.TimePerRound )
-			{
-				RoundTimer += 0.02f;
+			RoundTimer += FixedDeltaTime;
 
-				if ( RoundTimer > GameState.TimePerRound )
-				{
-					Cancellation?.Cancel();
-					Cancellation?.Dispose();
-					Cancellation = null;
-				}
+			if ( RoundTimer >= GameState.TimePerRound )
+			{
+				RoundTimer = 0f;
+
+				StopRoundSpawner();
+
+				Log.Info( "[GameManager] Round finished." );
+
+				// TODO:
+				// Increment round
+				// Start next round
 			}
 		}
 	}
 
+
 	protected override void OnUpdate()
 	{
-		// GameManager is authoritative.
 		if ( !Networking.IsHost )
 			return;
 
 		if ( GameState == null )
 			return;
 
-		// example of how to change the game state from the server
+		GameState.Server_SetPlayerCount( Connection.All.Count );
 
-		if ( GameState.PlayerCount == 2 )
+		// Debug countdown
+		if ( GameState.State == GameStateType.Starting )
 		{
-			// game should start
-			if ( GameState.State == GameStateType.WaitingForPlayers )
-			{
-				GameState.Server_SetGameState( GameStateType.Starting );
-				GameState.Server_SetTimePerRound( 30f );
-				RoundTimer = 0f;
-				SpawnEnemy();
-				Log.Info( "[GameManager] Game is starting! ." );
-			}
+			float remaining = MathF.Max( 0f, StartDelay - StartTimer );
+
+			Log.Info( $"Start countdown: {remaining:F1}s" );
 		}
 
-		GameState.Server_SetPlayerCount( Connection.All.Count );
+		// Debug round timer
+		if ( GameState.State == GameStateType.Playing )
+		{
+			Log.Info( $"Round timer: {RoundTimer:F1}s / {GameState.TimePerRound:F1}s" );
+		}
 	}
+
+
+	#region Game Initialization
+
+	public void PlayerEnteredStartArea( PlayerBehaviour player )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		if ( GameState == null )
+			return;
+
+		if ( GameState.State != GameStateType.WaitingForPlayers )
+		{
+			Log.Info( "[GameManager] Game is already in progress. Cannot start a new game." );
+			return;
+		}
+
+		//if ( GameState.PlayerReadyCount != GameState.PlayerCount )
+		//{
+		//	Log.Info( "[GameManager] Not enough players to start the game." );
+		//	return;
+		//}
+
+		// Reset timer before starting.
+		StartTimer = 0f;
+
+		GameState.Server_SetGameState( GameStateType.Starting );
+
+		Log.Info( "[GameManager] Game starting countdown..." );
+	}
+
+	public void PlayerLeftStartArea( PlayerBehaviour player )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		if ( GameState == null )
+			return;
+
+		if ( GameState.State != GameStateType.Starting )
+			return;
+
+		StartTimer = 0f;
+
+
+		GameState.Server_SetGameState( GameStateType.WaitingForPlayers );
+		Log.Info( "[GameManager] Game starting countdown canceled." );
+	}
+
+
+	void StartRoundSpawner()
+	{
+		// Stop a previous spawner if one exists.
+		StopRoundSpawner();
+
+		Cancellation = new CancellationTokenSource();
+
+		_ = RoundSpawner( Cancellation.Token );
+	}
+
+
+	void StopRoundSpawner()
+	{
+		if ( Cancellation == null )
+			return;
+
+		Cancellation.Cancel();
+		Cancellation.Dispose();
+		Cancellation = null;
+	}
+
+	#endregion
+
 
 	#region Enemies methods
 
 	async Task RoundSpawner( CancellationToken token )
 	{
-		float spawnDelay = 1f / (BaseSpawnRate + StatsGrowth.spawnRate * GameState.CurrentRound);
+		float spawnDelay =
+			1f / (BaseSpawnRate + StatsGrowth.spawnRate * GameState.CurrentRound);
 
 		while ( !token.IsCancellationRequested )
 		{
 			await Task.DelaySeconds( spawnDelay );
 
+			if ( token.IsCancellationRequested )
+				break;
+
 			SpawnEnemy();
 		}
 	}
 
+
 	void SpawnEnemy()
 	{
+		if ( EnemyPrefab == null )
+		{
+			Log.Error( "[GameManager] EnemyPrefab is not assigned." );
+			return;
+		}
+
+		if ( SpawnPoints == null || SpawnPoints.Count == 0 )
+		{
+			Log.Error( "[GameManager] No spawn points assigned." );
+			return;
+		}
+
 		int spawnPoint = Game.Random.Int( SpawnPoints.Count - 1 );
 		Vector3 position = SpawnPoints[spawnPoint].WorldPosition;
 
@@ -153,11 +284,16 @@ public sealed class GameManager : Component
 		enemy.NetworkSpawn();
 
 		enemyBehaviour.SetPlayers( Players );
-		enemyBehaviour.hp += StatsGrowth.enemyHp * GameState.CurrentRound;
-		enemyBehaviour.damage += StatsGrowth.enemyDamage * GameState.CurrentRound;
+
+		enemyBehaviour.hp +=
+			StatsGrowth.enemyHp * GameState.CurrentRound;
+
+		enemyBehaviour.damage +=
+			StatsGrowth.enemyDamage * GameState.CurrentRound;
 
 		Enemies.Add( enemy );
 	}
+
 
 	[Rpc.Host]
 	public void EnemyTakeDamage( EnemyBehaviour enemy, float amount )
@@ -165,9 +301,5 @@ public sealed class GameManager : Component
 		enemy.TakeDamage( amount );
 	}
 
-
-
 	#endregion
-
-
 }

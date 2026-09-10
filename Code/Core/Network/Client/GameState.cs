@@ -22,6 +22,9 @@ public sealed class GameState : Component
 	public int PlayerCount { get; private set; }
 
 	[Sync( SyncFlags.FromHost )]
+	public int PlayerReadyCount { get; private set; }
+
+	[Sync( SyncFlags.FromHost )]
 	public int CurrentRound { get; private set; }
 
 	[Sync( SyncFlags.FromHost ), Property]
@@ -88,6 +91,13 @@ public sealed class GameState : Component
 		if ( !Networking.IsHost )
 			return;
 		Enemies.Remove( enemy );
+	}
+
+	public void Server_SetPlayerReadyCount( int count )
+	{
+		if ( !Networking.IsHost )
+			return;
+		PlayerReadyCount = count;
 	}
 
 	#endregion
