@@ -883,7 +883,7 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "TimePerRound": 0
+          "TimePerRound": 90
         },
         {
           "__type": "ClientManager",

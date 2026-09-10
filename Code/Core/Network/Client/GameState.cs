@@ -5,6 +5,7 @@ public enum GameStateType
 	WaitingForPlayers,
 	Starting,
 	Playing,
+	WaitingForNextRound,
 	GameOver
 }
 
@@ -30,6 +31,9 @@ public sealed class GameState : Component
 	[Sync( SyncFlags.FromHost ), Property]
 	public float TimePerRound { get; private set; }
 
+	[Sync( SyncFlags.FromHost ), Property]
+	public float TimePerWaitingRound { get; private set; }
+
 	public List<GameObject> Players { get; private set; } = new List<GameObject>();
 	public List<GameObject> Enemies { get; set; } = new List<GameObject>();
 
@@ -42,6 +46,13 @@ public sealed class GameState : Component
 			return;
 
 		State = state;
+	}
+
+	public void Server_SetTimePerWaitingRound( float time )
+	{
+		if ( !Networking.IsHost )
+			return;
+		TimePerWaitingRound = time;
 	}
 
 	public void Server_SetPlayerCount( int count )
