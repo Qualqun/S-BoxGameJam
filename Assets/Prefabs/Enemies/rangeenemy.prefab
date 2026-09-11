@@ -89,6 +89,12 @@
           "go": "0847bc44-9917-41af-a64c-d6173528996b"
         },
         "hp": 100,
+        "laserInfo": {
+          "_type": "component",
+          "component_id": "5fa08f6b-2011-463a-bb81-058a42fbf0c7",
+          "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
+          "component_type": "LineRenderer"
+        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -99,6 +105,77 @@
         "reloadTime": 1,
         "repathDistance": 64,
         "shootTime": 1
+      },
+      {
+        "__type": "Sandbox.LineRenderer",
+        "__guid": "5fa08f6b-2011-463a-bb81-058a42fbf0c7",
+        "__enabled": true,
+        "Flags": 0,
+        "Additive": false,
+        "AutoCalculateNormals": true,
+        "CastShadows": true,
+        "Color": {
+          "blend": "Linear",
+          "color": [
+            {
+              "t": 0.5,
+              "c": "1,0,0,1"
+            }
+          ],
+          "alpha": []
+        },
+        "CylinderSegments": 12,
+        "DepthFeather": 0,
+        "EndCap": "None",
+        "Face": "Cylinder",
+        "FogStrength": 1,
+        "Lighting": false,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "Opaque": true,
+        "Points": [],
+        "RenderOptions": {
+          "GameLayer": true,
+          "OverlayLayer": false,
+          "BloomLayer": false,
+          "AfterUILayer": false
+        },
+        "SplineBias": 0,
+        "SplineContinuity": 0,
+        "SplineInterpolation": 0,
+        "SplineTension": 0,
+        "StartCap": "None",
+        "Texturing": {
+          "Texture": null,
+          "Material": null,
+          "WorldSpace": true,
+          "UnitsPerTexture": 10,
+          "Scale": 1,
+          "Offset": 0,
+          "Scroll": 0,
+          "FilterMode": "Anisotropic",
+          "TextureAddressMode": "Wrap",
+          "Clamp": false
+        },
+        "UseVectorPoints": true,
+        "VectorPoints": [],
+        "Width": {
+          "rangey": "0,0.25",
+          "frames": [
+            {
+              "x": 0.5,
+              "y": 5,
+              "in": 0,
+              "out": 0,
+              "mode": "Mirrored"
+            }
+          ]
+        },
+        "Wireframe": false
       }
     ],
     "Children": [

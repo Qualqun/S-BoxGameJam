@@ -41,7 +41,7 @@ public class RangeEnemy : BaseEnemyBehaviour
 				if ( hit.Hit )
 				{
 					canShoot = hit.Collider.Tags.Has( "player" );
-					hitPos = hit.HitPosition;
+					hitPos = hit.Direction;
 				}
 
 			}
@@ -77,9 +77,11 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 		await Task.DelaySeconds( aimTime );
 
-		// laser aparition
+		UpdateLaser( gunPoint.WorldPosition, gunPoint.WorldPosition + direction  * 10000f);
 
 		await Task.DelaySeconds( shootTime );
+
+		ResetLaser();
 
 		newBullet = bullet.Clone( gunPoint.WorldPosition );
 		bulletBehaviour = newBullet.GetComponent<EnemyBulletBehaviour>();
@@ -122,11 +124,17 @@ public class RangeEnemy : BaseEnemyBehaviour
 	void UpdateLaser( Vector3 start, Vector3 end )
 	{
 		laserInfo.VectorPoints = new List<Vector3>
-	{
-		start,
-		end
-	};
+		{
+			start,
+			end
+		};
 	}
+
+	void ResetLaser()
+	{
+		laserInfo.VectorPoints.Clear();
+	}
+
 
 	protected override void DrawGizmos()
 	{
