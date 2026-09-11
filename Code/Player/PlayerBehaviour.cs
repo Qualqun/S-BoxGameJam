@@ -111,8 +111,6 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 				cancellation = null;
 
 				Tags.Add( "invulnerability" );
-
-				Log.Info( "Player " + GameObject.Name + " is dead" );
 			}
 			else
 			{

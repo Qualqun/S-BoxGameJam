@@ -27,19 +27,14 @@ public sealed class BulletBehaviour : Component
 
 				if ( enemy != null )
 				{
-
-					Log.Info( "Hit de fou" );
 					gameManager.EnemyTakeDamage( enemy, damage );
 				}
 			}
-
 
 			GameObject.Destroy();
 
 			return;
 		}
-
-		Log.Info( "Ball speed " + speed );
 
 		WorldPosition = nextStep;
 	}
