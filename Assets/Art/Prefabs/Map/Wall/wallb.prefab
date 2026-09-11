@@ -41,9 +41,57 @@
         },
         "RenderType": "On",
         "Tint": "1,1,1,1"
+      },
+      {
+        "__type": "Sandbox.BoxCollider",
+        "__guid": "8801e0e4-4bec-431d-bacd-419c79d972a7",
+        "__enabled": true,
+        "Flags": 0,
+        "Center": "-11.3950043,80.0000229,66.5347672",
+        "ColliderFlags": 0,
+        "Elasticity": null,
+        "Friction": null,
+        "IsTrigger": false,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OnObjectTriggerEnter": null,
+        "OnObjectTriggerExit": null,
+        "OnTriggerEnter": null,
+        "OnTriggerExit": null,
+        "RollingResistance": null,
+        "Scale": "44.8034897,160.000031,133.06955",
+        "Static": false,
+        "Surface": null,
+        "SurfaceVelocity": "0,0,0"
       }
     ],
-    "Children": []
+    "Children": [],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "PhysicsMode": "Physics3D",
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
+      }
+    },
+    "__variables": []
   },
   "ResourceVersion": 2,
   "ShowInMenu": false,
