@@ -34,6 +34,9 @@ public sealed class GameState : Component
 	[Sync( SyncFlags.FromHost ), Property]
 	public float TimePerWaitingRound { get; private set; }
 
+	[Sync( SyncFlags.FromHost ), Property]
+	public float TimeGameOver { get; private set; }
+
 	public List<GameObject> Players { get; private set; } = new List<GameObject>();
 	public List<GameObject> Enemies { get; set; } = new List<GameObject>();
 

@@ -101,6 +101,10 @@ public sealed class GameManager : Component
 				WaitingForNextRoundRoutine();
 				break;
 
+			case GameStateType.GameOver:
+				GameOverRoutine();
+				break;
+
 			default:
 				break;
 		}
@@ -135,6 +139,11 @@ public sealed class GameManager : Component
 		if ( GameState.State == GameStateType.WaitingForNextRound )
 		{
 			Log.Info( $"Next round in: {PhaseTimer:F1}s / {GameState.TimePerWaitingRound:F1}s" );
+		}
+
+		if ( GameState.State == GameStateType.GameOver )
+		{
+			Log.Info( $"Game Over timer: {PhaseTimer:F1}s / {GameState.TimeGameOver:F1}s" );
 		}
 	}
 
@@ -269,7 +278,21 @@ public sealed class GameManager : Component
 			Log.Info( "[GameManager] Next round started." );
 		}
 	}
+	private void GameOverRoutine()
+	{
+		if ( PhaseTimer >= GameState.TimeGameOver )
+		{
+			StopRoundSpawner();
 
+			GameState.Server_SetGameState(
+				GameStateType.WaitingForNextRound
+			);
+
+			PhaseTimer = 0f;
+
+			Log.Info( "[GameManager] Players should restart" );
+		}
+	}
 
 	void StartRoundSpawner()
 	{

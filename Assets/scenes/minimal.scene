@@ -778,8 +778,9 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
+          "TimeGameOver": 5,
           "TimePerRound": 30,
-          "TimePerWaitingRound": 0
+          "TimePerWaitingRound": 5
         },
         {
           "__type": "ClientManager",

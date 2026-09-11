@@ -111,6 +111,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 				cancellation = null;
 
 				Tags.Add( "invulnerability" );
+
+				gameManager.GameState.Server_SetGameState(GameStateType.GameOver );
 			}
 			else
 			{
