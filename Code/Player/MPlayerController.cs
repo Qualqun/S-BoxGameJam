@@ -14,6 +14,7 @@ public sealed class MPlayerController : Component
 		Mouse.Visibility = MouseVisibility.Visible;
 		Mouse.CursorType = "crosshair";
 	}
+
 	protected override void OnUpdate()
 	{
 		PlayerRotation();

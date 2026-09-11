@@ -36,14 +36,13 @@ public sealed class GameManager : Component
 	[Property, Group( "Refs" )]
 	public GameObject PlayerPrefab { get; set; }
 
-	[Property, Group( "Refs" )]
-	public GameObject EnemyPrefab { get; set; }
+	[Property, Group( "List Refs" )]
+	public List<GameObject> EnemiesPrefabs { get; set; }
 
-	[Property, Group( "Refs" )]
+	[Property, Group( "List Refs" )]
 	public List<GameObject> SpawnPoints { get; set; }
 
-
-	List<GameObject> Players { get; set; } = new List<GameObject>();
+	List<PlayerBehaviour> Players { get; set; } = new List<PlayerBehaviour>();
 	List<GameObject> Enemies { get; set; } = new List<GameObject>();
 
 	float PhaseTimer { get; set; } = 0f;
@@ -129,7 +128,7 @@ public sealed class GameManager : Component
 		// Debug round timer
 		if ( GameState.State == GameStateType.Playing )
 		{
-			Log.Info( $"Round timer: {PhaseTimer:F1}s / {GameState.TimePerRound:F1}s" );
+			//Log.Info( $"Round timer: {PhaseTimer:F1}s / {GameState.TimePerRound:F1}s" );
 		}
 
 		// Debug waiting timer
@@ -156,7 +155,7 @@ public sealed class GameManager : Component
 		GameObject player = PlayerPrefab.Clone( WorldTransform );
 		PlayerBehaviour playerBehaviour = player.GetComponent<PlayerBehaviour>();
 
-		Players.Add( player );
+		Players.Add( playerBehaviour );
 		playerBehaviour.gameManager = this;
 
 		player.NetworkSpawn( connection );
@@ -295,6 +294,12 @@ public sealed class GameManager : Component
 
 	#endregion
 
+	[Rpc.Broadcast]
+	public void PlayerTakeDamage( PlayerBehaviour player, float amount )
+	{
+		player.TakeHit( amount );
+	}
+
 
 	#region Enemies methods
 
@@ -317,7 +322,7 @@ public sealed class GameManager : Component
 
 	void SpawnEnemy()
 	{
-		if ( EnemyPrefab == null )
+		if ( EnemiesPrefabs == null  || EnemiesPrefabs.Count == 0)
 		{
 			Log.Error( "[GameManager] EnemyPrefab is not assigned." );
 			return;
@@ -329,31 +334,35 @@ public sealed class GameManager : Component
 			return;
 		}
 
+
 		int spawnPoint = Game.Random.Int( SpawnPoints.Count - 1 );
+		int enemyType = Game.Random.Int( EnemiesPrefabs.Count - 1 );
+
 		Vector3 position = SpawnPoints[spawnPoint].WorldPosition;
 
-		GameObject enemy = EnemyPrefab.Clone( position );
-		EnemyBehaviour enemyBehaviour = enemy.GetComponent<EnemyBehaviour>();
+		GameObject enemyPrefab = EnemiesPrefabs[enemyType];
+		GameObject enemy = enemyPrefab.Clone( position );
+
+		BaseEnemyBehaviour enemyBehaviour = enemy.GetComponent<BaseEnemyBehaviour>();
 
 		enemy.NetworkSpawn();
 
+		enemyBehaviour.gameManager = this;
 		enemyBehaviour.SetPlayers( Players );
-
-		enemyBehaviour.hp +=
-			StatsGrowth.enemyHp * GameState.CurrentRound;
-
-		enemyBehaviour.damage +=
-			StatsGrowth.enemyDamage * GameState.CurrentRound;
+		enemyBehaviour.hp += StatsGrowth.enemyHp * GameState.CurrentRound;
+		enemyBehaviour.damage += StatsGrowth.enemyDamage * GameState.CurrentRound;
 
 		Enemies.Add( enemy );
 	}
 
 
 	[Rpc.Host]
-	public void EnemyTakeDamage( EnemyBehaviour enemy, float amount )
+	public void EnemyTakeDamage( BaseEnemyBehaviour enemy, float amount )
 	{
 		enemy.TakeDamage( amount );
 	}
+
+
 
 	#endregion
 }

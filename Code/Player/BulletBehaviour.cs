@@ -17,16 +17,18 @@ public sealed class BulletBehaviour : Component
 	void LinearDirection()
 	{
 		Vector3 nextStep = WorldPosition + direction * speed * Time.Delta;
-		SceneTraceResult traceResult = Scene.Trace.Sphere( 32f * WorldScale.x, WorldPosition, nextStep ).WithoutTags( "player", "bullet" ).Run();
+		SceneTraceResult traceResult = Scene.Trace.Sphere( 32f * WorldScale.x, WorldPosition, nextStep ).WithoutTags( "player", "bullet", "enemybullet" ).Run();
 
 		if ( traceResult.Hit )
 		{
 			if ( traceResult.HasTag( "Enemy" ) )
 			{
-				EnemyBehaviour enemy = traceResult.Collider.GetComponent<EnemyBehaviour>();
+				BaseEnemyBehaviour enemy = traceResult.Collider.GetComponent<BaseEnemyBehaviour>();
 
-				if(enemy!= null)
+				if ( enemy != null )
 				{
+
+					Log.Info( "Hit de fou" );
 					gameManager.EnemyTakeDamage( enemy, damage );
 				}
 			}

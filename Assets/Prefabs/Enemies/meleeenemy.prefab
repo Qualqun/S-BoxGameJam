@@ -3,7 +3,7 @@
     "__guid": "550d6052-1a2e-4f07-8865-e53e4716cea7",
     "__version": 2,
     "Flags": 0,
-    "Name": "enemy",
+    "Name": "meleeenemy",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
@@ -20,7 +20,7 @@
         "__guid": "3f407b4f-97bf-4207-a23c-9309ce46c792",
         "__enabled": true,
         "Flags": 0,
-        "Acceleration": 120,
+        "Acceleration": 250000,
         "AllowDefaultArea": true,
         "AllowedAreas": [],
         "AutoTraverseLinks": true,
@@ -37,25 +37,6 @@
         "Separation": 0.25,
         "UpdatePosition": true,
         "UpdateRotation": true
-      },
-      {
-        "__type": "EnemyBehaviour",
-        "__guid": "f911952d-5b9e-4d8c-a998-040c7b28c106",
-        "__enabled": true,
-        "Flags": 0,
-        "agent": {
-          "_type": "component",
-          "component_id": "3f407b4f-97bf-4207-a23c-9309ce46c792",
-          "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
-          "component_type": "NavMeshAgent"
-        },
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "repathDistance": 64
       },
       {
         "__type": "Sandbox.CapsuleCollider",
@@ -83,6 +64,27 @@
         "Static": false,
         "Surface": null,
         "SurfaceVelocity": "0,0,0"
+      },
+      {
+        "__type": "MeleeEnemy",
+        "__guid": "fd9b5349-aacf-41de-baa4-5942a436d8dd",
+        "__enabled": true,
+        "Flags": 0,
+        "agent": {
+          "_type": "component",
+          "component_id": "3f407b4f-97bf-4207-a23c-9309ce46c792",
+          "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
+          "component_type": "NavMeshAgent"
+        },
+        "damage": 25,
+        "hp": 100,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "repathDistance": 64
       }
     ],
     "Children": [

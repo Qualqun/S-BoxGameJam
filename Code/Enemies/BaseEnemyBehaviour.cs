@@ -8,40 +8,38 @@ public struct EnemyStats
 }
 
 
-public sealed class EnemyBehaviour : Component
+public class BaseEnemyBehaviour : Component
 {
 	[Property, Group( "stats" )] public float hp { get; set; } = 100f;
 	[Property, Group( "stats" )] public float damage { get; set; } = 25f;
 
+	[Property, Group( "Refs" )] protected NavMeshAgent agent { get; set; }
+	[Property, Group( "Refs" )] protected float repathDistance { get; set; } = 64f;
 
-	[Property, Group( "Refs" )] NavMeshAgent agent;
-	[Property, Group( "Refs" )] float repathDistance { get; set; } = 64f;
-
-
-
-	List<GameObject> players;
-	GameObject target;
-	float targetDist = float.MaxValue;
-	bool isAttacking = false;
+	protected List<PlayerBehaviour> players;
+	public GameManager gameManager { get; set; }
+	protected PlayerBehaviour target;
+	protected float targetDist = float.MaxValue;
+	protected bool noTarget = true;
 
 	protected override void OnStart()
 	{
 		base.OnStart();
 
-		if(IsProxy)
+		if ( IsProxy )
 		{
 			Destroy();
 		}
 	}
-
-
 	protected override void OnUpdate()
 	{
+		base.OnUpdate();
+
 		if ( players.Count > 0 )
 		{
 			for ( int i = 0; i < players.Count; i++ )
 			{
-				if ( players[i] == null )
+				if ( players[i] == null || players[i].isDead )
 				{
 					players.RemoveAt( i );
 					i--;
@@ -52,6 +50,7 @@ public sealed class EnemyBehaviour : Component
 
 					if ( dist < targetDist )
 					{
+						noTarget = false;
 						target = players[i];
 						targetDist = dist;
 					}
@@ -60,28 +59,28 @@ public sealed class EnemyBehaviour : Component
 		}
 		else
 		{
-			//idle animations
+			noTarget = true;
 		}
 
-		if ( !isAttacking )
+	}
+
+	protected void FollowPlayer()
+	{
+		if ( agent.TargetPosition.HasValue )
 		{
+			float targetDistance = Vector3.DistanceBetween( agent.TargetPosition.Value, target.WorldPosition );
 
-			if ( agent.TargetPosition.HasValue )
-			{
-				float targetDistance = Vector3.DistanceBetween( agent.TargetPosition.Value, target.WorldPosition );
-
-				if ( targetDistance > repathDistance )
-				{
-					agent.MoveTo( target.WorldPosition );
-				}
-			}
-			else
+			if ( targetDistance > repathDistance )
 			{
 				agent.MoveTo( target.WorldPosition );
 			}
 		}
-
+		else
+		{
+			agent.MoveTo( target.WorldPosition );
+		}
 	}
+
 
 	public void TakeDamage( float amount )
 	{
@@ -92,10 +91,10 @@ public sealed class EnemyBehaviour : Component
 			GameObject.Destroy();
 		}
 	}
-
-	public void SetPlayers( List<GameObject> allPlayers)
+	public void SetPlayers( List<PlayerBehaviour> allPlayers )
 	{
 		players = allPlayers;
 	}
+
 
 }

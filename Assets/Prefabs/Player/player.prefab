@@ -91,7 +91,7 @@
         "Flags": 0,
         "bullet": {
           "_type": "gameobject",
-          "prefab": "prefabs/bullet.prefab"
+          "prefab": "prefabs/player/playerbullet.prefab"
         },
         "controller": {
           "_type": "component",
@@ -103,6 +103,12 @@
           "_type": "gameobject",
           "go": "4da7d666-9abb-84c8-8d46-b24dfdbe0ffd"
         },
+        "model": {
+          "_type": "component",
+          "component_id": "e5728d85-77e1-4852-a22c-6cda78821502",
+          "go": "1d2f0ea9-6352-4453-bd44-3e3c7c69f0d0",
+          "component_type": "SkinnedModelRenderer"
+        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -110,10 +116,40 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "playerStats": {
+          "hp": 100,
           "moveSpeed": 1000,
           "fireRate": 1,
-          "ballSpeed": 1000
+          "ballDamage": 250,
+          "ballSpeed": 1000,
+          "timeInvulnerability": 2
         }
+      },
+      {
+        "__type": "Sandbox.CapsuleCollider",
+        "__guid": "cfc34dc4-9480-4f17-827c-62e0934a8cf8",
+        "__enabled": true,
+        "Flags": 0,
+        "ColliderFlags": 0,
+        "Elasticity": null,
+        "End": "2,0,65",
+        "Friction": null,
+        "IsTrigger": false,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OnObjectTriggerEnter": null,
+        "OnObjectTriggerExit": null,
+        "OnTriggerEnter": null,
+        "OnTriggerExit": null,
+        "Radius": 8,
+        "RollingResistance": null,
+        "Start": "5,0,8",
+        "Static": false,
+        "Surface": null,
+        "SurfaceVelocity": "0,0,0"
       }
     ],
     "Children": [
@@ -194,52 +230,6 @@
                 },
                 "Tint": "1,1,1,1",
                 "UseAnimGraph": true
-              }
-            ],
-            "Children": []
-          },
-          {
-            "__guid": "aa0b1dd3-826a-4bcf-9245-9f75a61310c1",
-            "__version": 2,
-            "Flags": 0,
-            "Name": "Collider",
-            "Position": "0,0,0",
-            "Rotation": "0,0,0,1",
-            "Scale": "1,1,1",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 2,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [
-              {
-                "__type": "Sandbox.CapsuleCollider",
-                "__guid": "61f5bc3f-6d76-4047-b12d-80a63e04d10a",
-                "__enabled": true,
-                "Flags": 0,
-                "ColliderFlags": 0,
-                "Elasticity": null,
-                "End": "2,0,65",
-                "Friction": null,
-                "IsTrigger": false,
-                "OnComponentDestroy": null,
-                "OnComponentDisabled": null,
-                "OnComponentEnabled": null,
-                "OnComponentFixedUpdate": null,
-                "OnComponentStart": null,
-                "OnComponentUpdate": null,
-                "OnObjectTriggerEnter": null,
-                "OnObjectTriggerExit": null,
-                "OnTriggerEnter": null,
-                "OnTriggerExit": null,
-                "Radius": 8,
-                "RollingResistance": null,
-                "Start": "5,0,8",
-                "Static": false,
-                "Surface": null,
-                "SurfaceVelocity": "0,0,0"
               }
             ],
             "Children": []
