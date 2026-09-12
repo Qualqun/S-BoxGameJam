@@ -49,9 +49,6 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	protected override void OnStart()
 	{
-		AddGunOutPut( new ShotgunOutPut() );
-		AddOnAirBehaviour( new HomingShot() );
-		AddEndBehaviour( new EndExplosion() );
 
 		runtimePlayerStat = basePlayerStat;
 
