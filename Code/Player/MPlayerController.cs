@@ -7,6 +7,7 @@ public sealed class MPlayerController : Component
 	[Property, Group( "Refs" )] GameObject visual { get; set; }
 	[Property, Group( "Refs" )] Rigidbody rigidbody { get; set; }
 
+
 	protected override void OnStart()
 	{
 		base.OnStart();
@@ -36,7 +37,7 @@ public sealed class MPlayerController : Component
 	void Inputs()
 	{
 		Vector3 velocity = new Vector3();
-		float speed = playerBehaviour.playerStats.moveSpeed;
+		float speed = playerBehaviour.runtimePlayerStat.moveSpeed;
 	
 		if ( Input.Down( "Forward" ) )
 		{

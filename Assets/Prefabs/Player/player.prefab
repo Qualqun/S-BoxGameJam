@@ -89,6 +89,26 @@
         "__guid": "ac55f1d4-64b7-49be-a7a3-c6e812aa6931",
         "__enabled": true,
         "Flags": 0,
+        "basePlayerStat": {
+          "hp": 100,
+          "moveSpeed": 500,
+          "fireRate": 2,
+          "timeInvulnerability": 1,
+          "statsMultiplier": {
+            "fireRateMultiplier": [],
+            "damageMultiplier": [],
+            "sizeMultiplier": []
+          },
+          "bulletInfo": {
+            "size": 1,
+            "speed": 1000,
+            "damage": 100,
+            "direction": "0,0,0",
+            "onAirBehaviours": null,
+            "endModifiers": null
+          },
+          "gunOutPuts": []
+        },
         "bullet": {
           "_type": "gameobject",
           "prefab": "prefabs/player/playerbullet.prefab"
@@ -114,15 +134,7 @@
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "playerStats": {
-          "hp": 100,
-          "moveSpeed": 1000,
-          "fireRate": 1,
-          "ballDamage": 250,
-          "ballSpeed": 1000,
-          "timeInvulnerability": 2
-        }
+        "OnComponentUpdate": null
       },
       {
         "__type": "Sandbox.CapsuleCollider",

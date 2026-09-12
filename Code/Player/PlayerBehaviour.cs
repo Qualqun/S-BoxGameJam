@@ -1,15 +1,28 @@
 using Sandbox;
 using System.Threading;
 using System.Threading.Tasks;
+
+
+public struct StatsMultiplier
+{
+	public List<float> fireRateMultiplier { get; set; }
+	public List<float> damageMultiplier { get; set; }
+	public List<float> sizeMultiplier { get; set; }
+}
+
+
 public struct PlayerStats
 {
 	public float hp { get; set; }
 	public float moveSpeed { get; set; }
 	public float fireRate { get; set; }
-	public float ballDamage { get; set; }
-	public float ballSpeed { get; set; }
 	public float timeInvulnerability { get; set; }
+	public StatsMultiplier statsMultiplier { get; set; }
+	public BulletInfo bulletInfo { get; set; }
+	[Hide] public List<GunOutPut> gunOutPuts { get; set; }
 }
+
+
 
 public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 {
@@ -17,7 +30,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	[Sync] public bool isDead { get; set; } = false;
 
 	[Header( "Stats" )]
-	[Property] public PlayerStats playerStats { get; set; }
+	[Property] public PlayerStats basePlayerStat { get; set; }
+	public PlayerStats runtimePlayerStat { get; set; }
 
 	[Property, Group( "Refs" )] GameObject gunPoint { get; set; }
 	[Property, Group( "Refs" )] GameObject bullet { get; set; }
@@ -26,6 +40,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	[Sync( SyncFlags.FromHost )] public GameManager gameManager { get; set; }
 
+
+
 	float hp;
 	bool canShoot = true;
 
@@ -33,21 +49,28 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	protected override void OnStart()
 	{
-		base.OnStart();
+		AddGunOutPut( new ShotgunOutPut() );
+		AddOnAirBehaviour( new HomingShot() );
+		AddEndBehaviour( new EndExplosion() );
 
-		hp = playerStats.hp;
+		runtimePlayerStat = basePlayerStat;
 
 		if ( IsProxy )
 		{
 			controller.Destroy();
 		}
+
+		base.OnStart();
+
 	}
 
 	async Task StartTimer( CancellationToken token )
 	{
+		float fireRate = (1f / runtimePlayerStat.fireRate).Clamp( 0.01f, float.MaxValue );
+
 		canShoot = false;
 
-		await Task.DelaySeconds( 1f / playerStats.fireRate );
+		await Task.DelaySeconds( fireRate );
 
 		if ( token.IsCancellationRequested )
 		{
@@ -67,7 +90,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		isInvulnerable = true;
 		Tags.Add( "invulnerability" );
 
-		await Task.DelaySeconds( playerStats.timeInvulnerability );
+		await Task.DelaySeconds( runtimePlayerStat.timeInvulnerability );
 
 		colorTint.a = 1f;
 		model.Tint = colorTint;
@@ -87,7 +110,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 			TakeHit( enemy.damage );
 		}
 
-		
+
 	}
 	public void TakeHit( float amount )
 	{
@@ -112,7 +135,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 				Tags.Add( "invulnerability" );
 
-				gameManager.GameState.Server_SetGameState(GameStateType.GameOver );
+				gameManager.GameState.Server_SetGameState( GameStateType.GameOver );
 			}
 			else
 			{
@@ -124,24 +147,105 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	{
 		if ( canShoot )
 		{
-			GameObject newBullet = bullet.Clone( gunPoint.WorldPosition );
-			BulletBehaviour bulletBehaviour = newBullet.GetComponent<BulletBehaviour>();
+			List<BulletInfo> bullets = new();
+			BulletInfo baseBullet = InitBaseBullet();
 
-			Vector3 direction = gunPoint.WorldPosition - WorldPosition;
+			bullets.Add( baseBullet );
 
-			direction = direction.WithZ( 0 );
+			if ( runtimePlayerStat.gunOutPuts != null && runtimePlayerStat.gunOutPuts.Count > 0 )
+			{
+				foreach ( GunOutPut modifier in runtimePlayerStat.gunOutPuts )
+				{
+					List<BulletInfo> newBullets = new();
 
-			bulletBehaviour.speed = playerStats.ballSpeed;
-			bulletBehaviour.damage = playerStats.ballDamage;
-			bulletBehaviour.direction = direction.Normal;
-			bulletBehaviour.gameManager = gameManager;
+					foreach ( BulletInfo bulletInfo in bullets )
+					{
+						modifier.OutPutBehaviour( bulletInfo, newBullets );
+					}
 
-			newBullet.NetworkSpawn();
+					bullets = newBullets;
+				}
+
+			}
+
+
+			foreach ( BulletInfo bulletInfo in bullets )
+			{
+				GameObject newBullet = bullet.Clone( gunPoint.WorldPosition );
+				BulletBehaviour bulletBehaviour = newBullet.GetComponent<BulletBehaviour>();
+
+				bulletBehaviour.InitBall( bulletInfo, gameManager );
+
+				newBullet.NetworkSpawn();
+			}
 
 
 			cancellation = new CancellationTokenSource();
 			_ = StartTimer( cancellation.Token );
 		}
 	}
+
+
+	BulletInfo InitBaseBullet()
+	{
+		Vector3 direction = gunPoint.WorldPosition - WorldPosition;
+		BulletInfo newBulletInfo = runtimePlayerStat.bulletInfo;
+
+		direction = direction.WithZ( 0 );
+		newBulletInfo.direction = direction.Normal;
+
+		return newBulletInfo;
+	}
+
+	#region Upgrade methods
+
+
+	[Rpc.Owner]
+	public void AddGunOutPut( GunOutPut newModifier )
+	{
+		PlayerStats playerStats = basePlayerStat;
+
+		if ( playerStats.gunOutPuts == null )
+		{
+			playerStats.gunOutPuts = new List<GunOutPut>();
+		}
+
+		playerStats.gunOutPuts.Add( newModifier );
+		basePlayerStat = playerStats;
+	}
+
+	[Rpc.Owner]
+	public void AddOnAirBehaviour( OnAirModifier newModifier )
+	{
+		PlayerStats playerStats = basePlayerStat;
+		BulletInfo bulletInfo = playerStats.bulletInfo;
+
+		if ( bulletInfo.onAirBehaviours == null )
+		{
+			bulletInfo.onAirBehaviours = new List<OnAirModifier>();
+		}
+
+		bulletInfo.onAirBehaviours.Add( newModifier );
+		playerStats.bulletInfo = bulletInfo;
+		basePlayerStat = playerStats;
+	}
+
+	[Rpc.Owner]
+	public void AddEndBehaviour( EndModifier newModifier )
+	{
+		PlayerStats playerStats = basePlayerStat;
+		BulletInfo bulletInfo = playerStats.bulletInfo;
+
+		if ( bulletInfo.endModifiers == null )
+		{
+			bulletInfo.endModifiers = new List<EndModifier>();
+		}
+
+		bulletInfo.endModifiers.Add( newModifier );
+		playerStats.bulletInfo = bulletInfo;
+		basePlayerStat = playerStats;
+	}
+
+	#endregion
 
 }
