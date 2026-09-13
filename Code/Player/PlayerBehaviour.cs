@@ -58,8 +58,6 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		base.OnStart();
 	}
 
-
-
 	async Task StartTimer( CancellationToken token )
 	{
 		float fireRate = (1f / runtimePlayerStat.fireRate).Clamp( 0.01f, float.MaxValue );
@@ -108,6 +106,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 
 	}
+
 	public void TakeHit( float amount )
 	{
 		if ( !isInvulnerable )
@@ -139,6 +138,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 			}
 		}
 	}
+
 	public void Fire()
 	{
 		if ( canShoot )
@@ -180,7 +180,6 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 			_ = StartTimer( cancellation.Token );
 		}
 	}
-
 
 	BulletInfo InitBaseBullet()
 	{
@@ -442,6 +441,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		runtimePlayerStat = basePlayerStat;
 		hp = runtimePlayerStat.hp;
 		canShoot = true;
+		isDead = false;
 
 	}
 
