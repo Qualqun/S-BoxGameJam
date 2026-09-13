@@ -1,4 +1,5 @@
 using Sandbox;
+using System.IO.Compression;
 using static Sandbox.Services.Stats;
 
 public struct BulletInfo
@@ -15,10 +16,33 @@ public sealed class BulletBehaviour : Component
 {
 	public BulletInfo bulletInfo { get; set; }
 	public GameManager gameManager { get; set; }
+	public List<GameObject> enemyHit = new List<GameObject>();
 
 
-	public void InitBall( BulletInfo newInfo, GameManager manager )
+	public void InitBall( BulletInfo baseinfo, GameManager manager )
 	{
+		BulletInfo newInfo = baseinfo;
+
+		if ( baseinfo.onAirBehaviours != null && baseinfo.onAirBehaviours.Count > 0 )
+		{
+			newInfo.onAirBehaviours = new List<OnAirModifier>();
+
+			foreach ( OnAirModifier modifier in baseinfo.onAirBehaviours )
+			{
+				newInfo.onAirBehaviours.Add( modifier.Clone() );
+			}
+		}
+
+		if ( baseinfo.endModifiers != null && baseinfo.endModifiers.Count > 0 )
+		{
+			newInfo.endModifiers = new List<EndModifier>();
+
+			foreach ( EndModifier modifier in baseinfo.endModifiers )
+			{
+				newInfo.endModifiers.Add( modifier.Clone() );
+			}
+		}
+
 		bulletInfo = newInfo;
 		gameManager = manager;
 
@@ -30,7 +54,7 @@ public sealed class BulletBehaviour : Component
 		ModifiersBehaviour();
 	}
 
-	void SetNewDirection( Vector3 newDirection )
+	public void SetNewDirection( Vector3 newDirection )
 	{
 		BulletInfo newInfo = bulletInfo;
 
@@ -41,6 +65,7 @@ public sealed class BulletBehaviour : Component
 
 	void ModifiersBehaviour()
 	{
+
 		SceneTraceResult traceResult;
 		Vector3 nextStep;
 
@@ -48,11 +73,10 @@ public sealed class BulletBehaviour : Component
 
 		if ( bulletInfo.onAirBehaviours != null && bulletInfo.onAirBehaviours.Count > 0 )
 		{
-			Log.Info( "On air " );
 
 			foreach ( OnAirModifier modifier in bulletInfo.onAirBehaviours )
 			{
-				direction = modifier.GetNewDirection( direction );
+				direction = modifier.GetNewDirection( direction, this );
 			}
 
 			SetNewDirection( direction );
@@ -61,45 +85,41 @@ public sealed class BulletBehaviour : Component
 		nextStep = WorldPosition + bulletInfo.direction * bulletInfo.speed * Time.Delta;
 		traceResult = Scene.Trace.Sphere( 32f * WorldScale.x, WorldPosition, nextStep ).WithoutTags( "player", "bullet", "enemybullet" ).Run();
 
-
 		if ( traceResult.Hit )
 		{
 			bool destroyBullet = true;
+			GameObject collideObj = traceResult.Collider.GameObject;
 
-			if ( bulletInfo.onAirBehaviours != null && bulletInfo.onAirBehaviours.Count > 0 )
+			if ( bulletInfo.endModifiers != null && bulletInfo.endModifiers.Count > 0 )
 			{
-				foreach ( OnAirModifier modifier in bulletInfo.onAirBehaviours )
+				foreach ( EndModifier modifier in bulletInfo.endModifiers )
 				{
 					if ( !modifier.EndBehaviour( traceResult, this ) )
 					{
 						destroyBullet = false;
 					}
 				}
+
 			}
 
-			if ( bulletInfo.endModifiers != null && bulletInfo.endModifiers.Count > 0 )
-			{
-				foreach ( EndModifier modifier in bulletInfo.endModifiers )
-				{
-					modifier.EndBehaviour( this );
-				}
-			}
-
-			if ( traceResult.HasTag( "Enemy" ) )
+			if ( traceResult.HasTag( "enemy" ) && !enemyHit.Contains( collideObj ) )
 			{
 				BaseEnemyBehaviour enemy = traceResult.Collider.GetComponent<BaseEnemyBehaviour>();
 
 				if ( enemy != null )
 				{
+					enemyHit.Add( collideObj );
 					gameManager.EnemyTakeDamage( enemy, bulletInfo.damage );
 				}
 			}
 
+
 			if ( destroyBullet )
 			{
 				GameObject.Destroy();
-				return;
 			}
+
+			return;
 
 		}
 

@@ -2,14 +2,17 @@ using Sandbox;
 
 public class OnAirModifier
 {
-	public virtual Vector3 GetNewDirection( Vector3 baseDirection )
+	public int level = 1;
+
+	public virtual Vector3 GetNewDirection( Vector3 baseDirection, BulletBehaviour bullet )
 	{
 		return baseDirection;
 	}
 
-	public virtual bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet)
+
+	public virtual OnAirModifier Clone()
 	{
-		return true;
+		return new OnAirModifier();
 	}
 
 }
@@ -17,10 +20,43 @@ public class OnAirModifier
 
 public class HomingShot : OnAirModifier
 {
-	public override Vector3 GetNewDirection( Vector3 baseDirection )
+	public override Vector3 GetNewDirection( Vector3 baseDirection, BulletBehaviour bullet )
 	{
-		Vector3 newDirection = baseDirection + Vector3.Left;
+		Vector3 newDirection = baseDirection;
+		Scene scene = bullet.GameObject.Scene;
+		List<SceneTraceResult> allResults =
+			scene.Trace.Sphere( 100f, bullet.WorldPosition, bullet.WorldPosition + Vector3.Forward ).WithAllTags( "enemy" ).RunAll().ToList();
+
+
+		if ( allResults != null && allResults.Count > 0 )
+		{
+			Vector3 directionToEnemy;
+			Vector3 targetPos = Vector3.Zero;
+			Vector3 bulletPos = bullet.WorldPosition;
+
+			float targetDist = float.MaxValue;
+			float powerHoming = 3f * Time.Delta;
+
+			foreach ( SceneTraceResult result in allResults )
+			{
+				Vector3 enemyPos = result.Collider.WorldPosition;
+				float distance = Vector3.DistanceBetween( enemyPos, bulletPos );
+
+				if ( distance < targetDist )
+				{
+					targetPos = enemyPos;
+					targetDist = distance;
+				}
+			}
+
+			directionToEnemy = (targetPos - bulletPos).WithZ( 0 ).Normal;
+
+			newDirection = Vector3.Lerp( baseDirection, directionToEnemy, powerHoming );
+			newDirection = newDirection.WithZ( 0 ).Normal;
+		}
+
 
 		return newDirection.Normal;
 	}
 }
+

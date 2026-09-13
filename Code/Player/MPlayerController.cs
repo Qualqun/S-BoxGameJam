@@ -24,8 +24,9 @@ public sealed class MPlayerController : Component
 
 	void PlayerRotation()
 	{
+		Vector3 gunPointOffSet = Vector3.Up * playerBehaviour.gunPoint.WorldPosition.z;
 		Ray ray = camera.ScreenPixelToRay( Mouse.Position );
-		SceneTraceResult trace = Scene.Trace.Ray( ray.Position, ray.Position + ray.Forward * 5000f ).WithTag("ground").Run();
+		SceneTraceResult trace = Scene.Trace.Ray( ray.Position - gunPointOffSet, ray.Position + ray.Forward * 5000f - gunPointOffSet ).WithTag("ground").Run();
 
 		Vector3 direction = trace.EndPosition - visual.WorldPosition;
 

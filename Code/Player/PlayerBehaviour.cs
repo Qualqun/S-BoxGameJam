@@ -33,7 +33,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	[Property] public PlayerStats basePlayerStat { get; set; }
 	public PlayerStats runtimePlayerStat { get; set; }
 
-	[Property, Group( "Refs" )] GameObject gunPoint { get; set; }
+	[Property, Group( "Refs" )] public GameObject gunPoint { get; set; }
 	[Property, Group( "Refs" )] GameObject bullet { get; set; }
 	[Property, Group( "Refs" )] MPlayerController controller { get; set; }
 	[Property, Group( "Refs" )] ModelRenderer model { get; set; }
@@ -60,6 +60,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		base.OnStart();
 
 	}
+
+	
 
 	async Task StartTimer( CancellationToken token )
 	{
@@ -223,6 +225,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		}
 
 		bulletInfo.onAirBehaviours.Add( newModifier );
+
 		playerStats.bulletInfo = bulletInfo;
 		basePlayerStat = playerStats;
 	}

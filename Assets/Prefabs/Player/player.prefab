@@ -100,8 +100,8 @@
             "sizeMultiplier": []
           },
           "bulletInfo": {
-            "size": 1,
-            "speed": 1000,
+            "size": 0.25,
+            "speed": 500,
             "damage": 100,
             "direction": "0,0,0",
             "onAirBehaviours": null,
