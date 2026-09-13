@@ -28,20 +28,21 @@ public sealed class GameState : Component
 	[Sync( SyncFlags.FromHost )]
 	public int CurrentRound { get; private set; }
 
-	[Sync( SyncFlags.FromHost ), Property]
-	public float TimePerRound { get; private set; }
-
-	[Sync( SyncFlags.FromHost ), Property]
-	public float TimePerWaitingRound { get; private set; }
-
-	[Sync( SyncFlags.FromHost ), Property]
-	public float TimeGameOver { get; private set; }
+	[Sync( SyncFlags.FromHost )]
+	public float PhaseTimer { get; private set; }
 
 	public List<GameObject> Players { get; private set; } = new List<GameObject>();
 	public List<GameObject> Enemies { get; set; } = new List<GameObject>();
 
 
 	#region Server Setters
+
+	public void Server_SetPhaseTimer( float timer )
+	{
+		if ( !Networking.IsHost )
+			return;
+		PhaseTimer = timer;
+	}	
 
 	public void Server_SetGameState( GameStateType state )
 	{
@@ -51,12 +52,6 @@ public sealed class GameState : Component
 		State = state;
 	}
 
-	public void Server_SetTimePerWaitingRound( float time )
-	{
-		if ( !Networking.IsHost )
-			return;
-		TimePerWaitingRound = time;
-	}
 
 	public void Server_SetPlayerCount( int count )
 	{
@@ -70,13 +65,6 @@ public sealed class GameState : Component
 		if ( !Networking.IsHost )
 			return;
 		CurrentRound = round;
-	}
-
-	public void Server_SetTimePerRound( float time )
-	{
-		if ( !Networking.IsHost )
-			return;
-		TimePerRound = time;
 	}
 
 	public void Server_AddPlayer( GameObject player )

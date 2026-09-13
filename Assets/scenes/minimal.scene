@@ -321,13 +321,21 @@
               "go": "87e7835a-c9f6-44c5-a367-09d86863f349"
             }
           ],
-          "StartDelay": 2,
-          "StartZone": null,
+          "StartZone": {
+            "_type": "component",
+            "component_id": "23581b7c-c3b3-4815-abd2-bdfc4c465de9",
+            "go": "f9834c81-f700-4cd7-9492-add1d640059e",
+            "component_type": "BoxCollider"
+          },
           "StatsGrowth": {
             "spawnRate": 0.2,
             "enemyHp": 10,
             "enemyDamage": 5
-          }
+          },
+          "TimeGameOver": 5,
+          "TimePerRound": 30,
+          "TimePerWaitingRound": 5,
+          "TimeStart": 5
         },
         {
           "__type": "GameState",
@@ -339,10 +347,7 @@
           "OnComponentEnabled": null,
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "TimeGameOver": 5,
-          "TimePerRound": 30,
-          "TimePerWaitingRound": 5
+          "OnComponentUpdate": null
         },
         {
           "__type": "ClientManager",
@@ -12944,6 +12949,75 @@
               "Children": []
             }
           ]
+        }
+      ]
+    },
+    {
+      "__guid": "c81d4dc8-62a2-43f3-a538-bd82ef8d1b48",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "UI",
+      "Position": "168.964417,-127.78495,208.69989",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [],
+      "Children": [
+        {
+          "__guid": "8f41be84-8b81-4c1e-9ef3-f2ebf2b2a5ac",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "GameHUD",
+          "Position": "0,0,0",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.ScreenPanel",
+              "__guid": "5e75d120-3204-4aef-b726-b97d6ddcafc7",
+              "__enabled": true,
+              "Flags": 0,
+              "AutoScreenScale": true,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Opacity": 1,
+              "Scale": 1,
+              "ScaleStrategy": "ConsistentHeight",
+              "TargetCamera": null,
+              "Timing": "AfterPostProcess",
+              "ZIndex": 100
+            },
+            {
+              "__type": "Sandbox.UI.GameHUD",
+              "__guid": "ed1840d3-3482-477f-8b83-683f60dabf9b",
+              "__enabled": true,
+              "Flags": 0,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null
+            }
+          ],
+          "Children": []
         }
       ]
     }

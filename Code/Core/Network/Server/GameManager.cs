@@ -20,8 +20,19 @@ public sealed class GameManager : Component
 	[Property, Group( "Refs" )]
 	public BoxCollider StartZone { get; set; }
 
-	[Property, Group( "Stats" )]
-	public float StartDelay { get; set; } = 5f;
+	
+	[Description( "Phases timer values" )]
+	[Property, Group( "Timers" )]
+	public float TimePerRound { get; private set; }
+
+	[Property, Group( "Timers" )]
+	public float TimePerWaitingRound { get; private set; }
+
+	[Property, Group( "Timers" )]
+	public float TimeGameOver { get; private set; }
+
+	[Property, Group( "Timers" )]
+	public float TimeStart { get; set; } = 5f;
 
 	[Description( "Number of enemy in one second" )]
 	[Property, Group( "Stats" )]
@@ -44,9 +55,6 @@ public sealed class GameManager : Component
 
 	List<PlayerBehaviour> Players { get; set; } = new List<PlayerBehaviour>();
 	List<GameObject> Enemies { get; set; } = new List<GameObject>();
-
-	float PhaseTimer { get; set; } = 0f;
-
 	CancellationTokenSource Cancellation;
 
 
@@ -63,10 +71,10 @@ public sealed class GameManager : Component
 
 		// Initial game state.
 		GameState.Server_SetGameState( GameStateType.WaitingForPlayers );
-		GameState.Server_SetPlayerCount( Connection.All.Count );
+		//GameState.Server_SetPlayerCount( Connection.All.Count );
 		GameState.Server_SetCurrentRound( 0 );
 
-		PhaseTimer = 0f;
+		GameState.Server_SetPhaseTimer( 0f );
 
 		Log.Info( "[GameManager] Initialized." );
 	}
@@ -84,7 +92,8 @@ public sealed class GameManager : Component
 		const float FixedDeltaTime = 0.02f;
 
 		// Timer shared
-		PhaseTimer += FixedDeltaTime;
+		if ( GameState.State != GameStateType.WaitingForPlayers )
+			GameState.Server_SetPhaseTimer(MathF.Max( 0f, GameState.PhaseTimer - FixedDeltaTime ));
 
 		// Phases of the game loop based on the current game state
 		switch ( GameState.State )
@@ -124,7 +133,7 @@ public sealed class GameManager : Component
 		// Debug countdown
 		if ( GameState.State == GameStateType.Starting )
 		{
-			float remaining = MathF.Max( 0f, StartDelay - PhaseTimer );
+			float remaining = MathF.Max( 0f, TimeStart - GameState.PhaseTimer );
 
 			Log.Info( $"Start countdown: {remaining:F1}s" );
 		}
@@ -138,12 +147,12 @@ public sealed class GameManager : Component
 		// Debug waiting timer
 		if ( GameState.State == GameStateType.WaitingForNextRound )
 		{
-			Log.Info( $"Next round in: {PhaseTimer:F1}s / {GameState.TimePerWaitingRound:F1}s" );
+			Log.Info( $"Next round in: {GameState.PhaseTimer:F1}s / {TimePerWaitingRound:F1}s" );
 		}
 
 		if ( GameState.State == GameStateType.GameOver )
 		{
-			Log.Info( $"Game Over timer: {PhaseTimer:F1}s / {GameState.TimeGameOver:F1}s" );
+			Log.Info( $"Game Over timer: {GameState.PhaseTimer:F1}s / {TimeGameOver:F1}s" );
 		}
 	}
 
@@ -194,8 +203,7 @@ public sealed class GameManager : Component
 		//}
 
 		// Reset phase timer before starting.
-		PhaseTimer = 0f;
-
+		GameState.Server_SetPhaseTimer( TimeStart );
 		GameState.Server_SetGameState( GameStateType.Starting );
 
 		Log.Info( "[GameManager] Game starting countdown..." );
@@ -213,8 +221,7 @@ public sealed class GameManager : Component
 		if ( GameState.State != GameStateType.Starting )
 			return;
 
-		PhaseTimer = 0f;
-
+		GameState.Server_SetPhaseTimer( 0f );
 		GameState.Server_SetGameState( GameStateType.WaitingForPlayers );
 
 		Log.Info( "[GameManager] Game starting countdown canceled." );
@@ -227,68 +234,46 @@ public sealed class GameManager : Component
 
 	void StartRoutine()
 	{
-		if ( PhaseTimer >= StartDelay )
+		if ( GameState.PhaseTimer <= 0f )
 		{
-			PhaseTimer = 0f;
-
-			GameState.Server_SetCurrentRound(
-				GameState.CurrentRound + 1
-			);
-
-			GameState.Server_SetGameState( GameStateType.Playing );
-
-			Log.Info( "[GameManager] Game officially started!" );
+			GameState.Server_SetCurrentRound( GameState.CurrentRound + 1 );
+			GameState.Server_SetPhaseTimer(TimePerRound);
+			GameState.Server_SetGameState(GameStateType.Playing);
 
 			StartRoundSpawner();
 		}
 	}
-
-
-	private void PlayRoutine()
-	{
-		if ( PhaseTimer >= GameState.TimePerRound )
-		{
-			PhaseTimer = 0f;
-
-			StopRoundSpawner();
-
-			GameState.Server_SetGameState(
-				GameStateType.WaitingForNextRound
-			);
-
-			Log.Info( "[GameManager] Round finished." );
-		}
-	}
-
-
 	private void WaitingForNextRoundRoutine()
 	{
-		if ( PhaseTimer >= GameState.TimePerWaitingRound )
+		if ( GameState.PhaseTimer <= 0f )
 		{
-			PhaseTimer = 0f;
-
 			StopRoundSpawner();
 
-			GameState.Server_SetGameState(
-				GameStateType.Playing
-			);
+			GameState.Server_SetPhaseTimer( TimePerRound );
+			GameState.Server_SetGameState( GameStateType.Playing );
 
 			StartRoundSpawner();
-
-			Log.Info( "[GameManager] Next round started." );
 		}
 	}
-	private void GameOverRoutine()
+	private void PlayRoutine()
 	{
-		if ( PhaseTimer >= GameState.TimeGameOver )
+		if ( GameState.PhaseTimer <= 0f )
 		{
 			StopRoundSpawner();
 
-			GameState.Server_SetGameState(
-				GameStateType.WaitingForNextRound
-			);
+			GameState.Server_SetPhaseTimer(TimePerWaitingRound);
+			GameState.Server_SetGameState(GameStateType.WaitingForNextRound);
+		}
+	}
 
-			PhaseTimer = 0f;
+	private void GameOverRoutine()
+	{
+		if ( GameState.PhaseTimer <= 0f )
+		{
+			StopRoundSpawner();
+
+			GameState.Server_SetGameState(GameStateType.WaitingForNextRound);
+			GameState.Server_SetPhaseTimer(TimePerWaitingRound);
 
 			Log.Info( "[GameManager] Players should restart" );
 		}
@@ -328,8 +313,7 @@ public sealed class GameManager : Component
 
 	async Task RoundSpawner( CancellationToken token )
 	{
-		float spawnDelay =
-			1f / (BaseSpawnRate + StatsGrowth.spawnRate * GameState.CurrentRound);
+		float spawnDelay = 1f / (BaseSpawnRate + StatsGrowth.spawnRate * GameState.CurrentRound);
 
 		while ( !token.IsCancellationRequested )
 		{

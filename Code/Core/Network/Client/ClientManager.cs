@@ -32,6 +32,7 @@ public class ClientManager : Component, Component.INetworkListener
 		Log.Info( $"[ClientManager] New player active: {connection.DisplayName} | Is local : {connection == Connection.Local} | Is host {connection == Connection.Host}" );
 
 		GameManager?.SpawnPlayer( connection );
+		GameManager?.GameState?.Server_SetPlayerCount( Connection.All.Count );
 
 	}
 
