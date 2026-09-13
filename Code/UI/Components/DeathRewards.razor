@@ -1,0 +1,82 @@
+@using Sandbox
+@using Sandbox.UI
+@inherits PanelComponent
+@namespace Sandbox
+
+<root class="death-rewards">
+
+	<div class="death-title">
+		You Died
+	</div>
+
+	<div class="death-subtitle">
+		Choose a reward to come back stronger!
+	</div>
+
+	<div class="rewards">
+
+		<div class="reward-card">
+			<div class="reward-image">
+				<img src="ui/rewards/health.png" />
+			</div>
+
+			<div class="reward-title">
+				Survival Heart
+			</div>
+
+			<div class="reward-passive">
+				Recover 20% additional health when you respawn.
+			</div>
+		</div>
+
+		<div class="reward-card">
+			<div class="reward-image">
+				<img src="ui/rewards/speed.png" />
+			</div>
+
+			<div class="reward-title">
+				Speed Boost
+			</div>
+
+			<div class="reward-passive">
+				Increases movement speed by 15% for a few seconds.
+			</div>
+		</div>
+
+		<div class="reward-card">
+			<div class="reward-image">
+				<img src="ui/rewards/damage.png" />
+			</div>
+
+			<div class="reward-title">
+				Explosive
+			</div>
+
+			<div class="reward-passive">
+				Attacks deal 25% additional damage for 10 seconds.
+			</div>
+		</div>
+
+	</div>
+
+</root>
+
+@code
+{
+	protected override void OnStart()
+	{
+		base.OnStart();
+
+		Panel.AddClass("hidden");
+	}
+
+	public void Show()
+	{
+		Panel.RemoveClass("hidden");
+	}
+
+	public void Hide()
+	{
+		Panel.AddClass("hidden");
+	}
+}

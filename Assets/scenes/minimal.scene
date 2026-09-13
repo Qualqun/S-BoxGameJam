@@ -12967,7 +12967,38 @@
       "NetworkOrphaned": 0,
       "NetworkTransmit": true,
       "OwnerTransfer": 1,
-      "Components": [],
+      "Components": [
+        {
+          "__type": "UIManager",
+          "__guid": "5d508ba5-953d-4fa7-8cf4-5a0b37c23fdd",
+          "__enabled": true,
+          "Flags": 0,
+          "ContinuePrompt": {
+            "_type": "component",
+            "component_id": "b8a53277-a993-4b04-a77c-0e8a250bdf1b",
+            "go": "e7dff19b-2120-43eb-9737-347ba5018dbd",
+            "component_type": "ContinuePrompt"
+          },
+          "DeathRewards": {
+            "_type": "component",
+            "component_id": "f83666c3-3f8e-443b-a3d8-5385b76e5d4d",
+            "go": "fc706737-bca5-4306-ace4-eeb7ea6edc32",
+            "component_type": "DeathRewards"
+          },
+          "GameHud": {
+            "_type": "component",
+            "component_id": "ffea8af1-ef9b-412e-abe0-ce1d034e7496",
+            "go": "8f41be84-8b81-4c1e-9ef3-f2ebf2b2a5ac",
+            "component_type": "GameHUD"
+          },
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        }
+      ],
       "Children": [
         {
           "__guid": "8f41be84-8b81-4c1e-9ef3-f2ebf2b2a5ac",
@@ -13005,8 +13036,114 @@
               "ZIndex": 100
             },
             {
-              "__type": "Sandbox.UI.GameHUD",
-              "__guid": "ed1840d3-3482-477f-8b83-683f60dabf9b",
+              "__type": "Sandbox.GameHUD",
+              "__guid": "ffea8af1-ef9b-412e-abe0-ce1d034e7496",
+              "__enabled": true,
+              "Flags": 0,
+              "GameState": {
+                "_type": "component",
+                "component_id": "40841857-4b79-438c-b036-d1581eeedb17",
+                "go": "6308e9fd-2ee1-40c4-aa6b-0deb242610a3",
+                "component_type": "GameState"
+              },
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null
+            }
+          ],
+          "Children": []
+        },
+        {
+          "__guid": "fc706737-bca5-4306-ace4-eeb7ea6edc32",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "DeathReward",
+          "Position": "0,0,0",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.ScreenPanel",
+              "__guid": "a5c59a48-ce19-4e23-950e-1acd8cec5a7a",
+              "__enabled": true,
+              "Flags": 0,
+              "AutoScreenScale": true,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Opacity": 1,
+              "Scale": 1,
+              "ScaleStrategy": "ConsistentHeight",
+              "TargetCamera": null,
+              "Timing": "AfterPostProcess",
+              "ZIndex": 100
+            },
+            {
+              "__type": "Sandbox.DeathRewards",
+              "__guid": "f83666c3-3f8e-443b-a3d8-5385b76e5d4d",
+              "__enabled": true,
+              "Flags": 0,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null
+            }
+          ],
+          "Children": []
+        },
+        {
+          "__guid": "e7dff19b-2120-43eb-9737-347ba5018dbd",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "ContinuePrompt",
+          "Position": "0,0,0",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.ScreenPanel",
+              "__guid": "0b67f0e8-8dea-4c17-8f9b-91c18e1b78e3",
+              "__enabled": true,
+              "Flags": 0,
+              "AutoScreenScale": true,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Opacity": 1,
+              "Scale": 1,
+              "ScaleStrategy": "ConsistentHeight",
+              "TargetCamera": null,
+              "Timing": "AfterPostProcess",
+              "ZIndex": 100
+            },
+            {
+              "__type": "Sandbox.ContinuePrompt",
+              "__guid": "b8a53277-a993-4b04-a77c-0e8a250bdf1b",
               "__enabled": true,
               "Flags": 0,
               "OnComponentDestroy": null,

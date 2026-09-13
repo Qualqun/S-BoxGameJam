@@ -1,0 +1,44 @@
+@using Sandbox
+@using Sandbox.UI
+@inherits PanelComponent
+@namespace Sandbox
+
+<root class="continue-prompt">
+
+	<div class="prompt-title">
+		One more round?
+	</div>
+
+	<div class="choices">
+
+		<div class="choice yes">
+			YES
+		</div>
+
+		<div class="choice no">
+			NO
+		</div>
+
+	</div>
+
+</root>
+
+@code
+{
+	protected override void OnStart()
+	{
+		base.OnStart();
+
+		Panel.AddClass("hidden");
+	}
+
+	public void Show()
+	{
+		Panel.RemoveClass("hidden");
+	}
+
+	public void Hide()
+	{
+		Panel.AddClass("hidden");
+	}
+}

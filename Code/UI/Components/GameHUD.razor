@@ -2,6 +2,7 @@
 @using Sandbox.UI
 @using System
 @inherits PanelComponent
+@namespace Sandbox
 
 <root class="game-hud">
 
@@ -30,12 +31,15 @@
 
 @code
 {
-	private GameState GameState => Scene.Get<GameState>();
+	[Property]
+	public GameState GameState { get; set; }
+
 
 	private string TimerText =>
 		GameState is null
 			? "0"
 			: $"{MathF.Ceiling(GameState.PhaseTimer)}";
+
 
 	private string PhaseText =>
 		GameState is null
@@ -49,6 +53,7 @@
 				GameStateType.GameOver => "Game Over",
 				_ => ""
 			};
+
 
 	private string PlayerCountText =>
 		GameState is null
@@ -66,5 +71,24 @@
 			(int)MathF.Ceiling(GameState.PhaseTimer),
 			GameState.PlayerCount
 		);
+	}
+}
+@code
+{
+	protected override void OnStart()
+	{
+		base.OnStart();
+
+		// Panel.AddClass("hidden");
+	}
+
+	public void Show()
+	{
+		Panel.RemoveClass("hidden");
+	}
+
+	public void Hide()
+	{
+		Panel.AddClass("hidden");
 	}
 }

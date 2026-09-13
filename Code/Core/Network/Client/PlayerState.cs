@@ -1,32 +1,23 @@
-//using Sandbox;
+public sealed class PlayerState : Component
+{
+	[Sync( SyncFlags.FromHost )]
+	public float MaxHp { get; set; }
 
-//public enum GameStateType
-//{
-//	WaitingForPlayers,
-//	Starting,
-//	Playing,
-//	GameOver
-//}
+	[Sync( SyncFlags.FromHost )]
+	public float MoveSpeed { get; set; }
 
-//public struct RoundGrowth
-//{
+	[Sync( SyncFlags.FromHost )]
+	public float FireRate { get; set; }
 
-//}
+	[Sync( SyncFlags.FromHost )]
+	public float BulletDamage { get; set; }
 
-//public sealed class GameState : Component
-//{
-//	[Sync( SyncFlags.FromHost )]
-//	public GameStateType State { get; set; } = GameStateType.WaitingForPlayers;
+	[Sync( SyncFlags.FromHost )]
+	public float BulletSize { get; set; }
 
-//	[Sync( SyncFlags.FromHost )]
-//	public int PlayerCount { get; set; }
+	[Sync( SyncFlags.FromHost )]
+	public float BulletSpeed { get; set; }
 
-//	[Sync( SyncFlags.FromHost )]
-//	public int CurrentRound { get; set; }
-
-//	[Sync( SyncFlags.FromHost ), Property]
-//	public float TimePerRound { get; set; }
-
-//	public List<GameObject> Players { get; set; } = new List<GameObject>();
-//	public List<GameObject> Enemies { get; set; } = new List<GameObject>();
-//}
+	[Sync( SyncFlags.FromHost )]
+	public float TimeInvulnerability { get; set; }
+}
