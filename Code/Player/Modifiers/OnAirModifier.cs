@@ -9,12 +9,10 @@ public class OnAirModifier
 		return baseDirection;
 	}
 
-
 	public virtual OnAirModifier Clone()
 	{
 		return new OnAirModifier();
 	}
-
 }
 
 

@@ -117,9 +117,10 @@ public sealed class BulletBehaviour : Component
 			if ( destroyBullet )
 			{
 				GameObject.Destroy();
+				return;
+
 			}
 
-			return;
 
 		}
 

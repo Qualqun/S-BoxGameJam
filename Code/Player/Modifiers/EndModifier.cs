@@ -65,7 +65,7 @@ public class Percing : EndModifier
 		{
 			enemyEncountered.Add( collisionObj );
 
-			if( !alreadyEncountered )
+			if ( !alreadyEncountered )
 			{
 				nbPercing--;
 
@@ -91,28 +91,35 @@ public class Percing : EndModifier
 
 }
 
+public class EndExplosion : EndModifier
+{
+	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet )
+	{
+		GameObject bulletObj = bullet.GameObject;
+		BulletInfo bulletInfo = bullet.bulletInfo;
+		int nbBullets = 8;
+		int anglePerBullet = 360 / nbBullets;
 
 
-//public class EndExplosion : EndModifier
-//{
-//	public override void EndBehaviour( BulletBehaviour bullet ) 
-//	{
-//		GameObject bulletObj = bullet.GameObject;
+		bulletInfo.endModifiers = null;
+		bulletInfo.size /= 2f;
+		bulletInfo.direction = Vector3.Forward;
 
-//		GameObject newBullet = bulletObj.Clone( bulletObj.WorldPosition );
-//		BulletBehaviour bulletBehaviour = newBullet.GetComponent<BulletBehaviour>();
+		for ( int i = 0; i < nbBullets; i++ )
+		{
+			GameObject newBullet = bulletObj.Clone( bulletObj.WorldPosition );
+			BulletBehaviour bulletBehaviour = newBullet.GetComponent<BulletBehaviour>();
 
-//		BulletInfo bulletInfo = bullet.bulletInfo;
+			bulletBehaviour.InitBall( bulletInfo, bullet.gameManager );
+			bulletInfo.direction = Rotation.FromYaw( anglePerBullet ) * bulletInfo.direction;
+			newBullet.NetworkSpawn();
+		}
 
-//		bulletInfo.direction *= -1;
-//		bulletInfo.size /= 2f;
+		return true;
+	}
 
-//		bulletInfo.onAirBehaviours = null;
-//		bulletInfo.endModifiers = null;
-
-//		bulletBehaviour.InitBall( bulletInfo, bullet.gameManager );
-
-//		newBullet.NetworkSpawn();
-
-//	}
-//}
+	public override EndExplosion Clone()
+	{
+		return new EndExplosion();
+	}
+}

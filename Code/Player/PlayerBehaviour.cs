@@ -9,7 +9,7 @@ public struct StatsMultiplier
 	public List<float> damageMultiplier { get; set; }
 	public List<float> sizeMultiplier { get; set; }
 }
-
+	
 
 public struct PlayerStats
 {
@@ -40,8 +40,6 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	[Sync( SyncFlags.FromHost )] public GameManager gameManager { get; set; }
 
-
-
 	float hp;
 	bool canShoot = true;
 
@@ -49,8 +47,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	protected override void OnStart()
 	{
-
 		runtimePlayerStat = basePlayerStat;
+		hp = runtimePlayerStat.hp;
 
 		if ( IsProxy )
 		{
@@ -58,10 +56,9 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		}
 
 		base.OnStart();
-
 	}
 
-	
+
 
 	async Task StartTimer( CancellationToken token )
 	{
@@ -198,7 +195,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	#region Upgrade methods
 
-
+	#region Bullet modifiers methods
 	[Rpc.Owner]
 	public void AddGunOutPut( GunOutPut newModifier )
 	{
@@ -245,7 +242,211 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		playerStats.bulletInfo = bulletInfo;
 		basePlayerStat = playerStats;
 	}
+	#endregion
+
+	#region Multiplier methods
+
+	[Rpc.Owner]
+	public void AddFireRateMultiplier( float multiplier )
+	{
+		PlayerStats playerStats = basePlayerStat;
+		StatsMultiplier statsMultiplier = playerStats.statsMultiplier;
+
+		if ( statsMultiplier.fireRateMultiplier == null )
+		{
+			statsMultiplier.fireRateMultiplier = new List<float>();
+		}
+
+		statsMultiplier.fireRateMultiplier.Add( multiplier );
+
+		playerStats.statsMultiplier = statsMultiplier;
+		playerStats.fireRate *= multiplier;
+
+		basePlayerStat = playerStats;
+	}
+
+	[Rpc.Owner]
+	public void AddDamageMultiplier( float multiplier )
+	{
+		PlayerStats playerStats = basePlayerStat;
+		BulletInfo bulletInfo = playerStats.bulletInfo;
+		StatsMultiplier statsMultiplier = playerStats.statsMultiplier;
+
+		if ( statsMultiplier.damageMultiplier == null )
+		{
+			statsMultiplier.damageMultiplier = new List<float>();
+		}
+
+		statsMultiplier.damageMultiplier.Add( multiplier );
+
+		playerStats.statsMultiplier = statsMultiplier;
+		bulletInfo.damage *= multiplier;
+		playerStats.bulletInfo = bulletInfo;
+
+		basePlayerStat = playerStats;
+	}
+
+	[Rpc.Owner]
+	public void AddSizeMultiplier( float multiplier )
+	{
+		PlayerStats playerStats = basePlayerStat;
+		BulletInfo bulletInfo = playerStats.bulletInfo;
+		StatsMultiplier statsMultiplier = playerStats.statsMultiplier;
+
+		if ( statsMultiplier.sizeMultiplier == null )
+		{
+			statsMultiplier.sizeMultiplier = new List<float>();
+		}
+
+		statsMultiplier.sizeMultiplier.Add( multiplier );
+
+		playerStats.statsMultiplier = statsMultiplier;
+		bulletInfo.size *= multiplier;
+		playerStats.bulletInfo = bulletInfo;
+
+		basePlayerStat = playerStats;
+	}
 
 	#endregion
 
+	#region Base stats methods
+
+	[Rpc.Owner]
+	public void AddHp( float amount )
+	{
+		PlayerStats playerStats = basePlayerStat;
+
+		playerStats.hp += amount;
+
+		basePlayerStat = playerStats;
+		runtimePlayerStat = playerStats;
+	}
+
+	[Rpc.Owner]
+	public void AddMoveSpeed( float amount )
+	{
+		PlayerStats playerStats = basePlayerStat;
+
+		playerStats.moveSpeed += amount;
+
+		basePlayerStat = playerStats;
+		runtimePlayerStat = playerStats;
+	}
+
+	[Rpc.Owner]
+	public void AddFireRate( float amount )
+	{
+		PlayerStats playerStats = basePlayerStat;
+		float trueAmount = amount;
+
+		if ( playerStats.statsMultiplier.fireRateMultiplier!= null && playerStats.statsMultiplier.fireRateMultiplier.Count > 0 )
+		{
+			foreach ( float multiplier in playerStats.statsMultiplier.fireRateMultiplier )
+			{
+				trueAmount *= multiplier;
+			}
+		}
+
+		playerStats.fireRate += trueAmount;
+
+		basePlayerStat = playerStats;
+		runtimePlayerStat = playerStats;
+	}
+
+	[Rpc.Owner]
+	public void AddTimeInvulnerability( float amount )
+	{
+		PlayerStats playerStats = basePlayerStat;
+
+		playerStats.timeInvulnerability += amount;
+
+		basePlayerStat = playerStats;
+		runtimePlayerStat = playerStats;
+	}
+
+	[Rpc.Owner]
+	public void AddBulletDamage( float amount )
+	{
+		PlayerStats playerStats = basePlayerStat;
+		BulletInfo bulletInfo = playerStats.bulletInfo;
+
+		float trueAmount = amount;
+
+
+		if ( playerStats.statsMultiplier.damageMultiplier != null && playerStats.statsMultiplier.damageMultiplier.Count > 0 )
+		{
+			foreach ( float multiplier in playerStats.statsMultiplier.damageMultiplier )
+			{
+				trueAmount *= multiplier;
+			}
+		}
+
+
+		bulletInfo.damage += trueAmount;
+		playerStats.bulletInfo = bulletInfo;
+
+		basePlayerStat = playerStats;
+		runtimePlayerStat = playerStats;
+	}
+
+	[Rpc.Owner]
+	public void AddBulletSize( float amount )
+	{
+		PlayerStats playerStats = basePlayerStat;
+		BulletInfo bulletInfo = playerStats.bulletInfo;
+		float trueAmount = amount;
+
+
+		if ( playerStats.statsMultiplier.sizeMultiplier != null && playerStats.statsMultiplier.sizeMultiplier.Count > 0)
+		{
+			foreach ( float multiplier in playerStats.statsMultiplier.sizeMultiplier )
+			{
+				trueAmount *= multiplier;
+			}
+		}
+			
+		bulletInfo.size += trueAmount;
+		playerStats.bulletInfo = bulletInfo;
+
+		basePlayerStat = playerStats;
+		runtimePlayerStat = playerStats;
+	}
+
+	[Rpc.Owner]
+	public void AddBulletSpeed( float amount )
+	{
+		PlayerStats playerStats = basePlayerStat;
+		BulletInfo bulletInfo = playerStats.bulletInfo;
+
+		bulletInfo.speed += amount;
+		playerStats.bulletInfo = bulletInfo;
+
+		basePlayerStat = playerStats;
+		runtimePlayerStat = playerStats;
+	}
+
+	#endregion
+
+	#endregion
+
+	[Rpc.Owner]
+	public void ResetPlayer()
+	{
+		Color colorTint = model.Tint;
+
+		colorTint = Color.White;
+		colorTint.a = 1f;
+
+		model.Tint = colorTint;
+		Tags.Remove( "invulnerability" );
+		runtimePlayerStat = basePlayerStat;
+		hp = runtimePlayerStat.hp;
+		canShoot = true;
+
+	}
+
 }
+
+
+
+
