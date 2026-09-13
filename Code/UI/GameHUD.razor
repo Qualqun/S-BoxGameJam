@@ -1,0 +1,70 @@
+@using Sandbox
+@using Sandbox.UI
+@using System
+@inherits PanelComponent
+
+<root class="game-hud">
+
+	<!-- Timer -->
+	@if (GameState?.State != GameStateType.WaitingForPlayers)
+	{
+		<div class="timer">
+			@TimerText
+		</div>
+	}
+
+	<!-- Phase -->
+	<div class="phase-text">
+		@PhaseText
+	</div>
+
+	<!-- Lobby player count -->
+	@if (GameState?.State == GameStateType.WaitingForPlayers)
+	{
+		<div class="player-count">
+			@PlayerCountText
+		</div>
+	}
+
+</root>
+
+@code
+{
+	private GameState GameState => Scene.Get<GameState>();
+
+	private string TimerText =>
+		GameState is null
+			? "0"
+			: $"{MathF.Ceiling(GameState.PhaseTimer)}";
+
+	private string PhaseText =>
+		GameState is null
+			? ""
+			: GameState.State switch
+			{
+				GameStateType.WaitingForPlayers => "Head to the start zone or wait for your team...",
+				GameStateType.Starting => "All players are ready, the game is starting!",
+				GameStateType.Playing => "",
+				GameStateType.WaitingForNextRound => "Next round starting...",
+				GameStateType.GameOver => "Game Over",
+				_ => ""
+			};
+
+	private string PlayerCountText =>
+		GameState is null
+			? "0/4"
+			: $"{GameState.PlayerCount}/4";
+
+
+	protected override int BuildHash()
+	{
+		if (GameState is null)
+			return 0;
+
+		return HashCode.Combine(
+			GameState.State,
+			(int)MathF.Ceiling(GameState.PhaseTimer),
+			GameState.PlayerCount
+		);
+	}
+}
