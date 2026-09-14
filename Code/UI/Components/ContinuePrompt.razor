@@ -1,5 +1,6 @@
 @using Sandbox
 @using Sandbox.UI
+@using System.Linq
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -11,7 +12,7 @@
 
 	<div class="choices">
 
-		<div class="choice yes">
+		<div class="choice yes" @onclick=@OnYesClicked>
 			YES
 		</div>
 
@@ -20,7 +21,6 @@
 		</div>
 
 	</div>
-
 </root>
 
 @code
@@ -40,5 +40,18 @@
 	public void Hide()
 	{
 		Panel.AddClass("hidden");
+	}
+
+	private void OnYesClicked()
+	{
+		GameManager gameManager = Scene.GetAllComponents<GameManager>().FirstOrDefault();
+
+		if (gameManager != null)
+		{
+			gameManager.Broadcast_ShowDeathRewards();
+			Hide(); 
+		}
+		else
+			Log.Warning("GameManager not found in the scene!");
 	}
 }
