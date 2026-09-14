@@ -7,7 +7,7 @@ public partial class Power : GameResource
 	public string Title { get; set; }
 
 	[Property]
-	public int Id { get; set; }
+	public BoostType BoostType { get; set; }
 
 	[Property]
 	public Texture Image { get; set; }

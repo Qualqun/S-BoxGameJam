@@ -3,65 +3,50 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 
 public struct StatsPerRound
 {
 	[Description( "Number of enemy in one second" )]
 	public float spawnRate { get; set; }
-
 	public float enemyHp { get; set; }
 	public float enemyDamage { get; set; }
 }
 
-
-// Run only on the host
 public sealed class GameManager : Component
 {
 	[Property, Group( "Refs" )]
 	public BoxCollider StartZone { get; set; }
 
-	
 	[Description( "Phases timer values" )]
-	[Property, Group( "Timers" )]
-	public float TimePerRound { get; private set; }
+	[Property, Group( "Timers" )] public float TimePerRound { get; private set; }
 
-	[Property, Group( "Timers" )]
-	public float TimePerWaitingRound { get; private set; }
+	[Property, Group( "Timers" )] public float TimePerWaitingRound { get; private set; }
 
-	[Property, Group( "Timers" )]
-	public float TimeGameOver { get; private set; }
+	[Property, Group( "Timers" )] public float TimeGameOver { get; private set; }
 
-	[Property, Group( "Timers" )]
-	public float TimeStart { get; set; } = 5f;
+	[Property, Group( "Timers" )] public float TimeStart { get; set; } = 5f;
 
 	[Description( "Number of enemy in one second" )]
-	[Property, Group( "Stats" )]
-	public float BaseSpawnRate { get; set; } = 1f;
+	[Property, Group( "Stats" )] public float BaseSpawnRate { get; set; } = 1f;
 
-	[Property, Group( "Stats" )]
-	public StatsPerRound StatsGrowth { get; set; }
+	[Property, Group( "Stats" )] public StatsPerRound StatsGrowth { get; set; }
 
-	[Property, Group( "Refs" )]
-	public GameState GameState { get; set; }
+	[Property, Group( "Refs" )] public GameState GameState { get; set; }
 
-	[Property, Group( "Refs" )]
-	public GameObject PlayerPrefab { get; set; }
+	[Property, Group( "Refs" )] public GameObject PlayerPrefab { get; set; }
 
-	[Property, Group( "List Refs" )]
-	public List<GameObject> EnemiesPrefabs { get; set; }
+	[Property, Group( "List Refs" )] public List<GameObject> EnemiesPrefabs { get; set; }
 
-	[Property, Group( "List Refs" )]
-	public List<GameObject> SpawnPoints { get; set; }
+	[Property, Group( "List Refs" )] public List<GameObject> SpawnPoints { get; set; }
 
 	List<PlayerBehaviour> Players { get; set; } = new List<PlayerBehaviour>();
 	List<GameObject> Enemies { get; set; } = new List<GameObject>();
 	CancellationTokenSource Cancellation;
 
-
 	protected override void OnStart()
 	{
-		if ( !Networking.IsHost )
-			return;
+		if ( !Networking.IsHost ) return;
 
 		if ( GameState == null )
 		{
@@ -69,11 +54,8 @@ public sealed class GameManager : Component
 			return;
 		}
 
-		// Initial game state.
 		GameState.Server_SetGameState( GameStateType.WaitingForPlayers );
-		//GameState.Server_SetPlayerCount( Connection.All.Count );
 		GameState.Server_SetCurrentRound( 0 );
-
 		GameState.Server_SetPhaseTimer( 0f );
 
 		Log.Info( "[GameManager] Initialized." );
@@ -83,42 +65,36 @@ public sealed class GameManager : Component
 	{
 		base.OnFixedUpdate();
 
-		if ( !Networking.IsHost )
+		if ( !Networking.IsHost ) 
 			return;
 
-		if ( GameState == null )
+		if ( GameState == null ) 
 			return;
 
 		const float FixedDeltaTime = 0.02f;
 
-		// Timer shared
 		if ( GameState.State != GameStateType.WaitingForPlayers )
-			GameState.Server_SetPhaseTimer(MathF.Max( 0f, GameState.PhaseTimer - FixedDeltaTime ));
+			GameState.Server_SetPhaseTimer( MathF.Max( 0f, GameState.PhaseTimer - FixedDeltaTime ) );
 
-		// Phases of the game loop based on the current game state
 		switch ( GameState.State )
 		{
-			case GameStateType.Starting:
-				StartRoutine();
+			case GameStateType.Starting: 
+				StartRoutine(); 
 				break;
 
-			case GameStateType.Playing:
-				PlayRoutine();
+			case GameStateType.Playing: 
+				PlayRoutine(); 
 				break;
 
-			case GameStateType.WaitingForNextRound:
-				WaitingForNextRoundRoutine();
+			case GameStateType.WaitingForNextRound: 
+				WaitingForNextRoundRoutine(); 
 				break;
 
-			case GameStateType.GameOver:
-				GameOverRoutine();
-				break;
-
-			default:
+			case GameStateType.GameOver: 
+				GameOverRoutine(); 
 				break;
 		}
 	}
-
 
 	protected override void OnUpdate()
 	{
@@ -128,23 +104,12 @@ public sealed class GameManager : Component
 		if ( GameState == null )
 			return;
 
-		//GameState.Server_SetPlayerCount( Connection.All.Count );
-
-		// Debug countdown
 		if ( GameState.State == GameStateType.Starting )
 		{
 			float remaining = MathF.Max( 0f, TimeStart - GameState.PhaseTimer );
-
 			Log.Info( $"Start countdown: {remaining:F1}s" );
 		}
 
-		// Debug round timer
-		if ( GameState.State == GameStateType.Playing )
-		{
-			//Log.Info( $"Round timer: {PhaseTimer:F1}s / {GameState.TimePerRound:F1}s" );
-		}
-
-		// Debug waiting timer
 		if ( GameState.State == GameStateType.WaitingForNextRound )
 		{
 			Log.Info( $"Next round in: {GameState.PhaseTimer:F1}s / {TimePerWaitingRound:F1}s" );
@@ -156,12 +121,46 @@ public sealed class GameManager : Component
 		}
 	}
 
+	public void CheckPlayersState()
+	{
+		if ( !Networking.IsHost ) return;
+
+		bool allDead = true;
+
+		// check if all players are dead
+		foreach ( var player in Players )
+		{
+			if ( player.State.Life > 0 )
+			{
+				allDead = false;
+				break;
+			}
+		}
+
+		// If all players are dead, show the death rewards UI and transition to GameOver
+		if ( allDead && GameState.State != GameStateType.GameOver )
+		{
+			GameState.Server_SetGameState( GameStateType.GameOver );
+			Broadcast_ShowDeathRewards();
+		}
+	}
+
+	[Rpc.Broadcast]
+	public void Broadcast_ShowDeathRewards()
+	{
+		DeathRewards panel = Scene.GetAllComponents<DeathRewards>().FirstOrDefault();
+
+		if ( panel != null )
+			panel.Show();
+		else
+			Log.Warning( "DeathRewards not found in the scene!" );
+	}
 
 	#region Game Initialization
 
 	public void SpawnPlayer( Connection connection )
 	{
-		if ( !Networking.IsHost )
+		if ( !Networking.IsHost ) 
 			return;
 
 		if ( PlayerPrefab == null )
@@ -177,58 +176,42 @@ public sealed class GameManager : Component
 		playerBehaviour.gameManager = this;
 
 		player.NetworkSpawn( connection );
-
 		Log.Info( $"[GameManager] Spawned player for {connection.DisplayName}" );
 	}
 
-
 	public void PlayerEnteredStartArea( PlayerBehaviour player )
 	{
-		if ( !Networking.IsHost )
+		if ( !Networking.IsHost ) 
 			return;
 
-		if ( GameState == null )
+		if ( GameState == null ) 
 			return;
 
-		if ( GameState.State != GameStateType.WaitingForPlayers )
-		{
-			Log.Info( "[GameManager] Game is already in progress. Cannot start a new game." );
+		if ( GameState.State != GameStateType.WaitingForPlayers ) 
 			return;
-		}
 
-		//if ( GameState.PlayerReadyCount != GameState.PlayerCount )
-		//{
-		//	Log.Info( "[GameManager] Not enough players to start the game." );
-		//	return;
-		//}
-
-		// Reset phase timer before starting.
 		GameState.Server_SetPhaseTimer( TimeStart );
 		GameState.Server_SetGameState( GameStateType.Starting );
-
 		Log.Info( "[GameManager] Game starting countdown..." );
 	}
 
-
 	public void PlayerLeftStartArea( PlayerBehaviour player )
 	{
-		if ( !Networking.IsHost )
+		if ( !Networking.IsHost ) 
 			return;
 
-		if ( GameState == null )
+		if ( GameState == null ) 
 			return;
 
-		if ( GameState.State != GameStateType.Starting )
+		if ( GameState.State != GameStateType.Starting ) 
 			return;
 
 		GameState.Server_SetPhaseTimer( 0f );
 		GameState.Server_SetGameState( GameStateType.WaitingForPlayers );
-
 		Log.Info( "[GameManager] Game starting countdown canceled." );
 	}
 
 	#endregion
-
 
 	#region Gameplay loop
 
@@ -237,32 +220,30 @@ public sealed class GameManager : Component
 		if ( GameState.PhaseTimer <= 0f )
 		{
 			GameState.Server_SetCurrentRound( GameState.CurrentRound + 1 );
-			GameState.Server_SetPhaseTimer(TimePerRound);
-			GameState.Server_SetGameState(GameStateType.Playing);
-
+			GameState.Server_SetPhaseTimer( TimePerRound );
+			GameState.Server_SetGameState( GameStateType.Playing );
 			StartRoundSpawner();
 		}
 	}
+
 	private void WaitingForNextRoundRoutine()
 	{
 		if ( GameState.PhaseTimer <= 0f )
 		{
 			StopRoundSpawner();
-
 			GameState.Server_SetPhaseTimer( TimePerRound );
 			GameState.Server_SetGameState( GameStateType.Playing );
-
 			StartRoundSpawner();
 		}
 	}
+
 	private void PlayRoutine()
 	{
 		if ( GameState.PhaseTimer <= 0f )
 		{
 			StopRoundSpawner();
-
-			GameState.Server_SetPhaseTimer(TimePerWaitingRound);
-			GameState.Server_SetGameState(GameStateType.WaitingForNextRound);
+			GameState.Server_SetPhaseTimer( TimePerWaitingRound );
+			GameState.Server_SetGameState( GameStateType.WaitingForNextRound );
 		}
 	}
 
@@ -271,30 +252,22 @@ public sealed class GameManager : Component
 		if ( GameState.PhaseTimer <= 0f )
 		{
 			StopRoundSpawner();
-
-			GameState.Server_SetGameState(GameStateType.WaitingForNextRound);
-			GameState.Server_SetPhaseTimer(TimePerWaitingRound);
-
+			GameState.Server_SetGameState( GameStateType.WaitingForNextRound );
+			GameState.Server_SetPhaseTimer( TimePerWaitingRound );
 			Log.Info( "[GameManager] Players should restart" );
 		}
 	}
 
 	void StartRoundSpawner()
 	{
-		// Stop a previous spawner if one exists.
 		StopRoundSpawner();
-
 		Cancellation = new CancellationTokenSource();
-
 		_ = RoundSpawner( Cancellation.Token );
 	}
 
-
 	void StopRoundSpawner()
 	{
-		if ( Cancellation == null )
-			return;
-
+		if ( Cancellation == null ) return;
 		Cancellation.Cancel();
 		Cancellation.Dispose();
 		Cancellation = null;
@@ -308,7 +281,6 @@ public sealed class GameManager : Component
 		player.TakeHit( amount );
 	}
 
-
 	#region Enemies methods
 
 	async Task RoundSpawner( CancellationToken token )
@@ -318,40 +290,24 @@ public sealed class GameManager : Component
 		while ( !token.IsCancellationRequested )
 		{
 			await Task.DelaySeconds( spawnDelay );
-
-			if ( token.IsCancellationRequested )
-				break;
-
+			if ( token.IsCancellationRequested ) break;
 			SpawnEnemy();
 		}
 	}
 
-
 	void SpawnEnemy()
 	{
-		if ( EnemiesPrefabs == null  || EnemiesPrefabs.Count == 0)
-		{
-			Log.Error( "[GameManager] EnemyPrefab is not assigned." );
-			return;
-		}
-
-		if ( SpawnPoints == null || SpawnPoints.Count == 0 )
-		{
-			Log.Error( "[GameManager] No spawn points assigned." );
-			return;
-		}
-
+		if ( EnemiesPrefabs == null || EnemiesPrefabs.Count == 0 ) return;
+		if ( SpawnPoints == null || SpawnPoints.Count == 0 ) return;
 
 		int spawnPoint = Game.Random.Int( SpawnPoints.Count - 1 );
 		int enemyType = Game.Random.Int( EnemiesPrefabs.Count - 1 );
-
 		Vector3 position = SpawnPoints[spawnPoint].WorldPosition;
 
 		GameObject enemyPrefab = EnemiesPrefabs[enemyType];
 		GameObject enemy = enemyPrefab.Clone( position );
 
 		BaseEnemyBehaviour enemyBehaviour = enemy.GetComponent<BaseEnemyBehaviour>();
-
 		enemy.NetworkSpawn();
 
 		enemyBehaviour.gameManager = this;
@@ -362,14 +318,11 @@ public sealed class GameManager : Component
 		Enemies.Add( enemy );
 	}
 
-
 	[Rpc.Host]
 	public void EnemyTakeDamage( BaseEnemyBehaviour enemy, float amount )
 	{
 		enemy.TakeDamage( amount );
 	}
-
-
 
 	#endregion
 }

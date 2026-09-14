@@ -92,26 +92,6 @@
         "__guid": "ac55f1d4-64b7-49be-a7a3-c6e812aa6931",
         "__enabled": true,
         "Flags": 0,
-        "basePlayerStat": {
-          "hp": 100,
-          "moveSpeed": 500,
-          "fireRate": 8,
-          "timeInvulnerability": 1,
-          "statsMultiplier": {
-            "fireRateMultiplier": [],
-            "damageMultiplier": [],
-            "sizeMultiplier": []
-          },
-          "bulletInfo": {
-            "size": 0.25,
-            "speed": 500,
-            "damage": 25,
-            "direction": "0,0,0",
-            "onAirBehaviours": null,
-            "endModifiers": null
-          },
-          "gunOutPuts": []
-        },
         "bullet": {
           "_type": "gameobject",
           "prefab": "prefabs/player/playerbullet.prefab"
@@ -138,6 +118,7 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
+        "State": null,
         "ui": {
           "_type": "component",
           "component_id": "99aaa9a6-603c-426a-be59-df844272564b",
@@ -171,6 +152,32 @@
         "Static": false,
         "Surface": null,
         "SurfaceVelocity": "0,0,0"
+      },
+      {
+        "__type": "PlayerState",
+        "__guid": "28a22751-d9f3-44e3-b3e2-af68d1912b50",
+        "__enabled": true,
+        "Flags": 0,
+        "ActiveModifiers": [],
+        "BaseBulletDamage": 10,
+        "BaseBulletSize": 0.2,
+        "BaseBulletSpeed": 500,
+        "BaseFireRate": 2,
+        "DamageMultiplier": 1,
+        "FireRateMultiplier": 1,
+        "Hp": 100,
+        "Life": 3,
+        "MaxHp": 100,
+        "MaxLife": 3,
+        "MoveSpeed": 250,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "SizeMultiplier": 1,
+        "TimeInvulnerability": 1
       }
     ],
     "Children": [

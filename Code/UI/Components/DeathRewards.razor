@@ -1,10 +1,12 @@
 @using Sandbox
 @using Sandbox.UI
+@using System.Collections.Generic
+@using System.Linq
+@using System;
 @inherits PanelComponent
 @namespace Sandbox
 
 <root class="death-rewards">
-
 	<div class="death-title">
 		You Died
 	</div>
@@ -14,69 +16,78 @@
 	</div>
 
 	<div class="rewards">
+		@foreach (var power in ActivePowers)
+		{
+			<div class="reward-card" @onclick=@( () => OnRewardClicked( power ) )>
+				<div class="reward-image">
 
-		<div class="reward-card">
-			<div class="reward-image">
-				<img src="ui/rewards/health.png" />
+					<img texture=@power.Image />
+				</div>
+
+				<div class="reward-title">
+					@power.Title
+				</div>
+
+				<div class="reward-passive">
+					@power.Description
+				</div>
 			</div>
-
-			<div class="reward-title">
-				Survival Heart
-			</div>
-
-			<div class="reward-passive">
-				Recover 20% additional health when you respawn.
-			</div>
-		</div>
-
-		<div class="reward-card">
-			<div class="reward-image">
-				<img src="ui/rewards/speed.png" />
-			</div>
-
-			<div class="reward-title">
-				Speed Boost
-			</div>
-
-			<div class="reward-passive">
-				Increases movement speed by 15% for a few seconds.
-			</div>
-		</div>
-
-		<div class="reward-card">
-			<div class="reward-image">
-				<img src="ui/rewards/damage.png" />
-			</div>
-
-			<div class="reward-title">
-				Explosive
-			</div>
-
-			<div class="reward-passive">
-				Attacks deal 25% additional damage for 10 seconds.
-			</div>
-		</div>
-
+		}
 	</div>
-
 </root>
 
 @code
 {
+	public List<Power> ActivePowers { get; set; } = new List<Power>();
+
 	protected override void OnStart()
 	{
 		base.OnStart();
-
 		Panel.AddClass("hidden");
 	}
 
 	public void Show()
 	{
+		GenerateRandomRewards();
 		Panel.RemoveClass("hidden");
 	}
 
 	public void Hide()
 	{
 		Panel.AddClass("hidden");
+	}
+
+	private void GenerateRandomRewards()
+	{
+		var allPowers = ResourceLibrary.GetAll<Power>().ToList();
+
+		if (allPowers.Count == 0)
+		{
+			Log.Warning("Aucun fichier .power n'a été trouvé !");
+			return;
+		}
+
+		Random rng = new Random();
+		var shuffledPowers = allPowers.OrderBy(x => rng.Next()).ToList();
+
+		ActivePowers = shuffledPowers.Take(3).ToList();
+
+		StateHasChanged();
+	}
+
+	private void OnRewardClicked(Power selectedPower)
+	{
+		PlayerState localPlayerState = Scene.GetAllComponents<PlayerState>().FirstOrDefault(p => !p.IsProxy);
+
+		if (localPlayerState != null)
+		{
+			localPlayerState.ApplyBoost(selectedPower.BoostType);
+
+			Hide();
+		}
+		else
+		{
+			Log.Error("Impossible de trouver le PlayerState local.");
+		}
 	}
 }

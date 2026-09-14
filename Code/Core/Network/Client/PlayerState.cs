@@ -1,23 +1,158 @@
+using Sandbox;
+using System.Collections.Generic;
+
+public enum BoostType
+{
+	Hp,
+	MoveSpeed,
+	FireRate,
+	TimeInvulnerability,
+	BulletDamage,
+	BulletSize,
+	BulletSpeed,
+	Shotgun,
+	Uzi,
+	Sniper,
+	Percing,
+	Bounce,
+	Explosion,
+	HomingShot
+}
+
+public enum ModifierType
+{
+	Shotgun,
+	Uzi,
+	Sniper,
+	Percing,
+	Bounce,
+	Explosion,
+	HomingShot
+}
+
 public sealed class PlayerState : Component
 {
-	[Sync( SyncFlags.FromHost )]
-	public float MaxHp { get; set; }
+	[Property, Sync] public int MaxLife { get; set; } = 3;
+	[Property, Sync] public int Life { get; set; } = 3;
 
-	[Sync( SyncFlags.FromHost )]
-	public float MoveSpeed { get; set; }
+	[Property, Sync] public float MaxHp { get; set; } = 100f;
+	[Property, Sync] public float Hp { get; set; } = 100f;
+	[Property, Sync] public float MoveSpeed { get; set; } = 300f;
+	[Property, Sync] public float TimeInvulnerability { get; set; } = 1f;
+	[Property, Sync] public float BaseFireRate { get; set; } = 2f;
+	[Property, Sync] public float BaseBulletDamage { get; set; } = 10f;
+	[Property, Sync] public float BaseBulletSize { get; set; } = 1f;
+	[Property, Sync] public float BaseBulletSpeed { get; set; } = 500f;
 
-	[Sync( SyncFlags.FromHost )]
-	public float FireRate { get; set; }
+	// Multipliers
+	[Property, Sync] public float FireRateMultiplier { get; set; } = 1f;
+	[Property, Sync] public float DamageMultiplier { get; set; } = 1f;
+	[Property, Sync] public float SizeMultiplier { get; set; } = 1f;
 
-	[Sync( SyncFlags.FromHost )]
-	public float BulletDamage { get; set; }
+	// Sync modifiers
+	[Property, Sync] public NetList<ModifierType> ActiveModifiers { get; set; } = new();
 
-	[Sync( SyncFlags.FromHost )]
-	public float BulletSize { get; set; }
+	// Properties that calculate the final values based on base values and multipliers
+	public float FireRate => BaseFireRate * FireRateMultiplier;
+	public float BulletDamage => BaseBulletDamage * DamageMultiplier;
+	public float BulletSize => BaseBulletSize * SizeMultiplier;
+	public float BulletSpeed => BaseBulletSpeed;
 
-	[Sync( SyncFlags.FromHost )]
-	public float BulletSpeed { get; set; }
+	
 
-	[Sync( SyncFlags.FromHost )]
-	public float TimeInvulnerability { get; set; }
+	private void AddModifier( ModifierType modifier )
+	{
+		ActiveModifiers.Add( modifier );
+	}
+
+	public void TakeDamage( float amount )
+	{
+		Hp -= amount;
+	}
+
+	#region Authority Methods
+
+	[Authority]
+	public void Reset()
+	{
+		Life = MaxLife;
+		MaxHp = 100f;
+		Hp = 100f;
+		MoveSpeed = 300f;
+		TimeInvulnerability = 1f;
+
+		BaseFireRate = 2f;
+		BaseBulletDamage = 10f;
+		BaseBulletSize = 1f;
+		BaseBulletSpeed = 500f;
+
+		FireRateMultiplier = 1f;
+		DamageMultiplier = 1f;
+		SizeMultiplier = 1f;
+
+		ActiveModifiers.Clear();
+	}
+
+	[Authority]
+	public void ApplyBoost( BoostType boost )
+	{
+		switch ( boost )
+		{
+			case BoostType.Hp:
+				MaxHp += 20f;
+				Hp += 20f;
+				break;
+			case BoostType.MoveSpeed:
+				MoveSpeed += 50f;
+				break;
+			case BoostType.FireRate:
+				BaseFireRate += 1f;
+				break;
+			case BoostType.TimeInvulnerability:
+				TimeInvulnerability += 0.5f;
+				break;
+			case BoostType.BulletDamage:
+				BaseBulletDamage += 5f;
+				break;
+			case BoostType.BulletSize:
+				BaseBulletSize += 0.5f;
+				break;
+			case BoostType.BulletSpeed:
+				BaseBulletSpeed += 100f;
+				break;
+
+			case BoostType.Shotgun:
+				FireRateMultiplier *= 0.8f;
+				DamageMultiplier *= 0.9f;
+				AddModifier( ModifierType.Shotgun );
+				break;
+			case BoostType.Uzi:
+				FireRateMultiplier *= 2f;
+				DamageMultiplier *= 0.6f;
+				AddModifier( ModifierType.Uzi );
+				break;
+			case BoostType.Sniper:
+				FireRateMultiplier *= 0.6f;
+				DamageMultiplier *= 2f;
+				BaseBulletSpeed += 100f;
+				AddModifier( ModifierType.Sniper );
+				AddModifier( ModifierType.Percing );
+				break;
+
+			case BoostType.Percing:
+				AddModifier( ModifierType.Percing );
+				break;
+			case BoostType.Bounce:
+				AddModifier( ModifierType.Bounce );
+				break;
+			case BoostType.Explosion:
+				AddModifier( ModifierType.Explosion );
+				break;
+			case BoostType.HomingShot:
+				AddModifier( ModifierType.HomingShot );
+				break;
+		}
+	}
+
+	#endregion
 }

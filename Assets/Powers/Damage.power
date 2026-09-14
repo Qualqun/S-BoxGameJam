@@ -1,6 +1,6 @@
 {
   "Title": "Damage",
-  "Id": 1,
+  "BoostType": "BulletSize",
   "Image": null,
   "Description": "Damage test",
   "__references": [],

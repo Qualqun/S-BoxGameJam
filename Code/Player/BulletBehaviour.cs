@@ -7,9 +7,9 @@ public struct BulletInfo
 	public float size { get; set; }
 	public float speed { get; set; }
 	public float damage { get; set; }
-	[Hide] public Vector3 direction { get; set; }
-	[Hide] public List<OnAirModifier> onAirBehaviours { get; set; }
-	[Hide] public List<EndModifier> endModifiers { get; set; }
+	public Vector3 direction { get; set; }
+	public List<OnAirModifier> onAirBehaviours { get; set; }
+	public List<EndModifier> endModifiers { get; set; }
 }
 
 public sealed class BulletBehaviour : Component
@@ -18,16 +18,10 @@ public sealed class BulletBehaviour : Component
 	public GameManager gameManager { get; set; }
 	public List<GameObject> enemyHit = new List<GameObject>();
 
-
-
-
-
 	protected override void OnUpdate()
 	{
 		ModifiersBehaviour();
 	}
-
-	
 
 	void ModifiersBehaviour()
 	{
@@ -65,14 +59,10 @@ public sealed class BulletBehaviour : Component
 					bool isDestroyBullet = modifier.EndBehaviour( traceResult, this, out bool isUpdateNextStep );
 
 					if ( !isDestroyBullet )
-					{
 						destroyBullet = false;
-					}
 
 					if( isUpdateNextStep )
-					{
 						updateNextStep = true;
-					}
 
 				}
 
@@ -90,15 +80,11 @@ public sealed class BulletBehaviour : Component
 			}
 
 			if ( updateNextStep )
-			{
 				nextStep = GetNextStep();
-			}
 
 			if ( destroyBullet )
-			{
 				GameObject.Destroy();
 				return;
-			}
 		}
 
 		WorldPosition = nextStep;
