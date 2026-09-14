@@ -47,6 +47,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	protected override void OnStart()
 	{
+		AddEndBehaviour( new Bounce() );
+
 		runtimePlayerStat = basePlayerStat;
 		hp = runtimePlayerStat.hp;
 

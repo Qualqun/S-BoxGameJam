@@ -4,8 +4,9 @@ public class EndModifier
 {
 	public int level = 1;
 
-	public virtual bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet )
+	public virtual bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet, out bool updateNextStep )
 	{
+		updateNextStep = false;
 		return true;
 	}
 
@@ -19,7 +20,7 @@ public class Bounce : EndModifier
 {
 	int nbBounce = 1;
 
-	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet )
+	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet, out bool updateNextStep )
 	{
 		if ( !traceResult.HasTag( "enemy" ) && nbBounce > 0 )
 		{
@@ -31,9 +32,12 @@ public class Bounce : EndModifier
 
 			nbBounce--;
 
+			updateNextStep = true;
+
 			return false;
 		}
 
+		updateNextStep = false;
 		return true;
 	}
 
@@ -56,7 +60,7 @@ public class Percing : EndModifier
 	List<GameObject> enemyEncountered = new List<GameObject>();
 
 
-	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet )
+	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet, out bool updateNextStep )
 	{
 		GameObject collisionObj = traceResult.Collider.GameObject;
 		bool alreadyEncountered = enemyEncountered.Contains( collisionObj );
@@ -64,6 +68,8 @@ public class Percing : EndModifier
 		if ( traceResult.HasTag( "enemy" ) )
 		{
 			enemyEncountered.Add( collisionObj );
+			updateNextStep = true;
+
 
 			if ( !alreadyEncountered )
 			{
@@ -75,6 +81,7 @@ public class Percing : EndModifier
 			return false;
 		}
 
+		updateNextStep = false;
 		return true;
 	}
 
@@ -93,7 +100,7 @@ public class Percing : EndModifier
 
 public class EndExplosion : EndModifier
 {
-	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet )
+	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet, out bool updateNextStep )
 	{
 		GameObject bulletObj = bullet.GameObject;
 		BulletInfo bulletInfo = bullet.bulletInfo;
@@ -114,7 +121,7 @@ public class EndExplosion : EndModifier
 			bulletInfo.direction = Rotation.FromYaw( anglePerBullet ) * bulletInfo.direction;
 			newBullet.NetworkSpawn();
 		}
-
+		updateNextStep = false;
 		return true;
 	}
 

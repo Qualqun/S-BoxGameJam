@@ -15,7 +15,6 @@ public class OnAirModifier
 	}
 }
 
-
 public class HomingShot : OnAirModifier
 {
 	public override Vector3 GetNewDirection( Vector3 baseDirection, BulletBehaviour bullet )
