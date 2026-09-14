@@ -95,6 +95,12 @@
           "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
           "component_type": "LineRenderer"
         },
+        "model": {
+          "_type": "component",
+          "component_id": "55877364-1eab-4af3-a53b-76223c029f8a",
+          "go": "28e70bda-3ad6-4279-a730-d78983df1236",
+          "component_type": "SkinnedModelRenderer"
+        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,

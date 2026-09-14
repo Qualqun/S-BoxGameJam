@@ -1,4 +1,5 @@
 using Sandbox;
+using System.Threading.Tasks;
 
 public struct EnemyStats
 {
@@ -10,11 +11,18 @@ public struct EnemyStats
 
 public class BaseEnemyBehaviour : Component
 {
-	[Property, Group( "stats" )] public float hp { get; set; } = 100f;
-	[Property, Group( "stats" )] public float damage { get; set; } = 25f;
+	[Property, Group( "Stats" )] public float hp { get; set; } = 100f;
+	[Property, Group( "Stats" )] public float damage { get; set; } = 25f;
+
+	[Property, Group( "Game feel stats" )] protected float visualHitDuration = 0.2f;
+
 
 	[Property, Group( "Refs" )] protected NavMeshAgent agent { get; set; }
+	[Property, Group( "Refs" )] protected ModelRenderer model { get; set; }
 	[Property, Group( "Refs" )] protected float repathDistance { get; set; } = 64f;
+
+
+	Task visualHitTask;
 
 	protected List<PlayerBehaviour> players;
 	public GameManager gameManager { get; set; }
@@ -81,20 +89,65 @@ public class BaseEnemyBehaviour : Component
 		}
 	}
 
+	async Task VisualTakeHit()
+	{
+		float timer = 0f;
+
+		while ( timer <= visualHitDuration )
+		{
+			Color color = model.Tint;
+
+			color = Color.Lerp(Color.White, Color.Red, timer / visualHitDuration );
+			model.Tint = color;
+
+			Log.Info( "Test" );
+
+			timer += Time.Delta;
+
+			await Task.FrameEnd();
+		}
+
+		timer = 0f;
+
+		while ( timer <= visualHitDuration )
+		{
+			Color color = model.Tint;
+
+			color = Color.Lerp( Color.Red, Color.White, timer / visualHitDuration );
+			model.Tint = color;
+
+			Log.Info( "Test" );
+
+			timer += Time.Delta;
+
+			await Task.FrameEnd();
+		}
+
+		visualHitTask = null;
+	}
 
 	public void TakeDamage( float amount )
 	{
 		hp -= amount;
 
+		if ( visualHitTask == null )
+		{
+			visualHitTask = VisualTakeHit();
+		}
+
 		if ( hp <= 0f )
 		{
 			GameObject.Destroy();
 		}
+		 
 	}
+
 	public void SetPlayers( List<PlayerBehaviour> allPlayers )
 	{
 		players = allPlayers;
 	}
+
+
 
 
 }

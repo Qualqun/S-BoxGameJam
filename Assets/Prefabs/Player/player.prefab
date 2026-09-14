@@ -61,6 +61,9 @@
           "go": "542c5a76-c6b6-49f2-b520-8af7a8b22c6b",
           "component_type": "CameraComponent"
         },
+        "cooldown": 1,
+        "dashDuration": 0.12,
+        "dashSpeed": 3000,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -92,7 +95,7 @@
         "basePlayerStat": {
           "hp": 100,
           "moveSpeed": 500,
-          "fireRate": 2,
+          "fireRate": 8,
           "timeInvulnerability": 1,
           "statsMultiplier": {
             "fireRateMultiplier": [],
@@ -102,7 +105,7 @@
           "bulletInfo": {
             "size": 0.25,
             "speed": 500,
-            "damage": 100,
+            "damage": 25,
             "direction": "0,0,0",
             "onAirBehaviours": null,
             "endModifiers": null
@@ -134,7 +137,13 @@
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null
+        "OnComponentUpdate": null,
+        "ui": {
+          "_type": "component",
+          "component_id": "99aaa9a6-603c-426a-be59-df844272564b",
+          "go": "d148855b-9afc-46b3-aba2-e9ade15a4ed6",
+          "component_type": "PlayerUI"
+        }
       },
       {
         "__type": "Sandbox.CapsuleCollider",
@@ -378,6 +387,77 @@
                 "OnComponentUpdate": null,
                 "Scale": 0.2,
                 "TexelSize": 1
+              }
+            ],
+            "Children": []
+          }
+        ]
+      },
+      {
+        "__guid": "bfa71fb6-38a3-4881-abaa-cb6cd2a0da62",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "UI",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [],
+        "Children": [
+          {
+            "__guid": "d148855b-9afc-46b3-aba2-e9ade15a4ed6",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Screen",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Sandbox.ScreenPanel",
+                "__guid": "e1f5c2d3-88fe-4bb0-9123-858e7b9f8784",
+                "__enabled": true,
+                "Flags": 0,
+                "AutoScreenScale": true,
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "Opacity": 1,
+                "Scale": 1,
+                "ScaleStrategy": "ConsistentHeight",
+                "TargetCamera": null,
+                "Timing": "AfterPostProcess",
+                "ZIndex": 100
+              },
+              {
+                "__type": "Sandbox.PlayerUI",
+                "__guid": "99aaa9a6-603c-426a-be59-df844272564b",
+                "__enabled": true,
+                "Flags": 0,
+                "CurrentHealth": 100,
+                "MaxHealth": 100,
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null
               }
             ],
             "Children": []

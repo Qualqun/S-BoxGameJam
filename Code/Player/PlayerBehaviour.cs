@@ -9,7 +9,7 @@ public struct StatsMultiplier
 	public List<float> damageMultiplier { get; set; }
 	public List<float> sizeMultiplier { get; set; }
 }
-	
+
 
 public struct PlayerStats
 {
@@ -34,6 +34,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	public PlayerStats runtimePlayerStat { get; set; }
 
 	[Property, Group( "Refs" )] public GameObject gunPoint { get; set; }
+
+	[Property, Group( "Refs" )] PlayerUI ui { get; set; }
 	[Property, Group( "Refs" )] GameObject bullet { get; set; }
 	[Property, Group( "Refs" )] MPlayerController controller { get; set; }
 	[Property, Group( "Refs" )] ModelRenderer model { get; set; }
@@ -52,12 +54,26 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		runtimePlayerStat = basePlayerStat;
 		hp = runtimePlayerStat.hp;
 
+		ui.SetHealth( hp, runtimePlayerStat.hp );
+
 		if ( IsProxy )
 		{
 			controller.Destroy();
+			ui.Destroy();
 		}
 
 		base.OnStart();
+	}
+
+	BulletInfo InitBaseBullet()
+	{
+		Vector3 direction = gunPoint.WorldPosition - WorldPosition;
+		BulletInfo newBulletInfo = runtimePlayerStat.bulletInfo;
+
+		direction = direction.WithZ( 0 );
+		newBulletInfo.direction = direction.Normal;
+
+		return newBulletInfo;
 	}
 
 	async Task StartTimer( CancellationToken token )
@@ -78,22 +94,13 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	async Task TimerHit()
 	{
-		Color colorTint = model.Tint;
-
-		colorTint.a = 0.5f;
-		model.Tint = colorTint;
-
-		isInvulnerable = true;
-		Tags.Add( "invulnerability" );
+		SetInvulnerability( true );
 
 		await Task.DelaySeconds( runtimePlayerStat.timeInvulnerability );
 
-		colorTint.a = 1f;
-		model.Tint = colorTint;
-
-		isInvulnerable = false;
-		Tags.Remove( "invulnerability" );
+		SetInvulnerability( false );
 	}
+
 
 	public void OnCollisionStart( Collision collision )
 	{
@@ -114,6 +121,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		if ( !isInvulnerable )
 		{
 			hp -= amount;
+			ui.SetHealth( hp, runtimePlayerStat.hp );
+
 
 			if ( hp <= 0 )
 			{
@@ -123,14 +132,14 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 				colorTint.a = 0.5f;
 
 				model.Tint = colorTint;
+				Tags.Add( "invulnerability" );
 
 				canShoot = false;
+				isDead = true;
 
 				cancellation?.Cancel();
 				cancellation?.Dispose();
 				cancellation = null;
-
-				Tags.Add( "invulnerability" );
 
 				gameManager.GameState.Server_SetGameState( GameStateType.GameOver );
 			}
@@ -183,15 +192,30 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		}
 	}
 
-	BulletInfo InitBaseBullet()
+	public void SetInvulnerability( bool mode )
 	{
-		Vector3 direction = gunPoint.WorldPosition - WorldPosition;
-		BulletInfo newBulletInfo = runtimePlayerStat.bulletInfo;
+		if ( !isDead )
+		{
+			Color colorTint = model.Tint;
 
-		direction = direction.WithZ( 0 );
-		newBulletInfo.direction = direction.Normal;
+			if ( mode )
+			{
+				colorTint.a = 0.5f;
+				model.Tint = colorTint;
 
-		return newBulletInfo;
+				isInvulnerable = true;
+				Tags.Add( "invulnerability" );
+			}
+			else
+			{
+				colorTint.a = 1f;
+				model.Tint = colorTint;
+
+				isInvulnerable = false;
+				Tags.Remove( "invulnerability" );
+			}
+		}
+
 	}
 
 	#region Upgrade methods
@@ -340,7 +364,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		PlayerStats playerStats = basePlayerStat;
 		float trueAmount = amount;
 
-		if ( playerStats.statsMultiplier.fireRateMultiplier!= null && playerStats.statsMultiplier.fireRateMultiplier.Count > 0 )
+		if ( playerStats.statsMultiplier.fireRateMultiplier != null && playerStats.statsMultiplier.fireRateMultiplier.Count > 0 )
 		{
 			foreach ( float multiplier in playerStats.statsMultiplier.fireRateMultiplier )
 			{
@@ -398,14 +422,14 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		float trueAmount = amount;
 
 
-		if ( playerStats.statsMultiplier.sizeMultiplier != null && playerStats.statsMultiplier.sizeMultiplier.Count > 0)
+		if ( playerStats.statsMultiplier.sizeMultiplier != null && playerStats.statsMultiplier.sizeMultiplier.Count > 0 )
 		{
 			foreach ( float multiplier in playerStats.statsMultiplier.sizeMultiplier )
 			{
 				trueAmount *= multiplier;
 			}
 		}
-			
+
 		bulletInfo.size += trueAmount;
 		playerStats.bulletInfo = bulletInfo;
 

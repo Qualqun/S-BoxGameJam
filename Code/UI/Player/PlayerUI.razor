@@ -1,0 +1,46 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root class="player-ui">
+	<div class="health-panel">
+		<div class="health-bar">
+			<div class="health-fill" style="width: @(HealthPercent * 100f)%"></div>
+		</div>
+	</div>
+</root>
+
+@code
+{
+	[Property] public float MaxHealth { get; set; } = 100f;
+	[Property] public float CurrentHealth { get; set; } = 100f;
+
+	public float HealthPercent
+	{
+		get
+		{
+			if ( MaxHealth <= 0f )
+				return 0f;
+
+			return (CurrentHealth / MaxHealth).Clamp( 0f, 1f );
+		}
+	}
+
+	public void SetHealth( float currentHealth, float maxHealth )
+	{
+		CurrentHealth = currentHealth;
+		MaxHealth = maxHealth;
+
+		StateHasChanged();
+	}
+
+	/// <summary>
+	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+	/// </summary>
+	protected override int BuildHash() => HashCode.Combine(
+		MathF.Ceiling( CurrentHealth ),
+		MathF.Ceiling( MaxHealth )
+	);
+}

@@ -24,7 +24,7 @@ public class Bounce : EndModifier
 	{
 		if ( !traceResult.HasTag( "enemy" ) && nbBounce > 0 )
 		{
-			Vector3 newDir = Vector3.Reflect( bullet.bulletInfo.direction, traceResult.HitPosition.Normal );
+			Vector3 newDir = Vector3.Reflect( bullet.bulletInfo.direction, traceResult.Normal );
 
 			newDir = newDir.WithZ( 0 );
 
