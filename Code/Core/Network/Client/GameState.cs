@@ -31,7 +31,7 @@ public sealed class GameState : Component
 	[Sync( SyncFlags.FromHost )]
 	public float PhaseTimer { get; private set; }
 
-	public List<GameObject> Players { get; private set; } = new List<GameObject>();
+	public List<PlayerBehaviour> Players { get; private set; } = new List<PlayerBehaviour>();
 	public List<GameObject> Enemies { get; set; } = new List<GameObject>();
 
 
@@ -67,14 +67,14 @@ public sealed class GameState : Component
 		CurrentRound = round;
 	}
 
-	public void Server_AddPlayer( GameObject player )
+	public void Server_AddPlayer( PlayerBehaviour player )
 	{
 		if ( !Networking.IsHost )
 			return;
 		Players.Add( player );
 	}
 
-	public void Server_RemovePlayer( GameObject player )
+	public void Server_RemovePlayer( PlayerBehaviour player )
 	{
 		if ( !Networking.IsHost )
 			return;

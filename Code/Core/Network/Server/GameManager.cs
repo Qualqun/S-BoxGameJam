@@ -39,11 +39,9 @@ public sealed class GameManager : Component
 	[Property, Group( "List Refs" )] public List<GameObject> EnemiesPrefabs { get; set; }
 
 	[Property, Group( "List Refs" )] public List<GameObject> SpawnPoints { get; set; }
-
-	public List<GameObject> Enemies { get; set; } = new List<GameObject>();
-	List<PlayerBehaviour> Players { get; set; } = new List<PlayerBehaviour>();
-
 	CancellationTokenSource Cancellation;
+
+
 
 	protected override void OnStart()
 	{
@@ -129,7 +127,7 @@ public sealed class GameManager : Component
 		bool allDead = true;
 
 		// check if all players are dead
-		foreach ( var player in Players )
+		foreach ( var player in GameState.Players )
 		{
 			if ( player.State.Life > 0 )
 			{
@@ -155,6 +153,28 @@ public sealed class GameManager : Component
 			panel.Show();
 		else
 			Log.Warning( "DeathRewards not found in the scene!" );
+	}
+
+	[Rpc.Broadcast]
+	public void Broadcast_ShowEnemyCount()
+	{
+		GameHUD panel = Scene.GetAllComponents<GameHUD>().FirstOrDefault();
+
+		if ( panel != null )
+			panel.ShowEnemyCount();
+		else
+			Log.Warning( "ShowEnemyCount not found in the scene!" );
+	}
+
+	[Rpc.Broadcast]
+	public void Broadcast_HideEnemyCount()
+	{
+		GameHUD panel = Scene.GetAllComponents<GameHUD>().FirstOrDefault();
+
+		if ( panel != null )
+			panel.HideEnemyCount();
+		else
+			Log.Warning( "ShowEnemyCount not found in the scene!" );
 	}
 
 	[Rpc.Broadcast]
@@ -184,7 +204,7 @@ public sealed class GameManager : Component
 		GameObject player = PlayerPrefab.Clone( WorldTransform );
 		PlayerBehaviour playerBehaviour = player.GetComponent<PlayerBehaviour>();
 
-		Players.Add( playerBehaviour );
+		GameState.Server_AddPlayer( playerBehaviour );
 		playerBehaviour.gameManager = this;
 
 		player.NetworkSpawn( connection );
@@ -227,6 +247,28 @@ public sealed class GameManager : Component
 
 	#region Gameplay loop
 
+	public bool AllEnemiesDead()
+	{
+		return GameState.Enemies.All( enemy => enemy == null || !enemy.IsValid() );
+	}
+
+	public void StartNextRound()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		if ( GameState == null )
+			return;
+
+		if ( GameState.State != GameStateType.Playing )
+			return;
+
+		Broadcast_HideEnemyCount();
+
+		GameState.Server_SetPhaseTimer( TimePerWaitingRound );
+		GameState.Server_SetGameState( GameStateType.WaitingForNextRound );
+		Log.Info( "[GameManager] Starting next round all enemies are dead..." );
+	}
 	void StartRoutine()
 	{
 		if ( GameState.PhaseTimer <= 0f )
@@ -251,12 +293,17 @@ public sealed class GameManager : Component
 
 	private void PlayRoutine()
 	{
+
 		if ( GameState.PhaseTimer <= 0f )
 		{
 			StopRoundSpawner();
-			GameState.Server_SetPhaseTimer( TimePerWaitingRound );
-			GameState.Server_SetGameState( GameStateType.WaitingForNextRound );
+
+			Broadcast_ShowEnemyCount();
+
+			//GameState.Server_SetPhaseTimer( TimePerWaitingRound );
+			//GameState.Server_SetGameState( GameStateType.WaitingForNextRound );
 		}
+
 	}
 
 	private void GameOverRoutine()
@@ -314,7 +361,6 @@ public sealed class GameManager : Component
 
 		int spawnPoint = Game.Random.Int( SpawnPoints.Count - 1 );
 		int enemyType = Game.Random.Int( EnemiesPrefabs.Count - 1 );
-
 		Vector3 position = SpawnPoints[spawnPoint].WorldPosition;
 
 		GameObject enemyPrefab = EnemiesPrefabs[enemyType];
@@ -324,11 +370,11 @@ public sealed class GameManager : Component
 		enemy.NetworkSpawn();
 
 		enemyBehaviour.gameManager = this;
-		enemyBehaviour.SetPlayers( Players );
+		enemyBehaviour.SetPlayers( GameState.Players );
 		enemyBehaviour.hp += StatsGrowth.enemyHp * GameState.CurrentRound;
 		enemyBehaviour.meleDamage += StatsGrowth.enemyDamage * GameState.CurrentRound;
 
-		Enemies.Add( enemy );
+		GameState.Server_AddEnemy( enemy );
 	}
 
 	[Rpc.Host]

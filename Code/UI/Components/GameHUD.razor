@@ -1,32 +1,33 @@
 @using Sandbox
 @using Sandbox.UI
 @using System
+@using System.Linq
 @inherits PanelComponent
 @namespace Sandbox
 
 <root class="game-hud">
 
-	<!-- Timer -->
 	@if (GameState?.State != GameStateType.WaitingForPlayers)
 	{
 		<div class="timer">
 			@TimerText
 		</div>
-	}
 
-	<!-- Phase -->
-	<div class="phase-text">
-		@PhaseText
-	</div>
-
-	<!-- Lobby player count -->
-	@if (GameState?.State == GameStateType.WaitingForPlayers)
-	{
-		<div class="player-count">
-			@PlayerCountText
+		<div class="enemy-count hidden" @ref="EnemyCountPanel">
+			@EnemyCountText
 		</div>
 	}
 
+	<div class="phase-text" @ref="PhaseTextPanel">
+		@PhaseText
+	</div>
+
+	@if (GameState?.State == GameStateType.WaitingForPlayers)
+	{
+		<div class="player-count" @ref="PlayerCountPanel">
+			@PlayerCountText
+		</div>
+	}
 </root>
 
 @code
@@ -34,12 +35,19 @@
 	[Property]
 	public GameState GameState { get; set; }
 
+	public Panel EnemyCountPanel { get; set; }
+	public Panel PhaseTextPanel { get; set; }
+	public Panel PlayerCountPanel { get; set; }
 
 	private string TimerText =>
 		GameState is null
 			? "0"
 			: $"{MathF.Ceiling(GameState.PhaseTimer)}";
 
+	private string EnemyCountText =>
+		GameState?.Enemies == null
+			? "0 enemies remaining"
+			: $"{GameState.Enemies.Count()} enemies remaining";
 
 	private string PhaseText =>
 		GameState is null
@@ -54,25 +62,27 @@
 				_ => ""
 			};
 
-
 	private string PlayerCountText =>
 		GameState is null
 			? "0/4"
 			: $"{GameState.PlayerCount}/4";
-
 
 	protected override int BuildHash()
 	{
 		if (GameState is null)
 			return 0;
 
+		int enemiesCount = GameState?.Enemies != null ? GameState.Enemies.Count() : 0;
+
 		return HashCode.Combine(
 			GameState.State,
 			(int)MathF.Ceiling(GameState.PhaseTimer),
-			GameState.PlayerCount
+			GameState.PlayerCount,
+			enemiesCount
 		);
 	}
 }
+
 @code
 {
 	protected override void OnStart()
@@ -90,5 +100,22 @@
 	public void Hide()
 	{
 		Panel.AddClass("hidden");
+	}
+
+	public void ShowEnemyCount()
+	{
+		EnemyCountPanel?.RemoveClass("hidden");
+
+		PhaseTextPanel?.AddClass("hidden");
+		PlayerCountPanel?.AddClass("hidden");
+	}
+
+	public void HideEnemyCount()
+	{
+		EnemyCountPanel?.AddClass("hidden");
+
+		// Réaffiche les autres textes
+		PhaseTextPanel?.RemoveClass("hidden");
+		PlayerCountPanel?.RemoveClass("hidden");
 	}
 }
