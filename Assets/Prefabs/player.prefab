@@ -96,7 +96,10 @@
           "_type": "gameobject",
           "prefab": "prefabs/bullet.prefab"
         },
-        "cameraPivot": null,
+        "cameraPivot": {
+          "_type": "gameobject",
+          "go": "283c792e-45c3-426f-8b83-20a9e9218b9f"
+        },
         "controller": {
           "_type": "component",
           "component_id": "34e1818d-5cd0-497b-9b14-52e13135ddc7",
@@ -107,15 +110,30 @@
           "_type": "gameobject",
           "go": "4da7d666-9abb-84c8-8d46-b24dfdbe0ffd"
         },
-        "model": null,
+        "model": {
+          "_type": "component",
+          "component_id": "e5728d85-77e1-4852-a22c-6cda78821502",
+          "go": "1d2f0ea9-6352-4453-bd44-3e3c7c69f0d0",
+          "component_type": "SkinnedModelRenderer"
+        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "State": null,
-        "ui": null
+        "State": {
+          "_type": "component",
+          "component_id": "1e80ad40-4a74-4207-9c38-15c688fc2b16",
+          "go": "30f4e803-7638-466b-8c25-308351d241f7",
+          "component_type": "PlayerState"
+        },
+        "ui": {
+          "_type": "component",
+          "component_id": "99aaa9a6-603c-426a-be59-df844272564b",
+          "go": "d148855b-9afc-46b3-aba2-e9ade15a4ed6",
+          "component_type": "PlayerUI"
+        }
       },
       {
         "__type": "PlayerState",
