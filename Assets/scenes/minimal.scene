@@ -333,7 +333,7 @@
             "enemyDamage": 5
           },
           "TimeGameOver": 5,
-          "TimePerRound": 30,
+          "TimePerRound": 10,
           "TimePerWaitingRound": 5,
           "TimeStart": 5
         },
