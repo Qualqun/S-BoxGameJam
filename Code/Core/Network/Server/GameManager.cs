@@ -141,7 +141,7 @@ public sealed class GameManager : Component
 		if ( allDead && GameState.State != GameStateType.GameOver )
 		{
 			GameState.Server_SetGameState( GameStateType.GameOver );
-			Broadcast_ShowDeathRewards();
+			Broadcast_ShowContinuePrompt();
 		}
 	}
 
@@ -154,6 +154,17 @@ public sealed class GameManager : Component
 			panel.Show();
 		else
 			Log.Warning( "DeathRewards not found in the scene!" );
+	}
+
+	[Rpc.Broadcast]
+	public void Broadcast_ShowContinuePrompt()
+	{
+		ContinuePrompt panel = Scene.GetAllComponents<ContinuePrompt>().FirstOrDefault();
+
+		if ( panel != null )
+			panel.Show();
+		else
+			Log.Warning( "ContinuePrompt not found in the scene!" );
 	}
 
 	#region Game Initialization

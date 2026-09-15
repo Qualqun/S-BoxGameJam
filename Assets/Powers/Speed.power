@@ -1,6 +1,6 @@
 {
   "Title": "Speed",
-  "BoostType": "Bounce",
+  "BoostType": "Hp",
   "Image": null,
   "Description": "Test speed",
   "__references": [],
