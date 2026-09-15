@@ -71,14 +71,19 @@ public class BaseEnemyBehaviour : Component
 		}
 
 	}
-
 	protected override void OnDestroy()
 	{
 		base.OnDestroy();
-	
-		gameManager?.Enemies.Remove( GameObject );
-	}
 
+		if (Networking.IsHost)
+		{
+			gameManager.GameState?.Enemies.Remove( GameObject );
+
+
+			if ( gameManager.AllEnemiesDead() )
+				gameManager?.StartNextRound();
+		}
+	}
 	protected void FollowPlayer()
 	{
 		if ( agent.TargetPosition.HasValue )
@@ -105,6 +110,11 @@ public class BaseEnemyBehaviour : Component
 		if ( hp <= 0f )
 		{
 			GameObject.Destroy();
+
+			//if ( gameManager != null && Networking.IsHost )
+			//{
+			//	gameManager.ene( GameObject );
+			//}
 		}
 	}
 
