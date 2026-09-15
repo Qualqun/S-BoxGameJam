@@ -9,8 +9,10 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	[Sync] public bool isDead { get; set; } = false;
 	[Property, Group( "Refs" )] public PlayerState State { get; set; }
 	[Property, Group( "Refs" )] public GameObject gunPoint { get; set; }
-	[Property, Group( "Refs" )] PlayerUI ui { get; set; }
 	[Property, Group( "Refs" )] GameObject bullet { get; set; }
+	[Property, Group( "Refs" )] GameObject cameraPivot { get; set; }
+
+	[Property, Group( "Refs" )] PlayerUI ui { get; set; }
 	[Property, Group( "Refs" )] MPlayerController controller { get; set; }
 	[Property, Group( "Refs" )] ModelRenderer model { get; set; }
 
@@ -27,6 +29,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 		if ( IsProxy )
 		{
+			cameraPivot.Destroy();
 			controller.Destroy();
 			ui.Destroy();
 		}
@@ -45,23 +48,23 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 			speed = State.BulletSpeed,
 			damage = State.BulletDamage,
 			direction = direction,
-			onAirBehaviours = new List<OnAirModifier>(),
+			onAirModifier = new List<OnAirModifier>(),
 			endModifiers = new List<EndModifier>()
 		};
 
-		foreach ( var mod in State.ActiveModifiers )
+		foreach ( ModifierType mod in State.ActiveModifiers )
 		{
 			if ( mod == ModifierType.HomingShot ) 
-				newBulletInfo.onAirBehaviours.Add( new HomingShot() );
+				newBulletInfo.AddAirModifier( new HomingShot() );
 
 			if ( mod == ModifierType.Bounce ) 
-				newBulletInfo.endModifiers.Add( new Bounce() );
+				newBulletInfo.AddEndModifiers( new Bounce() );
 
 			if ( mod == ModifierType.Percing ) 
-				newBulletInfo.endModifiers.Add( new Percing() );
+				newBulletInfo.AddEndModifiers( new Percing() );
 
 			if ( mod == ModifierType.Explosion ) 
-				newBulletInfo.endModifiers.Add( new EndExplosion() );
+				newBulletInfo.AddEndModifiers( new EndExplosion() );
 		}
 
 		return newBulletInfo;
@@ -99,7 +102,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		{
 			BaseEnemyBehaviour enemy = other.GameObject.GetComponent<BaseEnemyBehaviour>();
 
-			gameManager.PlayerTakeDamage( this, enemy.damage );
+			gameManager.PlayerTakeDamage( this, enemy.meleDamage );
 		}
 	}
 
@@ -115,13 +118,16 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 			if ( State.Hp <= 0 )
 			{
+				Color colorTint = model.Tint;
+
 				// Only the host should handle the life decrement
 				if ( Networking.IsHost )
 					State.Life--;
 
-				Color colorTint = model.Tint;
+				
 				colorTint = Color.Blue;
 				colorTint.a = 0.5f;
+
 				model.Tint = colorTint;
 				Tags.Add( "invulnerability" );
 
@@ -133,15 +139,21 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 				cancellation = null;
 
 				if ( State.Life > 0 )
+				{
 					_ = ReviveRoutine();
+				}
 				else
 				{
 					if ( Networking.IsHost )
+					{
 						gameManager.CheckPlayersState();
+					}
 				}
 			}
 			else
+			{
 				_ = TimerHit();
+			}
 		}
 	}
 
@@ -174,17 +186,41 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		if ( canShoot )
 		{
 			List<BulletInfo> bullets = new();
+			List<GunOutPut> gunModifiers = new();
+
 			BulletInfo baseBullet = InitBaseBullet();
+
 			bullets.Add( baseBullet );
 
-			foreach ( var mod in State.ActiveModifiers )
+			foreach ( ModifierType mod in State.ActiveModifiers )
 			{
 				if ( mod == ModifierType.Shotgun )
 				{
-					List<BulletInfo> newBullets = new();
-					new ShotgunOutPut().OutPutBehaviour( baseBullet, newBullets );
-					bullets = newBullets;
+					GunOutPut shotgunMod = new ShotgunOutPut();
+					bool levelUp = false;
+
+					foreach ( GunOutPut modifier in gunModifiers )
+					{
+						if( modifier .modifierType == shotgunMod.modifierType)
+						{
+							modifier.AddLevel();
+							levelUp = true;
+							break;
+						}
+					}
+
+					if( !levelUp )
+					{
+						gunModifiers.Add( shotgunMod );
+					}
 				}
+			}
+
+			foreach ( GunOutPut mod in gunModifiers )
+			{
+				List<BulletInfo> newBullets = new();
+				mod.OutPutBehaviour( baseBullet, newBullets );
+				bullets = newBullets;
 			}
 
 			foreach ( BulletInfo bulletInfo in bullets )
@@ -206,6 +242,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		if ( !isDead )
 		{
 			Color colorTint = model.Tint;
+
 			if ( mode )
 			{
 				colorTint.a = 0.5f;
@@ -222,18 +259,4 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		}
 	}
 
-	[Rpc.Owner]
-	public void ResetPlayer()
-	{
-		Color colorTint = model.Tint;
-		colorTint = Color.White;
-		colorTint.a = 1f;
-		model.Tint = colorTint;
-
-		Tags.Remove( "invulnerability" );
-		State.Reset();
-		ui.SetHealth( State.Hp, State.MaxHp );
-		canShoot = true;
-		isDead = false;
-	}
 }

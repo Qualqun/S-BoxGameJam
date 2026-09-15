@@ -8,8 +8,48 @@ public struct BulletInfo
 	public float speed { get; set; }
 	public float damage { get; set; }
 	public Vector3 direction { get; set; }
-	public List<OnAirModifier> onAirBehaviours { get; set; }
+	public List<OnAirModifier> onAirModifier { get; set; }
 	public List<EndModifier> endModifiers { get; set; }
+
+	public void AddAirModifier( OnAirModifier modifier )
+	{
+		if ( onAirModifier == null )
+		{
+			onAirModifier = new List<OnAirModifier>();
+		}
+
+		foreach ( OnAirModifier mod in onAirModifier )
+		{
+			if ( mod.modifierType == modifier.modifierType )
+			{
+				mod.AddLevel();
+				return;
+			}
+		}
+
+		onAirModifier.Add( modifier );
+	}
+
+	public void AddEndModifiers( EndModifier modifier )
+	{
+		if ( endModifiers == null )
+		{
+			endModifiers = new List<EndModifier>();
+		}
+
+		foreach ( EndModifier mod in endModifiers )
+		{
+			if ( mod.modifierType == modifier.modifierType )
+			{
+				mod.AddLevel();
+				return;
+			}
+		}
+
+		endModifiers.Add( modifier );
+	}
+
+
 }
 
 public sealed class BulletBehaviour : Component
@@ -17,6 +57,17 @@ public sealed class BulletBehaviour : Component
 	public BulletInfo bulletInfo { get; set; }
 	public GameManager gameManager { get; set; }
 	public List<GameObject> enemyHit = new List<GameObject>();
+
+	//protected override void OnStart()
+	//{
+	//	base.OnStart();
+
+	//	if(IsProxy)
+	//	{
+	//		Destroy();
+	//	}
+	//}
+
 
 	protected override void OnUpdate()
 	{
@@ -31,10 +82,10 @@ public sealed class BulletBehaviour : Component
 
 		Vector3 direction = bulletInfo.direction;
 
-		if ( bulletInfo.onAirBehaviours != null && bulletInfo.onAirBehaviours.Count > 0 )
+		if ( bulletInfo.onAirModifier != null && bulletInfo.onAirModifier.Count > 0 )
 		{
 
-			foreach ( OnAirModifier modifier in bulletInfo.onAirBehaviours )
+			foreach ( OnAirModifier modifier in bulletInfo.onAirModifier )
 			{
 				direction = modifier.GetNewDirection( direction, this );
 			}
@@ -61,7 +112,7 @@ public sealed class BulletBehaviour : Component
 					if ( !isDestroyBullet )
 						destroyBullet = false;
 
-					if( isUpdateNextStep )
+					if ( isUpdateNextStep )
 						updateNextStep = true;
 
 				}
@@ -70,13 +121,8 @@ public sealed class BulletBehaviour : Component
 
 			if ( traceResult.HasTag( "enemy" ) && !enemyHit.Contains( collideObj ) )
 			{
-				BaseEnemyBehaviour enemy = traceResult.Collider.GetComponent<BaseEnemyBehaviour>();
-
-				if ( enemy != null )
-				{
-					enemyHit.Add( collideObj );
-					gameManager.EnemyTakeDamage( enemy, bulletInfo.damage );
-				}
+				enemyHit.Add( collideObj );
+				gameManager.EnemyTakeDamage( collideObj, bulletInfo.damage );
 			}
 
 			if ( updateNextStep )
@@ -84,7 +130,7 @@ public sealed class BulletBehaviour : Component
 
 			if ( destroyBullet )
 				GameObject.Destroy();
-				return;
+			return;
 		}
 
 		WorldPosition = nextStep;
@@ -100,13 +146,13 @@ public sealed class BulletBehaviour : Component
 	{
 		BulletInfo newInfo = baseinfo;
 
-		if ( baseinfo.onAirBehaviours != null && baseinfo.onAirBehaviours.Count > 0 )
+		if ( baseinfo.onAirModifier != null && baseinfo.onAirModifier.Count > 0 )
 		{
-			newInfo.onAirBehaviours = new List<OnAirModifier>();
+			newInfo.onAirModifier = new List<OnAirModifier>();
 
-			foreach ( OnAirModifier modifier in baseinfo.onAirBehaviours )
+			foreach ( OnAirModifier modifier in baseinfo.onAirModifier )
 			{
-				newInfo.onAirBehaviours.Add( modifier.Clone() );
+				newInfo.onAirModifier.Add( modifier.Clone() );
 			}
 		}
 

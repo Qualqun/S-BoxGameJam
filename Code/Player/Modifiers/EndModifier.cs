@@ -2,6 +2,7 @@ using Sandbox;
 
 public class EndModifier
 {
+	public ModifierType modifierType;
 	public int level = 1;
 
 	public virtual bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet, out bool updateNextStep )
@@ -10,15 +11,22 @@ public class EndModifier
 		return true;
 	}
 
+	public virtual void AddLevel()
+	{
+		level++;
+	}
+
 	public virtual EndModifier Clone()
 	{
 		return new EndModifier();
 	}
+
 }
 
 public class Bounce : EndModifier
 {
-	int nbBounce = 1;
+	public new ModifierType modifierType { get; set; } = ModifierType.Bounce;
+	int nbBounce { get; set; } = 1;
 
 	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet, out bool updateNextStep )
 	{
@@ -41,6 +49,11 @@ public class Bounce : EndModifier
 		return true;
 	}
 
+	public override void AddLevel()
+	{
+		level++;
+		nbBounce = level;
+	}
 
 	public override EndModifier Clone()
 	{
@@ -56,10 +69,11 @@ public class Bounce : EndModifier
 
 public class Percing : EndModifier
 {
+	public new ModifierType modifierType { get; set; } = ModifierType.Percing;
 	int nbPercing = 1;
 	List<GameObject> enemyEncountered = new List<GameObject>();
 
-
+	
 	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet, out bool updateNextStep )
 	{
 		GameObject collisionObj = traceResult.Collider.GameObject;
@@ -85,6 +99,12 @@ public class Percing : EndModifier
 		return true;
 	}
 
+	public override void AddLevel()
+	{
+		level++;
+		nbPercing = level;
+	}
+
 
 	public override EndModifier Clone()
 	{
@@ -100,14 +120,17 @@ public class Percing : EndModifier
 
 public class EndExplosion : EndModifier
 {
+	public new ModifierType modifierType { get; set; } = ModifierType.Explosion;
+
 	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet, out bool updateNextStep )
 	{
 		GameObject bulletObj = bullet.GameObject;
 		BulletInfo bulletInfo = bullet.bulletInfo;
+
 		int nbBullets = 8;
 		int anglePerBullet = 360 / nbBullets;
 
-
+		bulletInfo.damage = bulletInfo.damage / 4f * level; 
 		bulletInfo.endModifiers = null;
 		bulletInfo.size /= 2f;
 		bulletInfo.direction = Vector3.Forward;
@@ -121,6 +144,7 @@ public class EndExplosion : EndModifier
 			bulletInfo.direction = Rotation.FromYaw( anglePerBullet ) * bulletInfo.direction;
 			newBullet.NetworkSpawn();
 		}
+
 		updateNextStep = false;
 		return true;
 	}

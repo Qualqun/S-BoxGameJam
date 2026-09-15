@@ -76,8 +76,27 @@
           "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
           "component_type": "NavMeshAgent"
         },
-        "damage": 25,
         "hp": 100,
+        "meleDamage": 25,
+        "model": {
+          "_type": "component",
+          "component_id": "0312b18d-107d-4e2d-9d21-0ad7f6f23d39",
+          "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
+          "component_type": "BaseVisualEnemy"
+        },
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "repathDistance": 64
+      },
+      {
+        "__type": "BaseVisualEnemy",
+        "__guid": "0312b18d-107d-4e2d-9d21-0ad7f6f23d39",
+        "__enabled": true,
+        "Flags": 0,
         "model": {
           "_type": "component",
           "component_id": "55877364-1eab-4af3-a53b-76223c029f8a",
@@ -90,7 +109,7 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "repathDistance": 64
+        "visualHitDuration": 0.2
       }
     ],
     "Children": [
@@ -139,12 +158,8 @@
                 "CreateBoneObjects": false,
                 "LodOverride": null,
                 "MaterialGroup": null,
-                "MaterialOverride": null,
-                "Materials": {
-                  "indexed": {
-                    "0": "models/citizen_mannequin/mannequin_dark.vmat"
-                  }
-                },
+                "MaterialOverride": "art/shaders/enemymat.vmat",
+                "Materials": null,
                 "Model": "models/citizen_mannequin/mannequin.vmdl",
                 "Morphs": {},
                 "OnComponentDestroy": null,

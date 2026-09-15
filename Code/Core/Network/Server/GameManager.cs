@@ -313,14 +313,16 @@ public sealed class GameManager : Component
 		enemyBehaviour.gameManager = this;
 		enemyBehaviour.SetPlayers( Players );
 		enemyBehaviour.hp += StatsGrowth.enemyHp * GameState.CurrentRound;
-		enemyBehaviour.damage += StatsGrowth.enemyDamage * GameState.CurrentRound;
+		enemyBehaviour.meleDamage += StatsGrowth.enemyDamage * GameState.CurrentRound;
 
 		Enemies.Add( enemy );
 	}
 
 	[Rpc.Host]
-	public void EnemyTakeDamage( BaseEnemyBehaviour enemy, float amount )
+	public void EnemyTakeDamage( GameObject enemyObj, float amount )
 	{
+		BaseEnemyBehaviour enemy = enemyObj.GetComponent<BaseEnemyBehaviour>();
+
 		enemy.TakeDamage( amount );
 	}
 

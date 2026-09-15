@@ -5,28 +5,31 @@ using static Sandbox.Services.Stats;
 public class RangeEnemy : BaseEnemyBehaviour
 {
 
-	[Property] LineRenderer laserInfo { get; set; }
 
-	[Property, Group( "stats" )] public float range { get; set; } = 100f;
+	[Property, Group( "Stats" )] public float range { get; set; } = 100f;
 
-	[Property, Group( "stats" )] public float bulletSpeed { get; set; } = 100f;
-	[Property, Group( "stats" )] public float bulletDamage { get; set; } = 100f;
-	[Property, Group( "stats" )] public float aimTime { get; set; } = 1f;
+	[Property, Group( "Stats" )] public float bulletSpeed { get; set; } = 100f;
+	[Property, Group( "Stats" )] public float bulletDamage { get; set; } = 100f;
+	[Property, Group( "Stats" )] public float aimTime { get; set; } = 1f;
 
-	[Property, Group( "stats" )] public float shootTime { get; set; } = 1f;
-	[Property, Group( "stats" )] public float reloadTime { get; set; } = 1f;
+	[Property, Group( "Stats" )] public float shootTime { get; set; } = 1f;
+	[Property, Group( "Stats" )] public float reloadTime { get; set; } = 1f;
 
-	[Property, Group( "refs" )] public GameObject bullet { get; set; }
-	[Property, Group( "refs" )] public GameObject gunPoint { get; set; }
-
+	[Property, Group( "Refs" )] public RangeVisualEnemy visual { get; set; }
+	[Property, Group( "Refs" )] public GameObject bullet { get; set; }
+	[Property, Group( "Refs" )] public GameObject gunPoint { get; set; }
 
 	Task attackTask;
 
-	Vector3 hitPos;
-
 	protected override void OnUpdate()
 	{
+		if(IsProxy)
+		{
+			return;
+		}
+
 		base.OnUpdate();
+
 
 		if ( !noTarget )
 		{
@@ -41,7 +44,6 @@ public class RangeEnemy : BaseEnemyBehaviour
 				if ( hit.Hit )
 				{
 					canShoot = hit.Collider.Tags.Has( "player" );
-					hitPos = hit.Direction;
 				}
 
 			}
@@ -77,14 +79,16 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 		await Task.DelaySeconds( aimTime );
 
-		UpdateLaser( gunPoint.WorldPosition, gunPoint.WorldPosition + direction  * 10000f);
+		visual.UpdateLaser( gunPoint.WorldPosition, gunPoint.WorldPosition + direction  * 10000f);
 
 		await Task.DelaySeconds( shootTime );
 
-		ResetLaser();
+		visual.ResetLaser();
 
 		newBullet = bullet.Clone( gunPoint.WorldPosition );
 		bulletBehaviour = newBullet.GetComponent<EnemyBulletBehaviour>();
+
+		
 
 		bulletBehaviour.speed = bulletSpeed;
 		bulletBehaviour.damage = bulletDamage;
@@ -121,20 +125,7 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 	}
 
-	void UpdateLaser( Vector3 start, Vector3 end )
-	{
-		laserInfo.VectorPoints = new List<Vector3>
-		{
-			start,
-			end
-		};
-	}
-
-	void ResetLaser()
-	{
-		laserInfo.VectorPoints.Clear();
-	}
-
+	
 
 	protected override void DrawGizmos()
 	{

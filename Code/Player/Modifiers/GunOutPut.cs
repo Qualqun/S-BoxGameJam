@@ -2,25 +2,35 @@ using Sandbox;
 
 public class GunOutPut
 {
+	public ModifierType modifierType;
+	public int level = 1;
+
 	public virtual void OutPutBehaviour( BulletInfo baseInfo, List<BulletInfo> bullets ) { }
+
+	public virtual void AddLevel()
+	{
+		level++;
+	}
 }
 
 
 public class ShotgunOutPut : GunOutPut
 {
+	public new ModifierType modifierType { get; set; } = ModifierType.Shotgun;
+
 	public override void OutPutBehaviour( BulletInfo baseInfo, List<BulletInfo> bullets )
 	{
-		int nbBullets = 3;
+		int nbBullets = level * 3;
 		int degRange = 120;
-		float degPerBullet = (float) degRange / nbBullets;
 
 		BulletInfo bulletInfo = baseInfo;
+		Vector3 startDirection = Rotation.FromYaw( -(degRange / 2) ) * bulletInfo.direction;
 
-		bulletInfo.direction = Rotation.FromYaw( -(degPerBullet * (nbBullets / 2 + 1)) ) * bulletInfo.direction;
+		bullets.Add( bulletInfo );
 
-		for ( int i = 0; i < nbBullets; i++ )
+		for ( int i = 0; i < nbBullets - 1; i++ )
 		{
-			bulletInfo.direction = Rotation.FromYaw( degPerBullet ) * bulletInfo.direction;
+			bulletInfo.direction = Rotation.FromYaw( Game.Random.Float( degRange ) ) * startDirection;
 			bullets.Add( bulletInfo );
 		}
 

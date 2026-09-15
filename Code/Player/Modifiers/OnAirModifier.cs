@@ -2,11 +2,17 @@ using Sandbox;
 
 public class OnAirModifier
 {
+	public ModifierType modifierType;
 	public int level = 1;
 
 	public virtual Vector3 GetNewDirection( Vector3 baseDirection, BulletBehaviour bullet )
 	{
 		return baseDirection;
+	}
+
+	public virtual void AddLevel()
+	{
+		level++;
 	}
 
 	public virtual OnAirModifier Clone()
@@ -17,6 +23,8 @@ public class OnAirModifier
 
 public class HomingShot : OnAirModifier
 {
+
+	public new ModifierType modifierType { get; set; } = ModifierType.HomingShot;
 	public override Vector3 GetNewDirection( Vector3 baseDirection, BulletBehaviour bullet )
 	{
 		Vector3 newDirection = baseDirection;
@@ -32,7 +40,7 @@ public class HomingShot : OnAirModifier
 			Vector3 bulletPos = bullet.WorldPosition;
 
 			float targetDist = float.MaxValue;
-			float powerHoming = 3f * Time.Delta;
+			float powerHoming = level * Time.Delta;
 
 			foreach ( SceneTraceResult result in allResults )
 			{
