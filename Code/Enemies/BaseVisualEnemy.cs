@@ -14,11 +14,12 @@ public class BaseVisualEnemy : Component
 		base.OnStart();
 
 		if ( !model.IsValid() || model.MaterialOverride is null )
+		{
 			return;
+		}
 
+		model.SceneObject.Batchable = false;
 
-		model.MaterialOverride = model.MaterialOverride.CreateCopy();
-		model.Attributes.Set( "PercentFlash", 0f );
 	}
 
 	[Rpc.Broadcast]
@@ -46,6 +47,7 @@ public class BaseVisualEnemy : Component
 
 		while ( timer >= 0 )
 		{
+			
 			model.Attributes.Set( "PercentFlash", (timer / visualHitDuration).Clamp( 0f, 1f ) );
 			timer -= Time.Delta * 2f;
 
