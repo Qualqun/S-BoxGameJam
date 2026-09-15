@@ -40,8 +40,9 @@ public sealed class GameManager : Component
 
 	[Property, Group( "List Refs" )] public List<GameObject> SpawnPoints { get; set; }
 
+	public List<GameObject> Enemies { get; set; } = new List<GameObject>();
 	List<PlayerBehaviour> Players { get; set; } = new List<PlayerBehaviour>();
-	List<GameObject> Enemies { get; set; } = new List<GameObject>();
+
 	CancellationTokenSource Cancellation;
 
 	protected override void OnStart()
@@ -313,6 +314,7 @@ public sealed class GameManager : Component
 
 		int spawnPoint = Game.Random.Int( SpawnPoints.Count - 1 );
 		int enemyType = Game.Random.Int( EnemiesPrefabs.Count - 1 );
+
 		Vector3 position = SpawnPoints[spawnPoint].WorldPosition;
 
 		GameObject enemyPrefab = EnemiesPrefabs[enemyType];

@@ -72,6 +72,13 @@ public class BaseEnemyBehaviour : Component
 
 	}
 
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+
+		gameManager.Enemies.Remove( GameObject );
+	}
+
 	protected void FollowPlayer()
 	{
 		if ( agent.TargetPosition.HasValue )
