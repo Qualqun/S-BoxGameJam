@@ -1,0 +1,104 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@using System.Collections.Generic;
+@using System.Globalization;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root class="hit-numbers">
+	@foreach ( var number in numbers )
+	{
+		if ( number.Visible )
+		{
+			<div @key="number" class="hit-number" style="@number.Style">@number.Text</div>
+		}
+	}
+</root>
+
+@code
+{
+	[Property] public float Duration { get; set; } = 1f;
+	[Property] public float RiseDistance { get; set; } = 56f;
+
+	private readonly List<FloatingNumber> numbers = new();
+
+	private sealed class FloatingNumber
+	{
+		public string Text;
+		public Vector3 WorldPosition;
+		public float Age;
+		public float Lifetime;
+		public float Rise;
+		public bool Visible;
+		public string Style;
+	}
+
+
+	[Rpc.Broadcast]
+	public void ShowNumber( float value, Vector3 worldPosition )
+	{
+		if ( !float.IsFinite( value ) || !float.IsFinite( worldPosition.x )
+			|| !float.IsFinite( worldPosition.y ) || !float.IsFinite( worldPosition.z ) )
+			return;
+
+		numbers.Add( new FloatingNumber
+		{
+			Text = value.ToString( "0.##", CultureInfo.InvariantCulture ),
+			WorldPosition = worldPosition,
+			Lifetime = float.IsFinite( Duration ) ? MathF.Max( Duration, 0.01f ) : 1f,
+			Rise = float.IsFinite( RiseDistance ) ? MathF.Max( RiseDistance, 0f ) : 56f
+		} );
+	}
+
+	protected override void OnPreRender()
+	{
+		base.OnPreRender();
+
+		if ( numbers.Count == 0 )
+			return;
+
+		CameraComponent camera = Scene.Camera;
+
+		for ( int i = numbers.Count - 1; i >= 0; i-- )
+		{
+			FloatingNumber number = numbers[i];
+			number.Age += Time.Delta;
+
+			if ( number.Age >= number.Lifetime )
+			{
+				numbers.RemoveAt( i );
+				continue;
+			}
+
+			number.Visible = camera.IsValid()
+				&& Vector3.Dot( number.WorldPosition - camera.WorldPosition, camera.WorldRotation.Forward ) > 0f;
+
+			if ( !number.Visible )
+				continue;
+
+			Vector2 screen = camera.PointToScreenNormal( number.WorldPosition );
+			if ( !float.IsFinite( screen.x ) || !float.IsFinite( screen.y ) )
+			{
+				number.Visible = false;
+				continue;
+			}
+
+			float progress = number.Age / number.Lifetime;
+			float opacity = 1f - ((progress - 0.6f) / 0.4f).Clamp( 0f, 1f );
+
+			// Percentages preserve world projection across UI resolutions; the rise is in UI pixels.
+			number.Style = FormattableString.Invariant(
+				$"left: {screen.x * 100f:0.###}%; top: {screen.y * 100f:0.###}%; margin-top: {-number.Rise * progress:0.###}px; opacity: {opacity:0.###};" );
+		}
+
+		StateHasChanged();
+	}
+
+	protected override void OnDisabled()
+	{
+		numbers.Clear();
+		StateHasChanged();
+		base.OnDisabled();
+	}
+}

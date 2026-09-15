@@ -1,9 +1,20 @@
 using Sandbox;
 using System.Threading.Tasks;
 
+public struct VibrationInfo
+{
+	public Vector3 size { get; set; }
+	public int nbVibration { get; set; }
+	public float time { get; set; }
+	public bool random { get; set; }
+}
+
+
 public class BaseVisualEnemy : Component
 {
-	[Property, Group( "Stats" )] protected float visualHitDuration = 0.2f;
+	[Property, Group( "Stats" )] protected float visualHitDuration { get; set; } = 0.2f;
+	[Property, Group( "Stats" )] protected VibrationInfo vibration { get; set; }
+
 	[Property, Group( "Refs" )] protected ModelRenderer model { get; set; }
 
 	Task visualHitTask = null;
@@ -28,6 +39,7 @@ public class BaseVisualEnemy : Component
 		if ( visualHitTask == null )
 		{
 			visualHitTask = VisualTakeHit();
+			_ = Shake( model.GameObject );
 		}
 	}
 
@@ -47,7 +59,7 @@ public class BaseVisualEnemy : Component
 
 		while ( timer >= 0 )
 		{
-			
+
 			model.Attributes.Set( "PercentFlash", (timer / visualHitDuration).Clamp( 0f, 1f ) );
 			timer -= Time.Delta * 2f;
 
@@ -56,5 +68,47 @@ public class BaseVisualEnemy : Component
 
 		model.Attributes.Set( "PercentFlash", 0f );
 		visualHitTask = null;
+	}
+
+	async Task Shake( GameObject obj )
+	{
+		float timePerVibration = vibration.time / vibration.nbVibration;
+		float timer = 0f;
+
+		int nbVibration = 1;
+		int sideVibration = 1;
+
+		Vector3 mainPos = obj.LocalPosition;
+		Vector3 lastPos = obj.LocalPosition;
+
+		Vector3 baseVibration = vibration.size;
+		Vector3 vibrationGoal = vibration.random ? Vector3.Random.Abs().WithZ(0) * baseVibration : baseVibration;
+
+		vibrationGoal += lastPos;
+
+		while ( timer <= vibration.time )
+		{
+			float percentVibration = timer / timePerVibration;
+
+			obj.LocalPosition = Vector3.Lerp( lastPos, vibrationGoal, percentVibration );
+			timer += Time.Delta;
+
+			if ( nbVibration * timePerVibration >= timer )
+			{
+				timer = nbVibration * timePerVibration;
+				lastPos = obj.LocalPosition;
+
+				nbVibration++;
+				sideVibration *= -1;
+
+				vibrationGoal = vibration.random ? Vector3.Random.Abs() * baseVibration : baseVibration;
+				vibrationGoal += lastPos;
+				vibrationGoal *= sideVibration;
+			}
+
+			await Task.FrameEnd();
+		}
+
+		obj.LocalPosition = mainPos;
 	}
 }

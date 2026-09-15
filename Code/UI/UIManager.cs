@@ -9,6 +9,9 @@ public sealed class UIManager : Component
 	[Property]
 	public GameHUD GameHud { get; set; }
 
+	[Property]
+	public HitNumbers HitNumbers { get; set; }
+
 	public void ShowDeathRewards()
 	{
 		DeathRewards?.Show();

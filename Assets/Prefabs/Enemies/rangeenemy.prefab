@@ -135,7 +135,13 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "visualHitDuration": 0.2
+        "vibration": {
+          "size": "2.5,2.5,0",
+          "nbVibration": 10,
+          "time": 0.5,
+          "random": true
+        },
+        "visualHitDuration": 0.1
       }
     ],
     "Children": [
@@ -222,9 +228,9 @@
                 "__guid": "6c73cd3f-d454-4577-b546-ca33261d125d",
                 "__enabled": true,
                 "Flags": 0,
-                "Additive": false,
+                "Additive": true,
                 "AutoCalculateNormals": true,
-                "CastShadows": true,
+                "CastShadows": false,
                 "Color": {
                   "blend": "Linear",
                   "color": [
@@ -247,7 +253,7 @@
                 "OnComponentFixedUpdate": null,
                 "OnComponentStart": null,
                 "OnComponentUpdate": null,
-                "Opaque": true,
+                "Opaque": false,
                 "Points": [],
                 "RenderOptions": {
                   "GameLayer": true,
@@ -275,7 +281,7 @@
                 "UseVectorPoints": true,
                 "VectorPoints": [],
                 "Width": {
-                  "rangey": "0,0.25",
+                  "rangey": "0,0.200000003",
                   "frames": [
                     {
                       "x": 0.5,
