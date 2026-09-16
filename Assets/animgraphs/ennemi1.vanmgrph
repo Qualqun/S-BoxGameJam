@@ -100,10 +100,17 @@
 									m_conditions = 
 									[
 										{
-											_class = "CFinishedCondition"
+											_class = "CParameterAnimCondition"
 											m_comparisonOp = 0
-											m_option = "FinishedConditionOption_OnFinished"
-											m_bIsFinished = true
+											m_paramID = 
+											{
+												m_id = 991537539
+											}
+											m_comparisonValue = 
+											{
+												m_nType = 1
+												m_data = false
+											}
 										},
 									]
 									m_blendDuration = 0.2
@@ -289,7 +296,7 @@
 		[
 			{
 				_class = "CBoolAnimParameter"
-				m_name = "EnnemiHit"
+				m_name = "EnemyHit"
 				m_id = 
 				{
 					m_id = 991537539

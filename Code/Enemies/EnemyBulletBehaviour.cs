@@ -4,6 +4,7 @@ using static Sandbox.Services.Stats;
 public sealed class EnemyBulletBehaviour : Component
 {
 	[Property, WideMode] TagSet noCollideTag { get; set; }
+	[Property] float size { get; set; } = 32f;
 
 	public float speed { get; set; }
 	public float damage { get; set; }
@@ -11,9 +12,11 @@ public sealed class EnemyBulletBehaviour : Component
 
 	public Vector3 direction { get; set; }
 
-
-	
-
+	protected override void OnStart()
+	{
+		base.OnStart();
+		WorldRotation = Rotation.LookAt( direction );
+	}
 	protected override void OnUpdate()
 	{
 		LinearDirection();
@@ -22,14 +25,14 @@ public sealed class EnemyBulletBehaviour : Component
 	void LinearDirection()
 	{
 		Vector3 nextStep = WorldPosition + direction * speed * Time.Delta;
-		SceneTraceResult traceResult = Scene.Trace.Sphere( 32f * WorldScale.x, WorldPosition, nextStep ).WithoutTags( noCollideTag ).Run();
+		SceneTraceResult traceResult = Scene.Trace.Sphere( size * WorldScale.x, WorldPosition, nextStep ).WithoutTags( noCollideTag ).Run();
 
 		if ( traceResult.Hit )
 		{
 			if ( traceResult.HasTag( "player" ) )
 			{
 				PlayerBehaviour player = traceResult.Collider.GetComponent<PlayerBehaviour>();
-				
+
 				if ( player != null )
 				{
 					using ( Rpc.FilterInclude( c => c == player.GameObject.Network.Owner ) )
@@ -45,5 +48,11 @@ public sealed class EnemyBulletBehaviour : Component
 		}
 
 		WorldPosition = nextStep;
+	}
+
+	protected override void DrawGizmos()
+	{
+		base.DrawGizmos();
+		Gizmo.Draw.LineSphere( WorldPosition, size );
 	}
 }

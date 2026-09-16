@@ -1,13 +1,17 @@
 using Sandbox;
 using System.Threading;
 using System.Threading.Tasks;
+using static Sandbox.Sprite;
 
 public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 {
 	[Sync] public bool isInvulnerable { get; set; }
 	[Sync] public bool isDead { get; set; } = false;
+
+	[Property, Group( "Refs" )] public PlayerAnimation animation { get; set; }
 	[Property, Group( "Refs" )] public PlayerState State { get; set; }
 	[Property, Group( "Refs" )] public GameObject gunPoint { get; set; }
+
 	[Property, Group( "Refs" )] GameObject bullet { get; set; }
 	[Property, Group( "Refs" )] GameObject cameraPivot { get; set; }
 
@@ -38,7 +42,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	BulletInfo InitBaseBullet()
 	{
-		Vector3 direction = gunPoint.WorldPosition - WorldPosition;
+		Vector3 direction = Rotation.FromYaw( model.WorldRotation.Yaw()) * Vector3.Forward;
 		direction = direction.WithZ( 0 ).Normal;
 
 		BulletInfo newBulletInfo = new BulletInfo
@@ -143,6 +147,9 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 			BulletInfo baseBullet = InitBaseBullet();
 
+
+			animation.speedShoot = State.FireRate;
+			animation.shoot = true;
 			bullets.Add( baseBullet );
 
 			foreach ( ModifierType mod in State.ActiveModifiers )

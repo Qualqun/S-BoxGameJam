@@ -55,6 +55,10 @@ public struct BulletInfo
 
 public sealed class BulletBehaviour : Component
 {
+	[Property, WideMode] TagSet noCollideTag { get; set; }
+	[Property] float size { get; set; } = 32f;
+
+
 	public BulletInfo bulletInfo { get; set; }
 	public GameManager gameManager { get; set; }
 	public List<GameObject> enemyHit = new List<GameObject>();
@@ -62,7 +66,6 @@ public sealed class BulletBehaviour : Component
 	protected override void OnStart()
 	{
 		base.OnStart();
-
 		if ( IsProxy )
 		{
 			Destroy();
@@ -93,7 +96,7 @@ public sealed class BulletBehaviour : Component
 		}
 
 		nextStep = GetNextStep();
-		traceResult = Scene.Trace.Sphere( 32f * WorldScale.x, WorldPosition, nextStep ).WithoutTags( "player", "bullet", "enemybullet", "ground" ).Run();
+		traceResult = Scene.Trace.Sphere( 32f * WorldScale.x, WorldPosition, nextStep ).WithoutTags( noCollideTag ).Run();
 
 		if ( traceResult.Hit )
 		{
@@ -153,6 +156,8 @@ public sealed class BulletBehaviour : Component
 		gameManager = manager;
 
 		WorldScale = bulletInfo.size;
+		WorldRotation = Rotation.LookAt( bulletInfo.direction );
+
 	}
 
 	public void SetNewDirection( Vector3 newDirection )
@@ -162,5 +167,14 @@ public sealed class BulletBehaviour : Component
 		newInfo.direction = newDirection;
 
 		bulletInfo = newInfo;
+		WorldRotation = Rotation.LookAt( bulletInfo.direction );
+
+
+	}
+
+	protected override void DrawGizmos()
+	{
+		base.DrawGizmos();
+		Gizmo.Draw.LineSphere( WorldPosition, size );
 	}
 }

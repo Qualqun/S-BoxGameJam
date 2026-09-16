@@ -43,7 +43,7 @@
 				{
 					_class = "CSequenceAnimNode"
 					m_sName = "Unnamed"
-					m_vecPosition = [ -560.0, 192.0 ]
+					m_vecPosition = [ -736.0, 160.0 ]
 					m_nNodeID = 
 					{
 						m_id = 156761697
@@ -88,13 +88,13 @@
 							_class = "CBlend2DItem"
 							m_tagSpans = [  ]
 							m_sequenceName = "SlideW"
-							m_blendValue = [ -1.0, 0.0 ]
+							m_blendValue = [ 1.0, 0.0 ]
 						},
 						{
 							_class = "CBlend2DItem"
 							m_tagSpans = [  ]
 							m_sequenceName = "SlideE"
-							m_blendValue = [ 1.0, 0.0 ]
+							m_blendValue = [ -1.0, 0.0 ]
 						},
 						{
 							_class = "CBlend2DItem"
@@ -106,13 +106,13 @@
 							_class = "CBlend2DItem"
 							m_tagSpans = [  ]
 							m_sequenceName = "SlideSW"
-							m_blendValue = [ -1.0, -1.0 ]
+							m_blendValue = [ 1.0, -1.0 ]
 						},
 						{
 							_class = "CBlend2DItem"
 							m_tagSpans = [  ]
 							m_sequenceName = "SlideSE"
-							m_blendValue = [ 1.0, -1.0 ]
+							m_blendValue = [ -1.0, -1.0 ]
 						},
 					]
 					m_blendSourceX = "Parameter"
@@ -125,7 +125,7 @@
 					{
 						m_id = 1346818817
 					}
-					m_bLoop = true
+					m_bLoop = false
 					m_bLockBlendOnReset = false
 					m_bLockWhenWaning = true
 					m_playbackSpeed = 1.0
@@ -185,7 +185,7 @@
 									{
 										m_id = 2097383236
 									}
-									m_bReset = false
+									m_bReset = true
 									m_resetCycleOption = "Beginning"
 									m_flFixedCycleValue = 0.0
 									m_bBlendCycle = false
@@ -464,7 +464,7 @@
 					{
 						m_nodeID = 
 						{
-							m_id = 156761697
+							m_id = 1438029720
 						}
 						m_outputID = 
 						{
@@ -510,6 +510,38 @@
 			{
 				key = 
 				{
+					m_id = 1438029720
+				}
+				value = 
+				{
+					_class = "CSpeedScaleAnimNode"
+					m_sName = "Unnamed"
+					m_vecPosition = [ -544.0, 160.0 ]
+					m_nNodeID = 
+					{
+						m_id = 1438029720
+					}
+					m_sNote = ""
+					m_inputConnection = 
+					{
+						m_nodeID = 
+						{
+							m_id = 156761697
+						}
+						m_outputID = 
+						{
+							m_id = 4294967295
+						}
+					}
+					m_param = 
+					{
+						m_id = 1651740221
+					}
+				}
+			},
+			{
+				key = 
+				{
 					m_id = 1632948340
 				}
 				value = 
@@ -528,25 +560,25 @@
 							_class = "CBlend2DItem"
 							m_tagSpans = [  ]
 							m_sequenceName = "Back"
-							m_blendValue = [ 0.0, -1.0 ]
+							m_blendValue = [ 0.0, -0.5 ]
 						},
 						{
 							_class = "CBlend2DItem"
 							m_tagSpans = [  ]
 							m_sequenceName = "Front"
-							m_blendValue = [ 0.0, 1.0 ]
+							m_blendValue = [ 0.0, 0.5 ]
 						},
 						{
 							_class = "CBlend2DItem"
 							m_tagSpans = [  ]
 							m_sequenceName = "Left"
-							m_blendValue = [ -1.0, 0.0 ]
+							m_blendValue = [ -0.5, 0.0 ]
 						},
 						{
 							_class = "CBlend2DItem"
 							m_tagSpans = [  ]
 							m_sequenceName = "Right"
-							m_blendValue = [ 1.0, 0.0 ]
+							m_blendValue = [ 0.5, 0.0 ]
 						},
 						{
 							_class = "CBlend2DItem"
@@ -639,6 +671,20 @@
 				m_bUseMostRecentValue = false
 				m_bAutoReset = false
 				m_bDefaultValue = false
+			},
+			{
+				_class = "CFloatAnimParameter"
+				m_name = "ShootSpeed"
+				m_id = 
+				{
+					m_id = 1651740221
+				}
+				m_previewButton = "ANIMPARAM_BUTTON_NONE"
+				m_bUseMostRecentValue = false
+				m_bAutoReset = false
+				m_fDefaultValue = 0.0
+				m_fMinValue = 0.0
+				m_fMaxValue = 1000.0
 			},
 		]
 	}

@@ -31,41 +31,68 @@ public sealed class MPlayerController : Component
 
 	void PlayerRotation()
 	{
-		Vector3 gunPointOffSet = Vector3.Up * playerBehaviour.gunPoint.WorldPosition.z;
-		Ray ray = camera.ScreenPixelToRay( Mouse.Position );
-		SceneTraceResult trace = Scene.Trace.Ray( ray.Position - gunPointOffSet, ray.Position + ray.Forward * 5000f - gunPointOffSet ).WithTag( "ground" ).Run();
+		if ( dashEnd )
+		{
+			Vector3 gunPointOffSet = Vector3.Up * playerBehaviour.gunPoint.WorldPosition.z;
+			Ray ray = camera.ScreenPixelToRay( Mouse.Position );
+			SceneTraceResult trace = Scene.Trace.Ray( ray.Position - gunPointOffSet, ray.Position + ray.Forward * 5000f - gunPointOffSet ).WithTag( "ground" ).Run();
 
-		Vector3 direction = trace.EndPosition - visual.WorldPosition;
+			Vector3 direction = trace.EndPosition - visual.WorldPosition;
 
-		direction = direction.WithZ( 0f );
-		visual.WorldRotation = Rotation.LookAt( direction );
+			direction = direction.WithZ( 0f );
+
+			visual.WorldRotation = Rotation.LookAt( direction );
+		}
 	}
 
 	void Inputs()
 	{
 		Vector3 velocity = Vector3.Zero;
-		float speed = playerBehaviour.State.MoveSpeed; 
+		Vector3 localMove;
+		float speed = playerBehaviour.State.MoveSpeed;
 
-		if ( Input.Down( "Forward" ) ) 
+		if ( Input.Down( "Forward" ) )
+		{
 			velocity += Vector3.Forward;
+		}
 
-		if ( Input.Down( "Backward" ) ) 
+		if ( Input.Down( "Backward" ) )
+		{
 			velocity -= Vector3.Forward;
+		}
 
-		if ( Input.Down( "Left" ) ) 
+		if ( Input.Down( "Left" ) )
+		{
 			velocity -= Vector3.Right;
+		}
 
-		if ( Input.Down( "Right" ) ) 
+		if ( Input.Down( "Right" ) )
+		{
 			velocity += Vector3.Right;
+		}
 
-		if ( Input.Down( "Attack1" ) ) 
+		if ( Input.Down( "Attack1" ) )
+		{
 			playerBehaviour.Fire();
+		}
 
 		if ( Input.Down( "Jump" ) && velocity != Vector3.Zero && dashTask == null && !playerBehaviour.isDead )
-			dashTask = Dash( velocity );
+		{
+			playerBehaviour.animation.dash = true;
+			dashTask = Dash( velocity.Normal );
+		}
 
 		if ( dashEnd )
-			rigidbody.Velocity = velocity * speed;
+		{
+			localMove = visual.WorldRotation.Inverse * velocity;
+
+			playerBehaviour.animation.move = new Vector2(
+				localMove.y.Clamp( -1f, 1f ),
+				localMove.x.Clamp( -1f, 1f )
+			);
+
+			rigidbody.Velocity = velocity.Normal * speed;
+		}
 	}
 
 	async Task Dash( Vector3 velocity )

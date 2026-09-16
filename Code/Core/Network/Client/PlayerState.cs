@@ -45,7 +45,7 @@ public sealed class PlayerState : Component
 	// Multipliers
 	[Property, Sync] public float FireRateMultiplier { get; set; } = 1f;
 	[Property, Sync] public float DamageMultiplier { get; set; } = 1f;
-	[Property, Sync] public float SizeMultiplier { get; set; } = 0.5f;
+	[Property, Sync] public float SizeMultiplier { get; set; } = 1f;
 
 	// Sync modifiers
 	[Property, Sync] public NetList<ModifierType> ActiveModifiers { get; set; } = new();

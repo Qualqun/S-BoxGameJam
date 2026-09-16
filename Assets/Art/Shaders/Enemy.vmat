@@ -8,5 +8,5 @@ Layer0
 	g_bFogEnabled "1"
 
 	//---- MainProperties ----
-	MainText "art/shaders/tempenemytext.jpg"
+	MainText "art/tex/palette_personnages_scifi_16x16.png"
 }

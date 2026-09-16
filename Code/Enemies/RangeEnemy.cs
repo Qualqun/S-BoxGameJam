@@ -1,6 +1,7 @@
 using Sandbox;
 using System.Threading.Tasks;
 using static Sandbox.Services.Stats;
+using static Sandbox.Sprite;
 
 public class RangeEnemy : BaseEnemyBehaviour
 {
@@ -13,6 +14,8 @@ public class RangeEnemy : BaseEnemyBehaviour
 	[Property, Group( "Stats" )] public float reloadTime { get; set; } = 1.4f;
 
 	[Property, Group( "Growth stats" )] public float bulletDamagePerRound { get; set; } = 6f;
+
+	[Property, Group( "Refs" )] RangeEnemyAnimation animation { get; set; }
 
 	[Property, Group( "Refs" )] public RangeVisualEnemy visual { get; set; }
 	[Property, Group( "Refs" )] public GameObject bullet { get; set; }
@@ -75,6 +78,8 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 		_ = AimRotate( direction, aimTime );
 
+		animation.stand = true;
+
 		await Task.DelaySeconds( aimTime );
 
 		visual.UpdateLaser( gunPoint.WorldPosition, gunPoint.WorldPosition + direction  * 10000f);
@@ -86,6 +91,9 @@ public class RangeEnemy : BaseEnemyBehaviour
 		await Task.DelaySeconds( shootTime / 4);
 
 		visual.ResetLaser();
+
+		animation.stand = false;
+		animation.shoot = true;
 
 		newBullet = bullet.Clone( gunPoint.WorldPosition );
 		bulletBehaviour = newBullet.GetComponent<EnemyBulletBehaviour>();
@@ -123,6 +131,13 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 		WorldRotation = targetRotation;
 
+	}
+
+	public override void TakeDamage( float amount )
+	{
+		base.TakeDamage( amount );
+
+		animation.hit = true;
 	}
 
 	public override void InitStats( int roundNb )
