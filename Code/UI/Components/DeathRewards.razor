@@ -20,7 +20,7 @@
 		{
 			<div class="reward-card" @onclick=@( () => OnRewardClicked( power ) )>
 				<div class="reward-image">
-					<img src=@power.Image /><img texture=@power.Image />
+					<Image Texture="@power.Image" />
 				</div>
 
 				<div class="reward-title">
@@ -58,11 +58,13 @@
 
 	private void GenerateRandomRewards()
 	{
-		var allPowers = ResourceLibrary.GetAll<Power>().ToList();
+		var allPowers = ResourceLibrary.GetAll<Power>()
+			.Where(p => p != null && !string.IsNullOrEmpty(p.Title) && p.Image != null)
+			.ToList();
 
 		if (allPowers.Count == 0)
 		{
-			Log.Warning("Aucun fichier .power n'a été trouvé !");
+			Log.Warning("Aucun fichier .power valide n'a été trouvé !");
 			return;
 		}
 
@@ -70,6 +72,11 @@
 		var shuffledPowers = allPowers.OrderBy(x => rng.Next()).ToList();
 
 		ActivePowers = shuffledPowers.Take(3).ToList();
+
+		foreach (var power in ActivePowers)
+		{
+			Log.Info($"Power: {power.Title} | Image: {power.Image} | Description: {power.Description}");
+		}
 
 		StateHasChanged();
 	}

@@ -503,6 +503,9 @@ public sealed class GameManager : Component
 	{
 		BaseEnemyBehaviour enemy = enemyObj.GetComponent<BaseEnemyBehaviour>();
 
+		if ( enemy == null )
+			return;
+
 		enemy.TakeDamage( amount );
 	}
 
