@@ -13,7 +13,7 @@
 						_class = "DefaultMaterialGroup"
 						remaps = [  ]
 						use_global_default = true
-						global_default_material = "materials/default.vmat"
+						global_default_material = "art/material/player.vmat"
 					},
 				]
 			},
@@ -51,24 +51,9 @@
 							exclude_by_default = true
 							exception_list = 
 							[
-								"Player1_002",
+								"Player1_004",
 							]
 						}
-					},
-				]
-			},
-			{
-				_class = "ModelModifierList"
-				children = 
-				[
-					{
-						_class = "ModelModifier_ScaleAndMirror"
-						scale = 0.3937
-						mirror_x = false
-						mirror_y = false
-						mirror_z = false
-						flip_bone_forward = false
-						swap_left_and_right_bones = false
 					},
 				]
 			},
@@ -76,29 +61,6 @@
 				_class = "AnimationList"
 				children = 
 				[
-					{
-						_class = "AnimFile"
-						name = "Front"
-						activity_name = ""
-						activity_weight = 1
-						weight_list_name = ""
-						fade_in_time = 0.2
-						fade_out_time = 0.2
-						looping = false
-						delta = false
-						worldSpace = false
-						hidden = false
-						anim_markup_ordered = false
-						disable_compression = false
-						disable_interpolation = false
-						enable_scale = false
-						source_filename = "Animation/PLayer/Front.fbx"
-						start_frame = 0
-						end_frame = -1
-						framerate = -1.0
-						take = 0
-						reverse = false
-					},
 					{
 						_class = "AnimFile"
 						name = "Back"
@@ -116,6 +78,29 @@
 						disable_interpolation = false
 						enable_scale = false
 						source_filename = "Animation/PLayer/Back.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						take = 0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "Front"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						disable_interpolation = false
+						enable_scale = false
+						source_filename = "Animation/PLayer/Front.fbx"
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
@@ -170,7 +155,7 @@
 					},
 					{
 						_class = "AnimFile"
-						name = "Slide"
+						name = "idle"
 						activity_name = ""
 						activity_weight = 1
 						weight_list_name = ""
@@ -184,7 +169,214 @@
 						disable_compression = false
 						disable_interpolation = false
 						enable_scale = false
-						source_filename = "Animation/PLayer/Slide.fbx"
+						source_filename = "animation/player/idle.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						take = 0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "SlideE"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						disable_interpolation = false
+						enable_scale = false
+						source_filename = "Animation/PLayer/SlideE.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						take = 0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "SlideN"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						disable_interpolation = false
+						enable_scale = false
+						source_filename = "Animation/PLayer/SlideN.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						take = 0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "SlideNE"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						disable_interpolation = false
+						enable_scale = false
+						source_filename = "Animation/PLayer/SlideNE.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						take = 0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "SlideNW"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						disable_interpolation = false
+						enable_scale = false
+						source_filename = "Animation/PLayer/SlideNW.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						take = 0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "SlideS"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						disable_interpolation = false
+						enable_scale = false
+						source_filename = "Animation/PLayer/SlideS.fbx"
+						start_frame = 0
+						end_frame = -1
+						framerate = -1.0
+						take = 0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "SlideSE"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						disable_interpolation = false
+						enable_scale = false
+						source_filename = "Animation/PLayer/SlideSE.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						take = 0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "SlideSW"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						disable_interpolation = false
+						enable_scale = false
+						source_filename = "Animation/PLayer/SlideSW.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						take = 0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "SlideW"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						disable_interpolation = false
+						enable_scale = false
+						source_filename = "Animation/PLayer/SlideW.fbx"
+						start_frame = -1
+						end_frame = -1
+						framerate = -1.0
+						take = 0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "Shoot"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						disable_interpolation = false
+						enable_scale = false
+						source_filename = "Animation/PLayer/Shoot.fbx"
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
@@ -194,10 +386,113 @@
 				]
 				default_root_bone_name = ""
 			},
+			{
+				_class = "ModelModifierList"
+				children = 
+				[
+					{
+						_class = "ModelModifier_ScaleAndMirror"
+						scale = 0.3937
+						mirror_x = false
+						mirror_y = false
+						mirror_z = false
+						flip_bone_forward = false
+						swap_left_and_right_bones = false
+					},
+				]
+			},
+			{
+				_class = "WeightListList"
+				children = 
+				[
+					{
+						_class = "WeightList"
+						name = "Shoot"
+						default_weight = 0.0
+						weights = 
+						[
+							{
+								bone = "3rdArmPart1"
+								weight = 1.0
+							},
+							{
+								bone = "3rdArmPart3"
+								weight = 1.0
+							},
+							{
+								bone = "BigAmmo1"
+								weight = 1.0
+							},
+							{
+								bone = "BigAmmo10"
+								weight = 1.0
+							},
+							{
+								bone = "BigAmmo2"
+								weight = 1.0
+							},
+							{
+								bone = "BigAmmo3"
+								weight = 1.0
+							},
+							{
+								bone = "BigAmmo4"
+								weight = 1.0
+							},
+							{
+								bone = "Hips"
+								weight = 0.0
+							},
+							{
+								bone = "LeftArm"
+								weight = 0.0
+							},
+							{
+								bone = "LeftShoulder"
+								weight = 1.0
+							},
+							{
+								bone = "LeftUpLeg"
+								weight = 0.0
+							},
+							{
+								bone = "RightArm"
+								weight = 1.0
+							},
+							{
+								bone = "RightHand"
+								weight = 1.0
+							},
+							{
+								bone = "RightHandIndex1"
+								weight = 1.0
+							},
+							{
+								bone = "RightShoulder"
+								weight = 1.0
+							},
+							{
+								bone = "RightUpLeg"
+								weight = 0.0
+							},
+							{
+								bone = "Spine1"
+								weight = 0.0
+							},
+							{
+								bone = "Spine2"
+								weight = 0.0
+							},
+						]
+						master_morph_weight = -1.0
+						morph_weights = [  ]
+					},
+				]
+			},
 		]
 		model_archetype = ""
 		primary_associated_entity = ""
-		anim_graph_name = ""
+		anim_graph_name = "animgraphs/player.vanmgrph"
 		base_model_name = ""
 	}
 }
