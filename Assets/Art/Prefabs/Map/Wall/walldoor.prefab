@@ -205,6 +205,133 @@
           }
         ],
         "Children": []
+      },
+      {
+        "__guid": "df908742-b864-4ca5-b90e-c78b8fe8727a",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "walldoorlight",
+        "Position": "-16.7339382,81.1399384,127.100815",
+        "Rotation": "3.87430191E-07,0,0,1.00000012",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.ModelRenderer",
+            "__guid": "e228daea-77ea-4d36-936a-36778cf5126f",
+            "__enabled": true,
+            "Flags": 0,
+            "BodyGroups": 18446744073709551615,
+            "CreateAttachments": false,
+            "LodOverride": null,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Materials": null,
+            "Model": "art/asset/map/props/walldoorlight.vmdl",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Tint": "1,1,1,1"
+          }
+        ],
+        "Children": [
+          {
+            "__guid": "8abddb5d-fe1c-4f34-adae-445948422032",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Point Light",
+            "Position": "-0.0523395389,-10.5140972,8.14695613E-06",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "light_point,light",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Sandbox.PointLight",
+                "__guid": "1e251049-a9e1-44ec-9488-3f01374d8743",
+                "__enabled": true,
+                "Flags": 0,
+                "Attenuation": 1,
+                "Contribution": "Diffuse, Specular, Transmissive",
+                "FogMode": "Enabled",
+                "FogStrength": 1,
+                "LightColor": "1,0.03922,0.03922,1",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "Radius": 400,
+                "ShadowBias": 0,
+                "ShadowHardness": 0.18018018,
+                "Shadows": true
+              }
+            ],
+            "Children": []
+          },
+          {
+            "__guid": "a7560de2-2bdb-411a-b592-e9c4896fe793",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Point Light",
+            "Position": "-0.0523395389,8.80927086,-6.82595419E-06",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "light_point,light",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Sandbox.PointLight",
+                "__guid": "ba3da3ab-2243-418f-8e02-31272dbd4a5f",
+                "__enabled": true,
+                "Flags": 0,
+                "Attenuation": 1,
+                "Contribution": "Diffuse, Specular, Transmissive",
+                "FogMode": "Enabled",
+                "FogStrength": 1,
+                "LightColor": "1,0.03922,0.03922,1",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "Radius": 400,
+                "ShadowBias": 0,
+                "ShadowHardness": 0.18018018,
+                "Shadows": true
+              }
+            ],
+            "Children": []
+          }
+        ]
       }
     ],
     "__properties": {
