@@ -28,9 +28,8 @@ public sealed class GameManager : Component
 	[Property, Group( "Timers" )] public float TimeStart { get; set; } = 5f;
 
 	[Description( "Number of enemy in one second" )]
-	[Property, Group( "Stats" )] public float BaseSpawnRate { get; set; } = 1f;
-
-	[Property, Group( "Stats" )] public StatsPerRound StatsGrowth { get; set; }
+	[Property, Group( "Stats" )] public float BaseSpawnRate { get; set; } = 0.1f;
+	[Property, Group( "Stats" )] public float RoundSpawnRate { get; set; } = 0.35f;
 
 	[Property, Group( "Refs" )] public GameState GameState { get; set; }
 
@@ -341,11 +340,22 @@ public sealed class GameManager : Component
 		player.TakeHit( amount );
 	}
 
+	[Rpc.Host]
+	public void PlayerTakeDamageFromEnemy( PlayerBehaviour player, GameObject enemyObj )
+	{
+		BaseEnemyBehaviour enemy = enemyObj.GetComponent<BaseEnemyBehaviour>();
+
+		using ( Rpc.FilterInclude( c => c == Rpc.Caller ) )
+		{
+			PlayerTakeDamage( player, enemy.meleDamage );
+		}
+	}
+
 	#region Enemies methods
 
 	async Task RoundSpawner( CancellationToken token )
 	{
-		float spawnDelay = 1f / (BaseSpawnRate + StatsGrowth.spawnRate * GameState.CurrentRound);
+		float spawnDelay = 1f / (BaseSpawnRate + RoundSpawnRate * GameState.CurrentRound);
 
 		while ( !token.IsCancellationRequested )
 		{
@@ -368,12 +378,13 @@ public sealed class GameManager : Component
 		GameObject enemy = enemyPrefab.Clone( position );
 
 		BaseEnemyBehaviour enemyBehaviour = enemy.GetComponent<BaseEnemyBehaviour>();
+
 		enemy.NetworkSpawn();
 
 		enemyBehaviour.gameManager = this;
+
 		enemyBehaviour.SetPlayers( GameState.Players );
-		enemyBehaviour.hp += StatsGrowth.enemyHp * GameState.CurrentRound;
-		enemyBehaviour.meleDamage += StatsGrowth.enemyDamage * GameState.CurrentRound;
+		enemyBehaviour.InitStats( GameState.CurrentRound );
 
 		GameState.Server_AddEnemy( enemy );
 	}

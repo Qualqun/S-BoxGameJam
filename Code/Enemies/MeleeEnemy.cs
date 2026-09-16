@@ -2,6 +2,9 @@ using Sandbox;
 
 public class MeleeEnemy : BaseEnemyBehaviour
 {
+	[Property, Group( "Stats" )] float slowDuration { get; set; } = 1f;
+	float timerSlow = 0;
+
 	protected override void OnUpdate()
 	{
 		base.OnUpdate();
@@ -11,5 +14,13 @@ public class MeleeEnemy : BaseEnemyBehaviour
 			FollowPlayer();
 		}
 		
+	}
+
+
+	public override void TakeDamage( float amount )
+	{
+		base.TakeDamage( amount );
+
+
 	}
 }

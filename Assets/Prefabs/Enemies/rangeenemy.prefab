@@ -76,19 +76,19 @@
           "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
           "component_type": "NavMeshAgent"
         },
-        "aimTime": 0.25,
+        "aimTime": 0.4,
         "bullet": {
           "_type": "gameobject",
           "prefab": "prefabs/enemies/enemybullet.prefab"
         },
-        "bulletDamage": 0,
-        "bulletSpeed": 100,
+        "bulletDamage": 6,
+        "bulletSpeed": 180,
         "gunPoint": {
           "_type": "gameobject",
           "go": "0847bc44-9917-41af-a64c-d6173528996b"
         },
-        "hp": 100,
-        "meleDamage": 25,
+        "hp": 25,
+        "meleDamage": 8,
         "model": {
           "_type": "component",
           "component_id": "4c3258a9-b2d9-48d6-8c2f-809bb91a3f57",
@@ -102,9 +102,9 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "range": 500,
-        "reloadTime": 1,
+        "reloadTime": 1.4,
         "repathDistance": 64,
-        "shootTime": 1,
+        "shootTime": 1.2,
         "visual": {
           "_type": "component",
           "component_id": "4c3258a9-b2d9-48d6-8c2f-809bb91a3f57",
@@ -117,6 +117,7 @@
         "__guid": "4c3258a9-b2d9-48d6-8c2f-809bb91a3f57",
         "__enabled": true,
         "Flags": 0,
+        "blinkSpeed": 0.05,
         "laserInfo": {
           "_type": "component",
           "component_id": "6c73cd3f-d454-4577-b546-ca33261d125d",

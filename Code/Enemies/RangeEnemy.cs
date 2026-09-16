@@ -7,13 +7,13 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 
 	[Property, Group( "Stats" )] public float range { get; set; } = 100f;
+	[Property, Group( "Stats" )] public float bulletSpeed { get; set; } = 180f;
+	[Property, Group( "Stats" )] public float bulletDamage { get; set; } = 6f;
+	[Property, Group( "Stats" )] public float aimTime { get; set; } = 0.4f;
+	[Property, Group( "Stats" )] public float shootTime { get; set; } = 1.2f;
+	[Property, Group( "Stats" )] public float reloadTime { get; set; } = 1.4f;
 
-	[Property, Group( "Stats" )] public float bulletSpeed { get; set; } = 100f;
-	[Property, Group( "Stats" )] public float bulletDamage { get; set; } = 100f;
-	[Property, Group( "Stats" )] public float aimTime { get; set; } = 1f;
-
-	[Property, Group( "Stats" )] public float shootTime { get; set; } = 1f;
-	[Property, Group( "Stats" )] public float reloadTime { get; set; } = 1f;
+	[Property, Group( "Growth stats" )] public float bulletDamagePerRound { get; set; } = 6f;
 
 	[Property, Group( "Refs" )] public RangeVisualEnemy visual { get; set; }
 	[Property, Group( "Refs" )] public GameObject bullet { get; set; }
@@ -67,7 +67,6 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 	async Task AttackBehaviour()
 	{
-
 		Vector3 direction = target.WorldPosition - WorldPosition;
 
 		GameObject newBullet;
@@ -81,14 +80,16 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 		visual.UpdateLaser( gunPoint.WorldPosition, gunPoint.WorldPosition + direction  * 10000f);
 
-		await Task.DelaySeconds( shootTime );
+		await Task.DelaySeconds( shootTime / 4 * 3);
+
+		visual.StartBlink();
+
+		await Task.DelaySeconds( shootTime / 4);
 
 		visual.ResetLaser();
 
 		newBullet = bullet.Clone( gunPoint.WorldPosition );
 		bulletBehaviour = newBullet.GetComponent<EnemyBulletBehaviour>();
-
-		
 
 		bulletBehaviour.speed = bulletSpeed;
 		bulletBehaviour.damage = bulletDamage;
@@ -125,7 +126,11 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 	}
 
-	
+	public override void InitStats( int roundNb )
+	{
+		base.InitStats( roundNb );
+		bulletDamage += bulletDamagePerRound * roundNb;
+	}
 
 	protected override void DrawGizmos()
 	{

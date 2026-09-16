@@ -76,8 +76,10 @@
           "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
           "component_type": "NavMeshAgent"
         },
-        "hp": 100,
-        "meleDamage": 25,
+        "hp": 25,
+        "hpPerRound": 15,
+        "meleDamage": 8,
+        "meleDamagePerRound": 6,
         "model": {
           "_type": "component",
           "component_id": "0312b18d-107d-4e2d-9d21-0ad7f6f23d39",
@@ -109,6 +111,12 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
+        "vibration": {
+          "size": "4,4,0",
+          "nbVibration": 10,
+          "time": 0.5,
+          "random": true
+        },
         "visualHitDuration": 0.2
       }
     ],

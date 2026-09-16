@@ -58,16 +58,15 @@ public sealed class BulletBehaviour : Component
 	public GameManager gameManager { get; set; }
 	public List<GameObject> enemyHit = new List<GameObject>();
 
-	//protected override void OnStart()
-	//{
-	//	base.OnStart();
+	protected override void OnStart()
+	{
+		base.OnStart();
 
-	//	if(IsProxy)
-	//	{
-	//		Destroy();
-	//	}
-	//}
-
+		if ( IsProxy )
+		{
+			Destroy();
+		}
+	}
 
 	protected override void OnUpdate()
 	{
@@ -76,7 +75,6 @@ public sealed class BulletBehaviour : Component
 
 	void ModifiersBehaviour()
 	{
-
 		SceneTraceResult traceResult;
 		Vector3 nextStep;
 
@@ -114,7 +112,6 @@ public sealed class BulletBehaviour : Component
 
 					if ( isUpdateNextStep )
 						updateNextStep = true;
-
 				}
 
 			}

@@ -11,8 +11,11 @@ public struct EnemyStats
 
 public class BaseEnemyBehaviour : Component
 {
-	[Property, Group( "Stats" )] public float hp { get; set; } = 100f;
-	[Property, Group( "Stats" )] public float meleDamage { get; set; } = 25f;
+	[Property, Group( "Stats" )] public float hp { get; set; } = 25f;
+	[Property, Group( "Stats" )] public float meleDamage { get; set; } = 8f;
+
+	[Property, Group( "Growth stats" )] public float hpPerRound { get; set; } = 15f;
+	[Property, Group( "Growth stats" )] public float meleDamagePerRound { get; set; } = 6f;
 
 	[Property, Group( "Refs" )] protected NavMeshAgent agent { get; set; }
 	[Property, Group( "Refs" )] protected BaseVisualEnemy model { get; set; }
@@ -36,10 +39,6 @@ public class BaseEnemyBehaviour : Component
 	}
 	protected override void OnUpdate()
 	{
-		if ( IsProxy )
-		{
-			return;
-		}
 
 		base.OnUpdate();
 
@@ -47,7 +46,7 @@ public class BaseEnemyBehaviour : Component
 		{
 			for ( int i = 0; i < players.Count; i++ )
 			{
-				if ( players[i] == null || players[i].isDead )
+				if ( players[i] == null || !players[i].IsValid || players[i].isDead )
 				{
 					players.RemoveAt( i );
 					i--;
@@ -77,13 +76,13 @@ public class BaseEnemyBehaviour : Component
 
 		if (Networking.IsHost)
 		{
-			gameManager.GameState?.Enemies.Remove( GameObject );
+			gameManager?.GameState?.Enemies.Remove( GameObject );
 
-
-			if ( gameManager.AllEnemiesDead() )
+			if ( gameManager != null && gameManager.AllEnemiesDead() )
 				gameManager?.StartNextRound();
 		}
 	}
+
 	protected void FollowPlayer()
 	{
 		if ( agent.TargetPosition.HasValue )
@@ -101,7 +100,13 @@ public class BaseEnemyBehaviour : Component
 		}
 	}
 
-	public void TakeDamage( float amount )
+	public virtual void InitStats( int roundNb )
+	{
+		hp += hpPerRound * roundNb;
+		meleDamage += meleDamagePerRound * roundNb;
+	}
+
+	public virtual void TakeDamage( float amount )
 	{
 		hp -= amount;
 
@@ -110,17 +115,11 @@ public class BaseEnemyBehaviour : Component
 		if ( hp <= 0f )
 		{
 			GameObject.Destroy();
-
-			//if ( gameManager != null && Networking.IsHost )
-			//{
-			//	gameManager.ene( GameObject );
-			//}
 		}
 	}
-
 	public void SetPlayers( List<PlayerBehaviour> allPlayers )
 	{
 		players = allPlayers;
 	}
-
+	
 }

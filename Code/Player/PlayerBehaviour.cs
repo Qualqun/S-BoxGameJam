@@ -1,7 +1,6 @@
 using Sandbox;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 {
@@ -54,16 +53,16 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 		foreach ( ModifierType mod in State.ActiveModifiers )
 		{
-			if ( mod == ModifierType.HomingShot ) 
+			if ( mod == ModifierType.HomingShot )
 				newBulletInfo.AddAirModifier( new HomingShot() );
 
-			if ( mod == ModifierType.Bounce ) 
+			if ( mod == ModifierType.Bounce )
 				newBulletInfo.AddEndModifiers( new Bounce() );
 
-			if ( mod == ModifierType.Percing ) 
+			if ( mod == ModifierType.Percing )
 				newBulletInfo.AddEndModifiers( new Percing() );
 
-			if ( mod == ModifierType.Explosion ) 
+			if ( mod == ModifierType.Explosion )
 				newBulletInfo.AddEndModifiers( new EndExplosion() );
 		}
 
@@ -76,7 +75,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		canShoot = false;
 		await Task.DelaySeconds( fireRate );
 
-		if ( token.IsCancellationRequested ) 
+		if ( token.IsCancellationRequested )
 			return;
 
 		canShoot = true;
@@ -93,46 +92,33 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	public void OnCollisionStart( Collision collision )
 	{
-		if ( !Networking.IsHost )
-			return;
+		GameObject otherObj = collision.Other.Collider.GameObject;
 
-		Collider other = collision.Other.Collider;
-
-		if ( other.Tags.Has( "enemy" ) )
+		if ( otherObj.Tags.Has( "enemy" ) )
 		{
-			BaseEnemyBehaviour enemy = other.GameObject.GetComponent<BaseEnemyBehaviour>();
-
-			gameManager.PlayerTakeDamage( this, enemy.meleDamage );
+			gameManager.PlayerTakeDamageFromEnemy( this, otherObj );
 		}
 	}
 
 	public void TakeHit( float amount )
 	{
+
 		if ( !isInvulnerable && !isDead )
 		{
 			State.TakeDamage( amount );
 
 			// Only update the UI if this is not a proxy
-			if ( !IsProxy && ui != null )
-				ui.SetHealth( State.Hp, State.MaxHp );
+			//if ( !IsProxy && ui != null )
+
+			ui?.SetHealth( State.Hp, State.MaxHp );
 
 			if ( State.Hp <= 0 )
 			{
-				Color colorTint = model.Tint;
-
 				// Only the host should handle the life decrement
 				if ( Networking.IsHost )
 					State.Life--;
 
-				
-				colorTint = Color.Blue;
-				colorTint.a = 0.5f;
-
-				model.Tint = colorTint;
-				Tags.Add( "invulnerability" );
-
-				canShoot = false;
-				isDead = true;
+				SetDead();
 
 				cancellation?.Cancel();
 				cancellation?.Dispose();
@@ -201,7 +187,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 					foreach ( GunOutPut modifier in gunModifiers )
 					{
-						if( modifier .modifierType == shotgunMod.modifierType)
+						if ( modifier.modifierType == shotgunMod.modifierType )
 						{
 							modifier.AddLevel();
 							levelUp = true;
@@ -209,7 +195,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 						}
 					}
 
-					if( !levelUp )
+					if ( !levelUp )
 					{
 						gunModifiers.Add( shotgunMod );
 					}
@@ -237,6 +223,21 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		}
 	}
 
+	[Rpc.Broadcast]
+	public void SetDead()
+	{
+		Color colorTint = model.Tint;
+		colorTint = Color.Blue;
+		colorTint.a = 0.5f;
+
+		model.Tint = colorTint;
+		Tags.Add( "invulnerability" );
+
+		canShoot = false;
+		isDead = true;
+	}
+
+	[Rpc.Broadcast]
 	public void SetInvulnerability( bool mode )
 	{
 		if ( !isDead )

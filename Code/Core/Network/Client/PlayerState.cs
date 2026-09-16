@@ -32,22 +32,22 @@ public enum ModifierType
 
 public sealed class PlayerState : Component
 {
-	[Property, Sync] public int MaxLife { get; set; } = 3;
-	[Property, Sync] public int Life { get; set; } = 3;
+	[Property, Sync] public int MaxLife { get; set; } = 1;
+	[Property, Sync] public int Life { get; set; } = 1;
 
 	[Property, Sync] public float MaxHp { get; set; } = 100f;
 	[Property, Sync] public float Hp { get; set; } = 100f;
-	[Property, Sync] public float MoveSpeed { get; set; } = 300f;
+	[Property, Sync] public float MoveSpeed { get; set; } = 250f;
 	[Property, Sync] public float TimeInvulnerability { get; set; } = 1f;
-	[Property, Sync] public float BaseFireRate { get; set; } = 2f;
-	[Property, Sync] public float BaseBulletDamage { get; set; } = 10f;
+	[Property, Sync] public float BaseFireRate { get; set; } = 4f;
+	[Property, Sync] public float BaseBulletDamage { get; set; } = 20f;
 	[Property, Sync] public float BaseBulletSize { get; set; } = 1f;
-	[Property, Sync] public float BaseBulletSpeed { get; set; } = 500f;
+	[Property, Sync] public float BaseBulletSpeed { get; set; } = 700f;
 
 	// Multipliers
 	[Property, Sync] public float FireRateMultiplier { get; set; } = 1f;
 	[Property, Sync] public float DamageMultiplier { get; set; } = 1f;
-	[Property, Sync] public float SizeMultiplier { get; set; } = 1f;
+	[Property, Sync] public float SizeMultiplier { get; set; } = 0.5f;
 
 	// Sync modifiers
 	[Property, Sync] public NetList<ModifierType> ActiveModifiers { get; set; } = new();
@@ -57,8 +57,6 @@ public sealed class PlayerState : Component
 	public float BulletDamage => BaseBulletDamage * DamageMultiplier;
 	public float BulletSize => BaseBulletSize * SizeMultiplier;
 	public float BulletSpeed => BaseBulletSpeed;
-
-	
 
 	private void AddModifier( ModifierType modifier )
 	{
@@ -78,17 +76,17 @@ public sealed class PlayerState : Component
 		Life = MaxLife;
 		MaxHp = 100f;
 		Hp = 100f;
-		MoveSpeed = 300f;
+		MoveSpeed = 250f;
 		TimeInvulnerability = 1f;
 
-		BaseFireRate = 2f;
-		BaseBulletDamage = 10f;
+		BaseFireRate = 4f;
+		BaseBulletDamage = 20f;
 		BaseBulletSize = 1f;
-		BaseBulletSpeed = 500f;
+		BaseBulletSpeed = 700f;
 
 		FireRateMultiplier = 1f;
 		DamageMultiplier = 1f;
-		SizeMultiplier = 1f;
+		SizeMultiplier = 0.5f;
 
 		ActiveModifiers.Clear();
 	}
@@ -99,26 +97,26 @@ public sealed class PlayerState : Component
 		switch ( boost )
 		{
 			case BoostType.Hp:
-				MaxHp += 20f;
-				Hp += 20f;
+				MaxHp += 30f;
+				Hp += 30f;
 				break;
 			case BoostType.MoveSpeed:
-				MoveSpeed += 50f;
+				MoveSpeed += 25f;
 				break;
 			case BoostType.FireRate:
 				BaseFireRate += 1f;
 				break;
 			case BoostType.TimeInvulnerability:
-				TimeInvulnerability += 0.5f;
+				TimeInvulnerability += 0.2f;
 				break;
 			case BoostType.BulletDamage:
-				BaseBulletDamage += 5f;
+				BaseBulletDamage += 10f;
 				break;
 			case BoostType.BulletSize:
-				BaseBulletSize += 0.5f;
+				BaseBulletSize += 0.25f;
 				break;
 			case BoostType.BulletSpeed:
-				BaseBulletSpeed += 100f;
+				BaseBulletSpeed += 150f;
 				break;
 
 			case BoostType.Shotgun:
