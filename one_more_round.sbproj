@@ -1,7 +1,7 @@
 {
   "Title": "one-more-round",
   "Type": "game",
-  "Org": "ratnation",
+  "Org": "local",
   "Ident": "one_more_round",
   "Schema": 1,
   "IncludeSourceFiles": false,

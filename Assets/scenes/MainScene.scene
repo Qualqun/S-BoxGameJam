@@ -269,7 +269,7 @@
       "Scale": "1,1,1",
       "Tags": "",
       "Enabled": true,
-      "NetworkMode": 2,
+      "NetworkMode": 1,
       "NetworkFlags": 0,
       "NetworkOrphaned": 0,
       "NetworkTransmit": true,
@@ -310,11 +310,11 @@
           "__guid": "2ccac9a4-4081-413f-9f54-2271993ac5c7",
           "__enabled": true,
           "Flags": 0,
-          "BaseSpawnRate": 0.25,
+          "BaseSpawnRate": 0.1,
           "EnemiesPrefabs": [
             {
               "_type": "gameobject",
-              "prefab": "prefabs/enemies/rangeenemy.prefab"
+              "prefab": "prefabs/enemies/meleeenemy.prefab"
             }
           ],
           "GameState": {
@@ -333,6 +333,7 @@
             "_type": "gameobject",
             "prefab": "prefabs/player/player.prefab"
           },
+          "RoundSpawnRate": 0.35,
           "SpawnPoints": [
             {
               "_type": "gameobject",
@@ -356,11 +357,6 @@
             "component_id": "23581b7c-c3b3-4815-abd2-bdfc4c465de9",
             "go": "f9834c81-f700-4cd7-9492-add1d640059e",
             "component_type": "BoxCollider"
-          },
-          "StatsGrowth": {
-            "spawnRate": 0.2,
-            "enemyHp": 10,
-            "enemyDamage": 5
           },
           "TimeGameOver": 5,
           "TimePerRound": 30,
@@ -14148,7 +14144,12 @@
               "__guid": "ffea8af1-ef9b-412e-abe0-ce1d034e7496",
               "__enabled": true,
               "Flags": 0,
-              "GameState": null,
+              "GameState": {
+                "_type": "component",
+                "component_id": "40841857-4b79-438c-b036-d1581eeedb17",
+                "go": "6308e9fd-2ee1-40c4-aa6b-0deb242610a3",
+                "component_type": "GameState"
+              },
               "OnComponentDestroy": null,
               "OnComponentDisabled": null,
               "OnComponentEnabled": null,
