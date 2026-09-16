@@ -351,7 +351,7 @@
               {
                 "__type": "Sandbox.Bloom",
                 "__guid": "6ff9f2bc-f7db-47bd-be9c-459674ead88d",
-                "__enabled": true,
+                "__enabled": false,
                 "Flags": 0,
                 "__version": 1,
                 "Mode": "Additive",
@@ -368,7 +368,7 @@
               {
                 "__type": "Sandbox.Tonemapping",
                 "__guid": "58b24b53-9b16-4ff4-bf26-b708ad5036ce",
-                "__enabled": true,
+                "__enabled": false,
                 "Flags": 0,
                 "__version": 3,
                 "AutoExposureEnabled": true,
@@ -388,7 +388,7 @@
               {
                 "__type": "Sandbox.Sharpen",
                 "__guid": "e4a36732-8269-43fe-a381-9366446159ab",
-                "__enabled": true,
+                "__enabled": false,
                 "Flags": 0,
                 "OnComponentDestroy": null,
                 "OnComponentDisabled": null,

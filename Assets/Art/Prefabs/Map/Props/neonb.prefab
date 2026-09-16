@@ -79,7 +79,7 @@
             "Radius": 120,
             "ShadowBias": 0,
             "ShadowHardness": 0,
-            "Shadows": true
+            "Shadows": false
           }
         ],
         "Children": []
