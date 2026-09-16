@@ -14075,15 +14075,30 @@
           "__guid": "5d508ba5-953d-4fa7-8cf4-5a0b37c23fdd",
           "__enabled": true,
           "Flags": 0,
-          "ContinuePrompt": null,
+          "ContinuePrompt": {
+            "_type": "component",
+            "component_id": "b8a53277-a993-4b04-a77c-0e8a250bdf1b",
+            "go": "e7dff19b-2120-43eb-9737-347ba5018dbd",
+            "component_type": "ContinuePrompt"
+          },
           "DeathRewards": {
             "_type": "component",
             "component_id": "f83666c3-3f8e-443b-a3d8-5385b76e5d4d",
             "go": "fc706737-bca5-4306-ace4-eeb7ea6edc32",
             "component_type": "DeathRewards"
           },
-          "GameHud": null,
-          "HitNumbers": null,
+          "GameHud": {
+            "_type": "component",
+            "component_id": "ffea8af1-ef9b-412e-abe0-ce1d034e7496",
+            "go": "8f41be84-8b81-4c1e-9ef3-f2ebf2b2a5ac",
+            "component_type": "GameHUD"
+          },
+          "HitNumbers": {
+            "_type": "component",
+            "component_id": "c30e793d-06c7-4799-a977-cee40c985ff6",
+            "go": "e228c97e-0ef4-4db2-bb39-cb4034b15827",
+            "component_type": "HitNumbers"
+          },
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -14248,7 +14263,7 @@
           "__guid": "e228c97e-0ef4-4db2-bb39-cb4034b15827",
           "__version": 2,
           "Flags": 0,
-          "Name": "ChildNumbers",
+          "Name": "HitNumbers",
           "Position": "0,0,0",
           "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
