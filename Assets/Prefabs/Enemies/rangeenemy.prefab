@@ -101,7 +101,7 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "range": 250,
+        "range": 500,
         "reloadTime": 1,
         "repathDistance": 64,
         "shootTime": 1,

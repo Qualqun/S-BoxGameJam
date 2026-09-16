@@ -1,7 +1,7 @@
 {
   "Title": "one-more-round",
   "Type": "game",
-  "Org": "local",
+  "Org": "ratnation",
   "Ident": "one_more_round",
   "Schema": 1,
   "IncludeSourceFiles": false,
@@ -23,6 +23,7 @@
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "CsProjName": "",
-    "StartupScene": "scenes/minimal.scene"
+    "StartupScene": "scenes/mainscene.scene",
+    "LaunchMode": "Normal"
   }
 }
