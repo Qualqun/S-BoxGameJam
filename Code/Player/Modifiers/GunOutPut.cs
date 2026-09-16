@@ -16,7 +16,10 @@ public class GunOutPut
 
 public class ShotgunOutPut : GunOutPut
 {
-	public new ModifierType modifierType { get; set; } = ModifierType.Shotgun;
+	public ShotgunOutPut()
+	{
+		modifierType = ModifierType.Shotgun;
+	}
 
 	public override void OutPutBehaviour( BulletInfo baseInfo, List<BulletInfo> bullets )
 	{

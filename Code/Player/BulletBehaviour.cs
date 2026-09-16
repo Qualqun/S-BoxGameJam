@@ -39,6 +39,8 @@ public struct BulletInfo
 
 		foreach ( EndModifier mod in endModifiers )
 		{
+			Log.Info( "New modifier name " + modifier.modifierType.ToString() + " other modifier " + mod.modifierType.ToString() );
+
 			if ( mod.modifierType == modifier.modifierType )
 			{
 				mod.AddLevel();
@@ -68,6 +70,7 @@ public sealed class BulletBehaviour : Component
 		}
 	}
 
+
 	protected override void OnUpdate()
 	{
 		ModifiersBehaviour();
@@ -82,7 +85,6 @@ public sealed class BulletBehaviour : Component
 
 		if ( bulletInfo.onAirModifier != null && bulletInfo.onAirModifier.Count > 0 )
 		{
-
 			foreach ( OnAirModifier modifier in bulletInfo.onAirModifier )
 			{
 				direction = modifier.GetNewDirection( direction, this );
@@ -112,6 +114,7 @@ public sealed class BulletBehaviour : Component
 
 					if ( isUpdateNextStep )
 						updateNextStep = true;
+
 				}
 
 			}
@@ -124,11 +127,15 @@ public sealed class BulletBehaviour : Component
 			}
 
 			if ( updateNextStep )
+			{
 				nextStep = GetNextStep();
+			}
 
 			if ( destroyBullet )
+			{
 				GameObject.Destroy();
-			return;
+				return;
+			}
 		}
 
 		WorldPosition = nextStep;
@@ -143,26 +150,6 @@ public sealed class BulletBehaviour : Component
 	public void InitBall( BulletInfo baseinfo, GameManager manager )
 	{
 		BulletInfo newInfo = baseinfo;
-
-		if ( baseinfo.onAirModifier != null && baseinfo.onAirModifier.Count > 0 )
-		{
-			newInfo.onAirModifier = new List<OnAirModifier>();
-
-			foreach ( OnAirModifier modifier in baseinfo.onAirModifier )
-			{
-				newInfo.onAirModifier.Add( modifier.Clone() );
-			}
-		}
-
-		if ( baseinfo.endModifiers != null && baseinfo.endModifiers.Count > 0 )
-		{
-			newInfo.endModifiers = new List<EndModifier>();
-
-			foreach ( EndModifier modifier in baseinfo.endModifiers )
-			{
-				newInfo.endModifiers.Add( modifier.Clone() );
-			}
-		}
 
 		bulletInfo = newInfo;
 		gameManager = manager;

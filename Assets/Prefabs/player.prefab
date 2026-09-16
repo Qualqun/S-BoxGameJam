@@ -130,8 +130,8 @@
         },
         "ui": {
           "_type": "component",
-          "component_id": "99aaa9a6-603c-426a-be59-df844272564b",
-          "go": "d148855b-9afc-46b3-aba2-e9ade15a4ed6",
+          "component_id": "3702113c-c56a-40fa-99e6-eb25eb0c65a8",
+          "go": "4df700b9-a715-462a-b0e0-fe5eee0aefa3",
           "component_type": "PlayerUI"
         }
       },
@@ -427,6 +427,58 @@
             "Children": []
           }
         ]
+      },
+      {
+        "__guid": "4df700b9-a715-462a-b0e0-fe5eee0aefa3",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "UI",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.ScreenPanel",
+            "__guid": "ad2af424-48a9-4828-81ef-c890bd0e013a",
+            "__enabled": true,
+            "Flags": 0,
+            "AutoScreenScale": true,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Opacity": 1,
+            "Scale": 1,
+            "ScaleStrategy": "ConsistentHeight",
+            "TargetCamera": null,
+            "Timing": "AfterPostProcess",
+            "ZIndex": 100
+          },
+          {
+            "__type": "Sandbox.PlayerUI",
+            "__guid": "3702113c-c56a-40fa-99e6-eb25eb0c65a8",
+            "__enabled": true,
+            "Flags": 0,
+            "CurrentHealth": 100,
+            "MaxHealth": 100,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          }
+        ],
+        "Children": []
       }
     ],
     "__properties": {

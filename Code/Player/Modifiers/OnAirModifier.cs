@@ -23,15 +23,17 @@ public class OnAirModifier
 
 public class HomingShot : OnAirModifier
 {
+	public HomingShot()
+	{
+		modifierType = ModifierType.HomingShot;
+	}
 
-	public new ModifierType modifierType { get; set; } = ModifierType.HomingShot;
 	public override Vector3 GetNewDirection( Vector3 baseDirection, BulletBehaviour bullet )
 	{
 		Vector3 newDirection = baseDirection;
 		Scene scene = bullet.GameObject.Scene;
 		List<SceneTraceResult> allResults =
-			scene.Trace.Sphere( 100f, bullet.WorldPosition, bullet.WorldPosition + Vector3.Forward ).WithAllTags( "enemy" ).RunAll().ToList();
-
+			scene.Trace.Sphere( 1000f, bullet.WorldPosition, bullet.WorldPosition + Vector3.Forward ).WithAllTags( "enemy" ).RunAll().ToList();
 
 		if ( allResults != null && allResults.Count > 0 )
 		{
@@ -40,7 +42,7 @@ public class HomingShot : OnAirModifier
 			Vector3 bulletPos = bullet.WorldPosition;
 
 			float targetDist = float.MaxValue;
-			float powerHoming = level * Time.Delta;
+			float powerHoming = level * 3 * Time.Delta;
 
 			foreach ( SceneTraceResult result in allResults )
 			{
@@ -59,7 +61,6 @@ public class HomingShot : OnAirModifier
 			newDirection = Vector3.Lerp( baseDirection, directionToEnemy, powerHoming );
 			newDirection = newDirection.WithZ( 0 ).Normal;
 		}
-
 
 		return newDirection.Normal;
 	}

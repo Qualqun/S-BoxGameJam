@@ -25,8 +25,12 @@ public class EndModifier
 
 public class Bounce : EndModifier
 {
-	public new ModifierType modifierType { get; set; } = ModifierType.Bounce;
 	int nbBounce { get; set; } = 1;
+
+	public Bounce()
+	{
+		modifierType = ModifierType.Bounce;
+	}
 
 	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet, out bool updateNextStep )
 	{
@@ -69,11 +73,14 @@ public class Bounce : EndModifier
 
 public class Percing : EndModifier
 {
-	public new ModifierType modifierType { get; set; } = ModifierType.Percing;
 	int nbPercing = 1;
 	List<GameObject> enemyEncountered = new List<GameObject>();
 
-	
+	public Percing()
+	{
+		modifierType = ModifierType.Percing;
+	}
+
 	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet, out bool updateNextStep )
 	{
 		GameObject collisionObj = traceResult.Collider.GameObject;
@@ -120,7 +127,10 @@ public class Percing : EndModifier
 
 public class EndExplosion : EndModifier
 {
-	public new ModifierType modifierType { get; set; } = ModifierType.Explosion;
+	public EndExplosion()
+	{
+		modifierType = ModifierType.Explosion;
+	}
 
 	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet, out bool updateNextStep )
 	{
