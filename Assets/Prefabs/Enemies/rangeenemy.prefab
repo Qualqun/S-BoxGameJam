@@ -89,7 +89,7 @@
         },
         "bulletDamage": 6,
         "bulletDamagePerRound": 6,
-        "bulletSpeed": 180,
+        "bulletSpeed": 1000,
         "gunPoint": {
           "_type": "gameobject",
           "go": "0847bc44-9917-41af-a64c-d6173528996b"
@@ -215,7 +215,7 @@
                 "BodyGroups": 18446744073709551615,
                 "BoneMergeTarget": null,
                 "CreateAttachments": false,
-                "CreateBoneObjects": false,
+                "CreateBoneObjects": true,
                 "LodOverride": null,
                 "MaterialGroup": null,
                 "MaterialOverride": "art/shaders/enemy.vmat",
@@ -323,25 +323,571 @@
                 "Wireframe": false
               }
             ],
-            "Children": []
-          },
-          {
-            "__guid": "0847bc44-9917-41af-a64c-d6173528996b",
-            "__version": 2,
-            "Flags": 0,
-            "Name": "GunPoint",
-            "Position": "25,0,40",
-            "Rotation": "0,0,0,1",
-            "Scale": "1,1,1",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 2,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [],
-            "Children": []
+            "Children": [
+              {
+                "__guid": "4f43aa37-8fef-4d67-8af1-736297a39699",
+                "__version": 2,
+                "Flags": 0,
+                "Name": "Hips",
+                "Position": "0,0,0",
+                "Rotation": "0,0,0,1",
+                "Scale": "1,1,1",
+                "Tags": "",
+                "Enabled": true,
+                "NetworkMode": 2,
+                "NetworkFlags": 0,
+                "NetworkOrphaned": 0,
+                "NetworkTransmit": true,
+                "OwnerTransfer": 1,
+                "Components": [],
+                "Children": [
+                  {
+                    "__guid": "f9a2633c-d487-448a-b6f2-ed065f69e57b",
+                    "__version": 2,
+                    "Flags": 0,
+                    "Name": "Spine",
+                    "Position": "0,0,0",
+                    "Rotation": "0,0,0,1",
+                    "Scale": "1,1,1",
+                    "Tags": "",
+                    "Enabled": true,
+                    "NetworkMode": 2,
+                    "NetworkFlags": 0,
+                    "NetworkOrphaned": 0,
+                    "NetworkTransmit": true,
+                    "OwnerTransfer": 1,
+                    "Components": [],
+                    "Children": [
+                      {
+                        "__guid": "dddb08ce-6426-41c5-a179-c0900d764c26",
+                        "__version": 2,
+                        "Flags": 0,
+                        "Name": "Spine1",
+                        "Position": "0,0,0",
+                        "Rotation": "0,0,0,1",
+                        "Scale": "1,1,1",
+                        "Tags": "",
+                        "Enabled": true,
+                        "NetworkMode": 2,
+                        "NetworkFlags": 0,
+                        "NetworkOrphaned": 0,
+                        "NetworkTransmit": true,
+                        "OwnerTransfer": 1,
+                        "Components": [],
+                        "Children": [
+                          {
+                            "__guid": "cb614b01-1ab5-4a3c-8d28-659a07861c25",
+                            "__version": 2,
+                            "Flags": 0,
+                            "Name": "Spine2",
+                            "Position": "0,0,0",
+                            "Rotation": "0,0,0,1",
+                            "Scale": "1,1,1",
+                            "Tags": "",
+                            "Enabled": true,
+                            "NetworkMode": 2,
+                            "NetworkFlags": 0,
+                            "NetworkOrphaned": 0,
+                            "NetworkTransmit": true,
+                            "OwnerTransfer": 1,
+                            "Components": [],
+                            "Children": [
+                              {
+                                "__guid": "17b8a3bd-7bf5-4d26-9524-f945ebc3c605",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "Neck",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": [
+                                  {
+                                    "__guid": "ed46892e-36bb-4b71-99fb-0b7762997cee",
+                                    "__version": 2,
+                                    "Flags": 0,
+                                    "Name": "Head",
+                                    "Position": "0,0,0",
+                                    "Rotation": "0,0,0,1",
+                                    "Scale": "1,1,1",
+                                    "Tags": "",
+                                    "Enabled": true,
+                                    "NetworkMode": 2,
+                                    "NetworkFlags": 0,
+                                    "NetworkOrphaned": 0,
+                                    "NetworkTransmit": true,
+                                    "OwnerTransfer": 1,
+                                    "Components": [],
+                                    "Children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "__guid": "c48277e7-d40b-4758-b8e5-4d2a72c8b0aa",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "LeftShoulder",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": [
+                                  {
+                                    "__guid": "65c5338b-f304-42cb-83c0-280a29ddf93f",
+                                    "__version": 2,
+                                    "Flags": 0,
+                                    "Name": "LeftArm",
+                                    "Position": "0,0,0",
+                                    "Rotation": "0,0,0,1",
+                                    "Scale": "1,1,1",
+                                    "Tags": "",
+                                    "Enabled": true,
+                                    "NetworkMode": 2,
+                                    "NetworkFlags": 0,
+                                    "NetworkOrphaned": 0,
+                                    "NetworkTransmit": true,
+                                    "OwnerTransfer": 1,
+                                    "Components": [],
+                                    "Children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "__guid": "21ee72ab-125e-4c2a-88d4-19619b5e22e3",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "RightShoulder",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": [
+                                  {
+                                    "__guid": "68352c33-2818-4ede-add9-f4140dc07c11",
+                                    "__version": 2,
+                                    "Flags": 0,
+                                    "Name": "RightArm",
+                                    "Position": "0,0,0",
+                                    "Rotation": "0,0,0,1",
+                                    "Scale": "1,1,1",
+                                    "Tags": "",
+                                    "Enabled": true,
+                                    "NetworkMode": 2,
+                                    "NetworkFlags": 0,
+                                    "NetworkOrphaned": 0,
+                                    "NetworkTransmit": true,
+                                    "OwnerTransfer": 1,
+                                    "Components": [],
+                                    "Children": [
+                                      {
+                                        "__guid": "7bfd6c0e-4214-4afc-b41c-bceab97aeaa7",
+                                        "__version": 2,
+                                        "Flags": 0,
+                                        "Name": "RightForeArm",
+                                        "Position": "0,0,0",
+                                        "Rotation": "0,0,0,1",
+                                        "Scale": "1,1,1",
+                                        "Tags": "",
+                                        "Enabled": true,
+                                        "NetworkMode": 2,
+                                        "NetworkFlags": 0,
+                                        "NetworkOrphaned": 0,
+                                        "NetworkTransmit": true,
+                                        "OwnerTransfer": 1,
+                                        "Components": [],
+                                        "Children": [
+                                          {
+                                            "__guid": "0847bc44-9917-41af-a64c-d6173528996b",
+                                            "__version": 2,
+                                            "Flags": 0,
+                                            "Name": "GunPoint",
+                                            "Position": "-0.49271965,42.7034264,0.405588269",
+                                            "Rotation": "0,0,0,1",
+                                            "Scale": "1,1,1",
+                                            "Tags": "",
+                                            "Enabled": true,
+                                            "NetworkMode": 2,
+                                            "NetworkFlags": 0,
+                                            "NetworkOrphaned": 0,
+                                            "NetworkTransmit": true,
+                                            "OwnerTransfer": 1,
+                                            "Components": [],
+                                            "Children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "__guid": "93b303ad-c21c-4089-a655-aeb8f6a7a6a2",
+                        "__version": 2,
+                        "Flags": 0,
+                        "Name": "Tube1",
+                        "Position": "0,0,0",
+                        "Rotation": "0,0,0,1",
+                        "Scale": "1,1,1",
+                        "Tags": "",
+                        "Enabled": true,
+                        "NetworkMode": 2,
+                        "NetworkFlags": 0,
+                        "NetworkOrphaned": 0,
+                        "NetworkTransmit": true,
+                        "OwnerTransfer": 1,
+                        "Components": [],
+                        "Children": [
+                          {
+                            "__guid": "79ecd649-a6a8-42dc-a727-00057c254268",
+                            "__version": 2,
+                            "Flags": 0,
+                            "Name": "Tube2",
+                            "Position": "0,0,0",
+                            "Rotation": "0,0,0,1",
+                            "Scale": "1,1,1",
+                            "Tags": "",
+                            "Enabled": true,
+                            "NetworkMode": 2,
+                            "NetworkFlags": 0,
+                            "NetworkOrphaned": 0,
+                            "NetworkTransmit": true,
+                            "OwnerTransfer": 1,
+                            "Components": [],
+                            "Children": [
+                              {
+                                "__guid": "444b1c62-a5c4-4abb-a945-368452780b89",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "Tube3",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": [
+                                  {
+                                    "__guid": "e9e86875-f701-4f72-b89a-bf0d4347c8b9",
+                                    "__version": 2,
+                                    "Flags": 0,
+                                    "Name": "Tube4",
+                                    "Position": "0,0,0",
+                                    "Rotation": "0,0,0,1",
+                                    "Scale": "1,1,1",
+                                    "Tags": "",
+                                    "Enabled": true,
+                                    "NetworkMode": 2,
+                                    "NetworkFlags": 0,
+                                    "NetworkOrphaned": 0,
+                                    "NetworkTransmit": true,
+                                    "OwnerTransfer": 1,
+                                    "Components": [],
+                                    "Children": [
+                                      {
+                                        "__guid": "19b371d1-5dc4-424e-99bc-dc8f811c99bb",
+                                        "__version": 2,
+                                        "Flags": 0,
+                                        "Name": "Tube5",
+                                        "Position": "0,0,0",
+                                        "Rotation": "0,0,0,1",
+                                        "Scale": "1,1,1",
+                                        "Tags": "",
+                                        "Enabled": true,
+                                        "NetworkMode": 2,
+                                        "NetworkFlags": 0,
+                                        "NetworkOrphaned": 0,
+                                        "NetworkTransmit": true,
+                                        "OwnerTransfer": 1,
+                                        "Components": [],
+                                        "Children": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "__guid": "0b924577-7d96-4745-8ebc-206b8f138f77",
+                        "__version": 2,
+                        "Flags": 0,
+                        "Name": "Rube1",
+                        "Position": "0,0,0",
+                        "Rotation": "0,0,0,1",
+                        "Scale": "1,1,1",
+                        "Tags": "",
+                        "Enabled": true,
+                        "NetworkMode": 2,
+                        "NetworkFlags": 0,
+                        "NetworkOrphaned": 0,
+                        "NetworkTransmit": true,
+                        "OwnerTransfer": 1,
+                        "Components": [],
+                        "Children": [
+                          {
+                            "__guid": "98f1a11b-9edc-44fb-ada2-d94c4bab548b",
+                            "__version": 2,
+                            "Flags": 0,
+                            "Name": "Rube2",
+                            "Position": "0,0,0",
+                            "Rotation": "0,0,0,1",
+                            "Scale": "1,1,1",
+                            "Tags": "",
+                            "Enabled": true,
+                            "NetworkMode": 2,
+                            "NetworkFlags": 0,
+                            "NetworkOrphaned": 0,
+                            "NetworkTransmit": true,
+                            "OwnerTransfer": 1,
+                            "Components": [],
+                            "Children": [
+                              {
+                                "__guid": "6380f6eb-e37b-432d-ad16-c84261d81c50",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "Rube3",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": [
+                                  {
+                                    "__guid": "7bc8e359-29b7-4f6a-97a5-167e53123143",
+                                    "__version": 2,
+                                    "Flags": 0,
+                                    "Name": "Rube4",
+                                    "Position": "0,0,0",
+                                    "Rotation": "0,0,0,1",
+                                    "Scale": "1,1,1",
+                                    "Tags": "",
+                                    "Enabled": true,
+                                    "NetworkMode": 2,
+                                    "NetworkFlags": 0,
+                                    "NetworkOrphaned": 0,
+                                    "NetworkTransmit": true,
+                                    "OwnerTransfer": 1,
+                                    "Components": [],
+                                    "Children": [
+                                      {
+                                        "__guid": "913c0e77-04d4-4601-82c9-3fb6183b939f",
+                                        "__version": 2,
+                                        "Flags": 0,
+                                        "Name": "Rube5",
+                                        "Position": "0,0,0",
+                                        "Rotation": "0,0,0,1",
+                                        "Scale": "1,1,1",
+                                        "Tags": "",
+                                        "Enabled": true,
+                                        "NetworkMode": 2,
+                                        "NetworkFlags": 0,
+                                        "NetworkOrphaned": 0,
+                                        "NetworkTransmit": true,
+                                        "OwnerTransfer": 1,
+                                        "Components": [],
+                                        "Children": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "__guid": "d3e504f0-cfe0-4fe5-b274-44df910a3158",
+                    "__version": 2,
+                    "Flags": 0,
+                    "Name": "LeftUpLeg",
+                    "Position": "0,0,0",
+                    "Rotation": "0,0,0,1",
+                    "Scale": "1,1,1",
+                    "Tags": "",
+                    "Enabled": true,
+                    "NetworkMode": 2,
+                    "NetworkFlags": 0,
+                    "NetworkOrphaned": 0,
+                    "NetworkTransmit": true,
+                    "OwnerTransfer": 1,
+                    "Components": [],
+                    "Children": [
+                      {
+                        "__guid": "b550371d-a391-4ff3-8b2c-5ccb0218b0dc",
+                        "__version": 2,
+                        "Flags": 0,
+                        "Name": "LeftLeg",
+                        "Position": "0,0,0",
+                        "Rotation": "0,0,0,1",
+                        "Scale": "1,1,1",
+                        "Tags": "",
+                        "Enabled": true,
+                        "NetworkMode": 2,
+                        "NetworkFlags": 0,
+                        "NetworkOrphaned": 0,
+                        "NetworkTransmit": true,
+                        "OwnerTransfer": 1,
+                        "Components": [],
+                        "Children": [
+                          {
+                            "__guid": "9969a179-c400-4711-819e-fd588e8b5a5c",
+                            "__version": 2,
+                            "Flags": 0,
+                            "Name": "LeftFoot",
+                            "Position": "0,0,0",
+                            "Rotation": "0,0,0,1",
+                            "Scale": "1,1,1",
+                            "Tags": "",
+                            "Enabled": true,
+                            "NetworkMode": 2,
+                            "NetworkFlags": 0,
+                            "NetworkOrphaned": 0,
+                            "NetworkTransmit": true,
+                            "OwnerTransfer": 1,
+                            "Components": [],
+                            "Children": [
+                              {
+                                "__guid": "f65a90f6-bcc0-49e2-a960-6452b7b09e92",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "LeftToeBase",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "__guid": "5b83858f-b6d4-4fb7-9622-8856b6f125d0",
+                    "__version": 2,
+                    "Flags": 0,
+                    "Name": "RightUpLeg",
+                    "Position": "0,0,0",
+                    "Rotation": "0,0,0,1",
+                    "Scale": "1,1,1",
+                    "Tags": "",
+                    "Enabled": true,
+                    "NetworkMode": 2,
+                    "NetworkFlags": 0,
+                    "NetworkOrphaned": 0,
+                    "NetworkTransmit": true,
+                    "OwnerTransfer": 1,
+                    "Components": [],
+                    "Children": [
+                      {
+                        "__guid": "2a379371-f519-4d60-ab53-eef7a9bb5246",
+                        "__version": 2,
+                        "Flags": 0,
+                        "Name": "RightLeg",
+                        "Position": "0,0,0",
+                        "Rotation": "0,0,0,1",
+                        "Scale": "1,1,1",
+                        "Tags": "",
+                        "Enabled": true,
+                        "NetworkMode": 2,
+                        "NetworkFlags": 0,
+                        "NetworkOrphaned": 0,
+                        "NetworkTransmit": true,
+                        "OwnerTransfer": 1,
+                        "Components": [],
+                        "Children": [
+                          {
+                            "__guid": "ec2d986b-9a30-4fea-8da7-c8556ea0a37a",
+                            "__version": 2,
+                            "Flags": 0,
+                            "Name": "RightFoot",
+                            "Position": "0,0,0",
+                            "Rotation": "0,0,0,1",
+                            "Scale": "1,1,1",
+                            "Tags": "",
+                            "Enabled": true,
+                            "NetworkMode": 2,
+                            "NetworkFlags": 0,
+                            "NetworkOrphaned": 0,
+                            "NetworkTransmit": true,
+                            "OwnerTransfer": 1,
+                            "Components": [],
+                            "Children": [
+                              {
+                                "__guid": "6382e476-051e-43e4-861a-2dae8f94147c",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "RightToeBase",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           }
         ]
       }

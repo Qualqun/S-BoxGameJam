@@ -106,10 +106,10 @@ public sealed class PlayerState : Component
 				BaseFireRate += 1f;
 				break;
 			case BoostType.TimeInvulnerability:
-				TimeInvulnerability += 0.2f;
+				TimeInvulnerability += 1f;
 				break;
 			case BoostType.BulletDamage:
-				BaseBulletDamage += 10f;
+				BaseBulletDamage += 15f;
 				break;
 			case BoostType.BulletSize:
 				BaseBulletSize += 0.25f;

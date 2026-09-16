@@ -4,9 +4,9 @@ using Sandbox;
 
 public class BaseEnemyAnimation : Component
 {
-	[Property] SkinnedModelRenderer model { get; set; }
+	[Property] protected SkinnedModelRenderer model { get; set; }
 
-	[Sync] public bool hit { get; set; }
+	bool hit { get; set; }
 
 	protected override void OnUpdate()
 	{
@@ -16,4 +16,11 @@ public class BaseEnemyAnimation : Component
 
 		hit = false;
 	}
+
+	[Rpc.Broadcast]
+	public virtual void OnHit()
+	{
+		hit = true;
+	}
+
 }

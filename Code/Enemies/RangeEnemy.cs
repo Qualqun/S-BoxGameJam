@@ -35,7 +35,7 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 		if ( !noTarget )
 		{
-			bool canShoot = targetDist < range || attackTask != null;
+			bool canShoot = targetDist < range && attackTask == null;
 
 			if ( canShoot )
 			{
@@ -47,10 +47,11 @@ public class RangeEnemy : BaseEnemyBehaviour
 				{
 					canShoot = hit.Collider.Tags.Has( "player" );
 				}
-
 			}
 
-			if ( canShoot )
+			animation.stand = canShoot || attackTask != null;
+
+			if ( canShoot || attackTask != null )
 			{
 				agent.Stop();
 
@@ -78,7 +79,7 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 		_ = AimRotate( direction, aimTime );
 
-		animation.stand = true;
+		
 
 		await Task.DelaySeconds( aimTime );
 
@@ -91,9 +92,7 @@ public class RangeEnemy : BaseEnemyBehaviour
 		await Task.DelaySeconds( shootTime / 4);
 
 		visual.ResetLaser();
-
-		animation.stand = false;
-		animation.shoot = true;
+		animation.Shoot();
 
 		newBullet = bullet.Clone( gunPoint.WorldPosition );
 		bulletBehaviour = newBullet.GetComponent<EnemyBulletBehaviour>();
@@ -137,7 +136,7 @@ public class RangeEnemy : BaseEnemyBehaviour
 	{
 		base.TakeDamage( amount );
 
-		animation.hit = true;
+		animation.OnHit();
 	}
 
 	public override void InitStats( int roundNb )

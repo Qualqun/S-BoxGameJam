@@ -157,9 +157,9 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 			BulletInfo baseBullet = InitBaseBullet();
 
-
 			animation.speedShoot = State.FireRate;
-			animation.shoot = true;
+			animation.Shoot();
+
 			bullets.Add( baseBullet );
 
 			foreach ( ModifierType mod in State.ActiveModifiers )
@@ -248,7 +248,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 			if ( mode )
 			{
-				colorTint.a = 0.5f;
+				colorTint.a = 0.35f;
 				isInvulnerable = true;
 				Tags.Add( "invulnerability" );
 			}

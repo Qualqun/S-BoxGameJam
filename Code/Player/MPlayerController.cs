@@ -78,7 +78,7 @@ public sealed class MPlayerController : Component
 
 		if ( Input.Down( "Jump" ) && velocity != Vector3.Zero && dashTask == null && !playerBehaviour.isDead )
 		{
-			playerBehaviour.animation.dash = true;
+			playerBehaviour.animation.Dash();
 			dashTask = Dash( velocity.Normal );
 		}
 

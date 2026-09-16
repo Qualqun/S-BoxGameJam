@@ -4,10 +4,8 @@ using Sandbox;
 
 public sealed class RangeEnemyAnimation : BaseEnemyAnimation
 {
-	[Property] SkinnedModelRenderer model { get; set; }
-
 	[Sync] public bool stand { get; set; } = false;
-	[Sync] public bool shoot { get; set; } = false;
+	bool shoot = false;
 
 	protected override void OnUpdate()
 	{
@@ -15,5 +13,15 @@ public sealed class RangeEnemyAnimation : BaseEnemyAnimation
 
 		model.Set( "Standing", stand );
 		model.Set( "Shoot", shoot );
+
+		shoot = false;
 	}
+
+	public void Shoot()
+	{
+		shoot = true;
+	}
+
+	
+
 }

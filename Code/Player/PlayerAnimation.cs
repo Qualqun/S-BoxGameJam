@@ -6,8 +6,9 @@ public sealed class PlayerAnimation : Component
 
 	[Sync] public Vector2 move { get; set; }
 	[Sync] public float speedShoot { get; set; } = 1f;
-	[Sync] public bool shoot { get; set; }
-	[Sync] public bool dash { get; set; }
+
+	bool shootAnim = false;
+	bool dash = false;
 
 	protected override void OnUpdate()
 	{
@@ -17,11 +18,23 @@ public sealed class PlayerAnimation : Component
 		model.Set( "move_y", move.y );
 		model.Set( "ShootSpeed", speedShoot );
 
-		model.Set( "Shoot", shoot );
+		model.Set( "Shoot", shootAnim );
 		model.Set( "Dash", dash );
 
-		shoot = false;
+		shootAnim = false;
 		dash = false;
 	}
-	
+
+	[Rpc.Broadcast]
+	public void Shoot()
+	{
+		shootAnim = true;
+	}
+
+	[Rpc.Broadcast]
+	public void Dash()
+	{
+		dash = true;
+	}
+
 }

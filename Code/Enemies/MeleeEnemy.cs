@@ -21,6 +21,6 @@ public class MeleeEnemy : BaseEnemyBehaviour
 	{
 		base.TakeDamage( amount );
 
-		animation.hit = true;
+		animation.OnHit();
 	}
 }

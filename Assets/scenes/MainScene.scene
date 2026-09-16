@@ -221,24 +221,6 @@
               "Children": []
             },
             {
-              "__guid": "e8e82d5f-44b7-4a8e-944f-434af8f16da0",
-              "__version": 2,
-              "Flags": 0,
-              "Name": "Point (1)",
-              "Position": "-959.244751,78.8535538,-9.80682671E-07",
-              "Rotation": "0,0,0,1",
-              "Scale": "1,1,1",
-              "Tags": "",
-              "Enabled": true,
-              "NetworkMode": 2,
-              "NetworkFlags": 0,
-              "NetworkOrphaned": 0,
-              "NetworkTransmit": true,
-              "OwnerTransfer": 1,
-              "Components": [],
-              "Children": []
-            },
-            {
               "__guid": "d613af4f-65ca-44c9-af3c-d8bedbbb3191",
               "__version": 2,
               "Flags": 0,
@@ -283,7 +265,7 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Game",
-      "Position": "0,0,1",
+      "Position": "0,0,0",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "",
@@ -333,11 +315,11 @@
           "EnemiesPrefabs": [
             {
               "_type": "gameobject",
-              "prefab": "prefabs/enemies/meleeenemy.prefab"
+              "prefab": "prefabs/enemies/rangeenemy.prefab"
             },
             {
               "_type": "gameobject",
-              "prefab": "prefabs/enemies/rangeenemy.prefab"
+              "prefab": "prefabs/enemies/meleeenemy.prefab"
             }
           ],
           "GameState": {
@@ -356,15 +338,11 @@
             "_type": "gameobject",
             "prefab": "prefabs/player/player.prefab"
           },
-          "RoundSpawnRate": 0.35,
+          "RoundSpawnRate": 1,
           "SpawnPoints": [
             {
               "_type": "gameobject",
               "go": "3935d6d2-cfdd-4ffa-8dc8-b5c2876b85e9"
-            },
-            {
-              "_type": "gameobject",
-              "go": "e8e82d5f-44b7-4a8e-944f-434af8f16da0"
             },
             {
               "_type": "gameobject",
@@ -24447,58 +24425,6 @@
           "Children": []
         }
       ]
-    },
-    {
-      "__guid": "d311ee5c-c722-4bea-a481-f0f6f7059155",
-      "__version": 2,
-      "__Prefab": "art/prefabs/map/bullet/bulletsniper.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "86f0a23e-093b-447b-ade4-ecf60c9ca47f"
-            },
-            "Property": "Position",
-            "Value": "83.776741,112.296402,11.6996212"
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "86f0a23e-093b-447b-ade4-ecf60c9ca47f": "d311ee5c-c722-4bea-a481-f0f6f7059155",
-        "5a347333-52b8-4d70-9021-a938037e0b9e": "8caa9e19-981e-8a0f-8276-cac4c0af6d08",
-        "cbe36ccb-c522-410c-94a3-de0e28c9190b": "9bee8f55-77fd-4c4d-8bb6-92900e89022e",
-        "3129ac16-6d17-4392-b7ff-c04496c09a39": "994d0bc2-a3bd-86cb-b530-af2677f0f91a"
-      }
-    },
-    {
-      "__guid": "0b8d3acd-85d7-487f-8808-994c05a5f2ee",
-      "__version": 2,
-      "__Prefab": "art/prefabs/map/bullet/bulletplayer.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "921d48a5-04db-46af-b862-4d1d684616dd"
-            },
-            "Property": "Position",
-            "Value": "89.269043,92.7988281,12.0884018"
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "921d48a5-04db-46af-b862-4d1d684616dd": "0b8d3acd-85d7-487f-8808-994c05a5f2ee",
-        "121716ff-9978-41a8-893b-2ac17653befa": "fbf7b6ba-7f15-4a52-9638-5fc6872cfd93",
-        "8f2037b8-269d-4cd7-88a2-9380b23f1b3b": "a001d375-aea2-450f-93ec-302d23e64611",
-        "a5a39b67-981c-44a7-a9d6-9dd1652538ea": "5f6baa5c-a04e-4286-9ba6-14ad360bb325"
-      }
     }
   ],
   "SceneProperties": {

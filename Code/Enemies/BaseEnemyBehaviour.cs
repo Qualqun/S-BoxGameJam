@@ -14,13 +14,12 @@ public class BaseEnemyBehaviour : Component
 	[Property, Group( "Stats" )] public float hp { get; set; } = 25f;
 	[Property, Group( "Stats" )] public float meleDamage { get; set; } = 8f;
 
-	[Property, Group( "Growth stats" )] public float hpPerRound { get; set; } = 15f;
+	[Property, Group( "Growth stats" )] public float hpPerRound { get; set; } = 25f;
 	[Property, Group( "Growth stats" )] public float meleDamagePerRound { get; set; } = 6f;
 
 	[Property, Group( "Refs" )] protected NavMeshAgent agent { get; set; }
 	[Property, Group( "Refs" )] protected BaseVisualEnemy model { get; set; }
 	[Property, Group( "Refs" )] protected float repathDistance { get; set; } = 64f;
-
 
 	protected List<PlayerBehaviour> players;
 	public GameManager gameManager { get; set; }
