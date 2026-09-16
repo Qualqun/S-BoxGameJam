@@ -132,7 +132,7 @@ public sealed class PlayerState : Component
 			case BoostType.Sniper:
 				FireRateMultiplier *= 0.6f;
 				DamageMultiplier *= 2f;
-				BaseBulletSpeed += 100f;
+				BaseBulletSpeed += 500f;
 				AddModifier( ModifierType.Sniper );
 				AddModifier( ModifierType.Percing );
 				break;

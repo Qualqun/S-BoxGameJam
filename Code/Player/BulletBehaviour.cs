@@ -39,7 +39,6 @@ public struct BulletInfo
 
 		foreach ( EndModifier mod in endModifiers )
 		{
-			Log.Info( "New modifier name " + modifier.modifierType.ToString() + " other modifier " + mod.modifierType.ToString() );
 
 			if ( mod.modifierType == modifier.modifierType )
 			{
@@ -94,7 +93,7 @@ public sealed class BulletBehaviour : Component
 		}
 
 		nextStep = GetNextStep();
-		traceResult = Scene.Trace.Sphere( 32f * WorldScale.x, WorldPosition, nextStep ).WithoutTags( "player", "bullet", "enemybullet" ).Run();
+		traceResult = Scene.Trace.Sphere( 32f * WorldScale.x, WorldPosition, nextStep ).WithoutTags( "player", "bullet", "enemybullet", "ground" ).Run();
 
 		if ( traceResult.Hit )
 		{
@@ -116,7 +115,6 @@ public sealed class BulletBehaviour : Component
 						updateNextStep = true;
 
 				}
-
 			}
 
 			if ( traceResult.HasTag( "enemy" ) && !enemyHit.Contains( collideObj ) )

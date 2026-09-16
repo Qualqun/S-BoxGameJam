@@ -90,7 +90,7 @@
         },
         "cooldown": 1,
         "dashDuration": 0.3,
-        "dashSpeed": 2000,
+        "dashSpeed": 600,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,

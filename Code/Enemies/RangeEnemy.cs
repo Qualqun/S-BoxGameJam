@@ -5,7 +5,6 @@ using static Sandbox.Services.Stats;
 public class RangeEnemy : BaseEnemyBehaviour
 {
 
-
 	[Property, Group( "Stats" )] public float range { get; set; } = 100f;
 	[Property, Group( "Stats" )] public float bulletSpeed { get; set; } = 180f;
 	[Property, Group( "Stats" )] public float bulletDamage { get; set; } = 6f;
@@ -41,7 +40,7 @@ public class RangeEnemy : BaseEnemyBehaviour
 					.Ray( gunPoint.WorldPosition, target.WorldPosition + Vector3.Up * 32 )
 					.WithAnyTags( "enemy" ).Run();
 
-				if ( hit.Hit )
+				if ( hit.Hit && !hit.StartedSolid )
 				{
 					canShoot = hit.Collider.Tags.Has( "player" );
 				}

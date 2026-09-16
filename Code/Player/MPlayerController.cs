@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 public sealed class MPlayerController : Component
 {
-	[Property, Group( "Stats" )] float dashDuration;
-	[Property, Group( "Stats" )] float cooldown;
-	[Property, Group( "Stats" )] float dashSpeed;
+	[Property, Group( "Stats" )] float dashDuration { get; set; }
+	[Property, Group( "Stats" )] float cooldown { get; set; }
+	[Property, Group( "Stats" )] float dashSpeed { get; set; }
 
 	[Property, Group( "Refs" )] PlayerBehaviour playerBehaviour { get; set; }
 	[Property, Group( "Refs" )] CameraComponent camera { get; set; }
@@ -36,6 +36,7 @@ public sealed class MPlayerController : Component
 		SceneTraceResult trace = Scene.Trace.Ray( ray.Position - gunPointOffSet, ray.Position + ray.Forward * 5000f - gunPointOffSet ).WithTag( "ground" ).Run();
 
 		Vector3 direction = trace.EndPosition - visual.WorldPosition;
+
 		direction = direction.WithZ( 0f );
 		visual.WorldRotation = Rotation.LookAt( direction );
 	}
