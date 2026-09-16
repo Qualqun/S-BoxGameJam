@@ -1,0 +1,8 @@
+{
+  "Title": "Heavy Rounds",
+  "BoostType": "BulletDamage",
+  "Image": null,
+  "Description": "+10 Bullet Damage",
+  "__references": [],
+  "__version": 0
+}

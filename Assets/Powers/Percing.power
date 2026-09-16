@@ -1,0 +1,8 @@
+{
+  "Title": "Piercing Rounds",
+  "BoostType": "Percing",
+  "Image": null,
+  "Description": "Bullets pierce through enemies",
+  "__references": [],
+  "__version": 0
+}

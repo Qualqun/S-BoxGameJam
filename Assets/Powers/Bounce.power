@@ -1,0 +1,8 @@
+{
+  "Title": "Ricochet",
+  "BoostType": "Bounce",
+  "Image": null,
+  "Description": "Bullets bounce off walls",
+  "__references": [],
+  "__version": 0
+}

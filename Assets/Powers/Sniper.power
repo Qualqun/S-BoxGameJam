@@ -1,0 +1,8 @@
+{
+  "Title": "Sniper",
+  "BoostType": "Sniper",
+  "Image": null,
+  "Description": "Fire 40% slower, deal 100% more damage. +500 Bullet Speed",
+  "__references": [],
+  "__version": 0
+}

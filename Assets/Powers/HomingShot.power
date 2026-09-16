@@ -1,0 +1,8 @@
+{
+  "Title": "Homing Rounds",
+  "BoostType": "HomingShot",
+  "Image": null,
+  "Description": "Bullets home in on enemies",
+  "__references": [],
+  "__version": 0
+}

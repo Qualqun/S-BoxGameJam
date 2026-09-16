@@ -1,0 +1,8 @@
+{
+  "Title": "Vitality",
+  "BoostType": "Hp",
+  "Image": null,
+  "Description": "+30 Max HP",
+  "__references": [],
+  "__version": 0
+}

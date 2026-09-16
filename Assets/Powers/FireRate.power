@@ -1,6 +1,6 @@
 {
   "Title": "Damage",
-  "BoostType": "BulletSize",
+  "BoostType": "BulletSpeed",
   "Image": null,
   "Description": "Damage test",
   "__references": [],

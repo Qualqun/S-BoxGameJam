@@ -1,0 +1,8 @@
+{
+  "Title": "Explosive Rounds",
+  "BoostType": "Explosion",
+  "Image": null,
+  "Description": "Bullets explode on impact",
+  "__references": [],
+  "__version": 0
+}

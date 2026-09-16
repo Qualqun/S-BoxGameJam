@@ -8,7 +8,6 @@ public enum BoostType
 	FireRate,
 	TimeInvulnerability,
 	BulletDamage,
-	BulletSize,
 	BulletSpeed,
 	Shotgun,
 	Uzi,
@@ -110,9 +109,6 @@ public sealed class PlayerState : Component
 				break;
 			case BoostType.BulletDamage:
 				BaseBulletDamage += 15f;
-				break;
-			case BoostType.BulletSize:
-				BaseBulletSize += 0.25f;
 				break;
 			case BoostType.BulletSpeed:
 				BaseBulletSpeed += 150f;

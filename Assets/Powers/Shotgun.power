@@ -1,0 +1,8 @@
+{
+  "Title": "Shotgun",
+  "BoostType": "Shotgun",
+  "Image": null,
+  "Description": "Fire 20% slower, deal 10% less damage, and fire 3 bullets in a shotgun spread.",
+  "__references": [],
+  "__version": 0
+}
