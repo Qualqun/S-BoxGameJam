@@ -20,8 +20,7 @@
 		{
 			<div class="reward-card" @onclick=@( () => OnRewardClicked( power ) )>
 				<div class="reward-image">
-
-					<img texture=@power.Image />
+					<img src=@power.Image /><img texture=@power.Image />
 				</div>
 
 				<div class="reward-title">
@@ -84,10 +83,6 @@
 			localPlayerState.ApplyBoost(selectedPower.BoostType);
 
 			Hide();
-		}
-		else
-		{
-			Log.Error("Impossible de trouver le PlayerState local.");
 		}
 	}
 }

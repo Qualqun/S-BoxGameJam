@@ -114,57 +114,24 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 			if ( State.Hp <= 0 )
 			{
-				// Only the host should handle the life decrement
-				if ( Networking.IsHost )
-					State.Life--;
-
 				SetDead();
+
+				if (Networking.IsHost )
+				{
+					if ( gameManager.AreAllPlayersDeadC() )
+						gameManager.GameOver();
+				}
+				
 
 				cancellation?.Cancel();
 				cancellation?.Dispose();
-				cancellation = null;
-
-				if ( State.Life > 0 )
-				{
-					_ = ReviveRoutine();
-				}
-				else
-				{
-					if ( Networking.IsHost )
-					{
-						gameManager.CheckPlayersState();
-					}
-				}
+				cancellation = null;		
 			}
 			else
 			{
 				_ = TimerHit();
 			}
 		}
-	}
-
-	async Task ReviveRoutine()
-	{
-		await Task.DelaySeconds( 3f );
-
-		State.Hp = State.MaxHp;
-
-		// Only update the UI if this is not a proxy 
-		if ( !IsProxy && ui != null )
-		{
-			ui.SetHealth( State.Hp, State.MaxHp );
-		}
-
-		Color colorTint = model.Tint;
-		colorTint = Color.White;
-		colorTint.a = 1f;
-		model.Tint = colorTint;
-
-		Tags.Remove( "invulnerability" );
-		isDead = false;
-		canShoot = true;
-
-		_ = TimerHit();
 	}
 
 	public void Fire()
@@ -236,7 +203,26 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		canShoot = false;
 		isDead = true;
 	}
+	[Rpc.Broadcast]
+	public void Revive()
+	{
+		isDead = false;
+		canShoot = true;
+		isInvulnerable = false;
+		Tags.Remove( "invulnerability" );
 
+		Color colorTint = model.Tint;
+		colorTint = Color.White;
+		colorTint.a = 1f;
+		model.Tint = colorTint;
+
+		if ( Networking.IsHost )
+		{
+			State.Hp = State.MaxHp;
+		}
+
+		ui?.SetHealth( State.Hp, State.MaxHp );
+	}
 	[Rpc.Broadcast]
 	public void SetInvulnerability( bool mode )
 	{

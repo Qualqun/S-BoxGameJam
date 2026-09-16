@@ -64,33 +64,33 @@ public sealed class GameManager : Component
 	{
 		base.OnFixedUpdate();
 
-		if ( !Networking.IsHost ) 
+		if ( !Networking.IsHost )
 			return;
 
-		if ( GameState == null ) 
+		if ( GameState == null )
 			return;
 
 		const float FixedDeltaTime = 0.02f;
 
-		if ( GameState.State != GameStateType.WaitingForPlayers )
+		if ( GameState.State != GameStateType.WaitingForPlayers && GameState.State != GameStateType.GameOver )
 			GameState.Server_SetPhaseTimer( MathF.Max( 0f, GameState.PhaseTimer - FixedDeltaTime ) );
 
 		switch ( GameState.State )
 		{
-			case GameStateType.Starting: 
-				StartRoutine(); 
+			case GameStateType.Starting:
+				StartRoutine();
 				break;
 
-			case GameStateType.Playing: 
-				PlayRoutine(); 
+			case GameStateType.Playing:
+				PlayRoutine();
 				break;
 
-			case GameStateType.WaitingForNextRound: 
-				WaitingForNextRoundRoutine(); 
+			case GameStateType.WaitingForNextRound:
+				WaitingForNextRoundRoutine();
 				break;
 
-			case GameStateType.GameOver: 
-				GameOverRoutine(); 
+			case GameStateType.GameOver:
+				GameOverRoutine();
 				break;
 		}
 	}
@@ -113,35 +113,24 @@ public sealed class GameManager : Component
 		{
 			Log.Info( $"Next round in: {GameState.PhaseTimer:F1}s / {TimePerWaitingRound:F1}s" );
 		}
-
-		if ( GameState.State == GameStateType.GameOver )
-		{
-			Log.Info( $"Game Over timer: {GameState.PhaseTimer:F1}s / {TimeGameOver:F1}s" );
-		}
 	}
 
-	public void CheckPlayersState()
+	public bool AreAllPlayersDeadC()
 	{
-		if ( !Networking.IsHost ) return;
+		if ( !Networking.IsHost ) 
+			return false;
 
 		bool allDead = true;
-
 		// check if all players are dead
 		foreach ( var player in GameState.Players )
 		{
-			if ( player.State.Life > 0 )
+			if ( player.State.Hp > 0 )
 			{
 				allDead = false;
 				break;
 			}
 		}
-
-		// If all players are dead, show the death rewards UI and transition to GameOver
-		if ( allDead && GameState.State != GameStateType.GameOver )
-		{
-			GameState.Server_SetGameState( GameStateType.GameOver );
-			Broadcast_ShowContinuePrompt();
-		}
+		return allDead;
 	}
 
 	[Rpc.Broadcast]
@@ -252,7 +241,8 @@ public sealed class GameManager : Component
 		return GameState.Enemies.All( enemy => enemy == null || !enemy.IsValid() );
 	}
 
-	public void StartNextRound()
+
+	public void GameOver()
 	{
 		if ( !Networking.IsHost )
 			return;
@@ -263,12 +253,43 @@ public sealed class GameManager : Component
 		if ( GameState.State != GameStateType.Playing )
 			return;
 
+		StopRoundSpawner();
+
+		GameState.Server_SetGameState( GameStateType.GameOver );
+
+		RemoveAllEnemies();
+		Broadcast_ShowContinuePrompt();
+
+		//GameState.Server_SetPhaseTimer( 0f );
+		
+	}
+
+	public void StartNextRound( bool isGameOver = false )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		if ( GameState == null )
+			return;
+
+		if ( GameState.State != GameStateType.Playing && GameState.State != GameStateType.GameOver )
+			return;
+
 		Broadcast_HideEnemyCount();
 
 		GameState.Server_SetPhaseTimer( TimePerWaitingRound );
 		GameState.Server_SetGameState( GameStateType.WaitingForNextRound );
-		Log.Info( "[GameManager] Starting next round all enemies are dead..." );
+
+		if ( isGameOver )
+		{
+			Log.Info( "[GameManager] Restart after game over..." );
+		}
+		else
+		{
+			Log.Info( "[GameManager] Starting next round all enemies are dead..." );
+		}
 	}
+
 	void StartRoutine()
 	{
 		if ( GameState.PhaseTimer <= 0f )
@@ -294,6 +315,8 @@ public sealed class GameManager : Component
 	private void PlayRoutine()
 	{
 
+		
+
 		if ( GameState.PhaseTimer <= 0f )
 		{
 			StopRoundSpawner();
@@ -304,17 +327,48 @@ public sealed class GameManager : Component
 			//GameState.Server_SetGameState( GameStateType.WaitingForNextRound );
 		}
 
+	
+
+	}
+
+	public bool AreAllPlayersTakedBoost()
+	{
+		if ( !Networking.IsHost )
+			return false;
+
+		foreach ( var player in GameState.Players )
+		{
+			if ( !player.State.RewardTaken )
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void GameOverRoutine()
 	{
-		if ( GameState.PhaseTimer <= 0f )
+		if ( AreAllPlayersTakedBoost() )
 		{
-			StopRoundSpawner();
-			GameState.Server_SetGameState( GameStateType.WaitingForNextRound );
-			GameState.Server_SetPhaseTimer( TimePerWaitingRound );
-			Log.Info( "[GameManager] Players should restart" );
+			foreach ( var player in GameState.Players )
+			{
+				player.State.RewardTaken = false;
+				player.Revive();
+			}
+			StartNextRound( true );
 		}
+	}
+
+	public void RemoveAllEnemies()
+	{
+		foreach ( var enemy in GameState.Enemies )
+		{
+			if ( enemy != null && enemy.IsValid() )
+			{
+				enemy.Destroy();
+			}
+		}
+		GameState.Server_ClearEnemies();
 	}
 
 	void StartRoundSpawner()
@@ -324,7 +378,7 @@ public sealed class GameManager : Component
 		_ = RoundSpawner( Cancellation.Token );
 	}
 
-	void StopRoundSpawner()
+	public	void StopRoundSpawner()
 	{
 		if ( Cancellation == null ) return;
 		Cancellation.Cancel();

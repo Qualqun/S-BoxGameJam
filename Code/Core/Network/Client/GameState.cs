@@ -57,6 +57,7 @@ public sealed class GameState : Component
 	{
 		if ( !Networking.IsHost )
 			return;
+
 		PlayerCount = count;
 	}
 
@@ -64,6 +65,7 @@ public sealed class GameState : Component
 	{
 		if ( !Networking.IsHost )
 			return;
+
 		CurrentRound = round;
 	}
 
@@ -71,13 +73,23 @@ public sealed class GameState : Component
 	{
 		if ( !Networking.IsHost )
 			return;
+
 		Players.Add( player );
+	}
+
+	public void Server_ClearEnemies()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		Enemies.Clear();
 	}
 
 	public void Server_RemovePlayer( PlayerBehaviour player )
 	{
 		if ( !Networking.IsHost )
 			return;
+
 		Players.Remove( player );
 	}
 

@@ -32,9 +32,6 @@ public enum ModifierType
 
 public sealed class PlayerState : Component
 {
-	[Property, Sync] public int MaxLife { get; set; } = 1;
-	[Property, Sync] public int Life { get; set; } = 1;
-
 	[Property, Sync] public float MaxHp { get; set; } = 100f;
 	[Property, Sync] public float Hp { get; set; } = 100f;
 	[Property, Sync] public float MoveSpeed { get; set; } = 250f;
@@ -44,6 +41,7 @@ public sealed class PlayerState : Component
 	[Property, Sync] public float BaseBulletSize { get; set; } = 1f;
 	[Property, Sync] public float BaseBulletSpeed { get; set; } = 700f;
 
+	[Property, Sync] public bool RewardTaken { get; set; } = false;
 	// Multipliers
 	[Property, Sync] public float FireRateMultiplier { get; set; } = 1f;
 	[Property, Sync] public float DamageMultiplier { get; set; } = 1f;
@@ -73,7 +71,6 @@ public sealed class PlayerState : Component
 	[Authority]
 	public void Reset()
 	{
-		Life = MaxLife;
 		MaxHp = 100f;
 		Hp = 100f;
 		MoveSpeed = 250f;
@@ -94,6 +91,8 @@ public sealed class PlayerState : Component
 	[Authority]
 	public void ApplyBoost( BoostType boost )
 	{
+		RewardTaken = true;
+
 		switch ( boost )
 		{
 			case BoostType.Hp:

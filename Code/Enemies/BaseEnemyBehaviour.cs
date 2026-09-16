@@ -78,7 +78,7 @@ public class BaseEnemyBehaviour : Component
 		{
 			gameManager?.GameState?.Enemies.Remove( GameObject );
 
-			if ( gameManager != null && gameManager.AllEnemiesDead() )
+			if ( gameManager != null && gameManager.AllEnemiesDead() && gameManager.GameState.State != GameStateType.GameOver )
 				gameManager?.StartNextRound();
 		}
 	}
