@@ -207,7 +207,7 @@
               "__version": 2,
               "Flags": 0,
               "Name": "Point",
-              "Position": "550,0,0",
+              "Position": "565.343689,-633.662842,0.000129538326",
               "Rotation": "0,0,0,1",
               "Scale": "1,1,1",
               "Tags": "",
@@ -225,7 +225,7 @@
               "__version": 2,
               "Flags": 0,
               "Name": "Point (1)",
-              "Position": "-550,0,0",
+              "Position": "-959.244751,78.8535538,-9.80682671E-07",
               "Rotation": "0,0,0,1",
               "Scale": "1,1,1",
               "Tags": "",
@@ -243,7 +243,7 @@
               "__version": 2,
               "Flags": 0,
               "Name": "Point (2)",
-              "Position": "0,-550,0",
+              "Position": "-77.2215576,-958.576416,-4.01362777E-05",
               "Rotation": "0,0,0,1",
               "Scale": "1,1,1",
               "Tags": "",
@@ -261,7 +261,7 @@
               "__version": 2,
               "Flags": 0,
               "Name": "Point (3)",
-              "Position": "0,550,0",
+              "Position": "237.040878,738.456238,-9.92119312E-05",
               "Rotation": "0,0,0,1",
               "Scale": "1,1,1",
               "Tags": "",
@@ -334,6 +334,10 @@
             {
               "_type": "gameobject",
               "prefab": "prefabs/enemies/meleeenemy.prefab"
+            },
+            {
+              "_type": "gameobject",
+              "prefab": "prefabs/enemies/rangeenemy.prefab"
             }
           ],
           "GameState": {
@@ -352,6 +356,7 @@
             "_type": "gameobject",
             "prefab": "prefabs/player/player.prefab"
           },
+          "RoundSpawnRate": 0.35,
           "SpawnPoints": [
             {
               "_type": "gameobject",
@@ -375,11 +380,6 @@
             "component_id": "23581b7c-c3b3-4815-abd2-bdfc4c465de9",
             "go": "f9834c81-f700-4cd7-9492-add1d640059e",
             "component_type": "BoxCollider"
-          },
-          "StatsGrowth": {
-            "spawnRate": 0,
-            "enemyHp": 0,
-            "enemyDamage": 0
           },
           "TimeGameOver": 5,
           "TimePerRound": 30,
@@ -6103,11 +6103,11 @@
                 "bb14708b-be4d-4e2e-af66-26ae2609ea7f": "fb87acfc-cbf2-8db2-8cf4-cba83071ead1",
                 "261c3a46-d22c-44ae-bd12-ecf42a2b3836": "1ec81718-522e-807d-b79a-4c10fe19d158",
                 "4ff48c6a-8561-4cbd-bba8-675416a2940f": "8fcbb2f6-50ad-8dbb-bd9a-90f7273b79fe",
-                "4c8a990a-45e2-433b-b6da-63d9e4446a06": "c043f700-418e-8e6f-ba48-e5a01a50620f",
-                "c55a780c-02f1-46db-8eff-38e6b35f0ac0": "08f5d6a6-0116-8976-be9c-12ca3c5ff93f",
                 "8bc64998-8540-461c-8976-a2e5ffa63619": "8c4dc976-c82d-8cce-99a2-429924f75d96",
                 "a517fa50-31ea-4b6c-b648-0b4275b8b5dc": "261c1ce0-b390-4459-84c7-67991cfae6a9",
-                "c17e2113-c3cb-4614-ac51-7d5ddce05335": "dfe7009e-5393-8be6-83f4-567d63345384"
+                "c17e2113-c3cb-4614-ac51-7d5ddce05335": "dfe7009e-5393-8be6-83f4-567d63345384",
+                "4c8a990a-45e2-433b-b6da-63d9e4446a06": "c043f700-418e-8e6f-ba48-e5a01a50620f",
+                "c55a780c-02f1-46db-8eff-38e6b35f0ac0": "08f5d6a6-0116-8976-be9c-12ca3c5ff93f"
               }
             },
             {
@@ -6225,11 +6225,11 @@
                 "bb14708b-be4d-4e2e-af66-26ae2609ea7f": "e70b40fc-5336-864c-990e-c139924c2400",
                 "261c3a46-d22c-44ae-bd12-ecf42a2b3836": "26ffdb99-b80a-8267-8931-ebd7259ef046",
                 "4ff48c6a-8561-4cbd-bba8-675416a2940f": "96ba45f9-5020-8d22-bde8-0af573a4ff1c",
-                "4c8a990a-45e2-433b-b6da-63d9e4446a06": "9d5f470a-e06b-8c30-a54e-8e8168f203ed",
-                "c55a780c-02f1-46db-8eff-38e6b35f0ac0": "e6c8b53d-d72a-8fcc-bb94-af2aed45667f",
                 "8bc64998-8540-461c-8976-a2e5ffa63619": "caed9e32-b57c-8d85-8909-e2c060c6e023",
                 "a517fa50-31ea-4b6c-b648-0b4275b8b5dc": "135ca5f1-4e24-4705-b235-f235a7b88d0e",
-                "c17e2113-c3cb-4614-ac51-7d5ddce05335": "222435e4-da34-8902-92d5-75f7685f497f"
+                "c17e2113-c3cb-4614-ac51-7d5ddce05335": "222435e4-da34-8902-92d5-75f7685f497f",
+                "4c8a990a-45e2-433b-b6da-63d9e4446a06": "9d5f470a-e06b-8c30-a54e-8e8168f203ed",
+                "c55a780c-02f1-46db-8eff-38e6b35f0ac0": "e6c8b53d-d72a-8fcc-bb94-af2aed45667f"
               }
             },
             {
@@ -6440,11 +6440,11 @@
                 "bb14708b-be4d-4e2e-af66-26ae2609ea7f": "2c5bf27c-431e-8032-9d64-d34884cdf6f7",
                 "261c3a46-d22c-44ae-bd12-ecf42a2b3836": "4ac072fb-d39a-8d26-8f57-d0dcd076983e",
                 "4ff48c6a-8561-4cbd-bba8-675416a2940f": "8dcfd8f0-8e91-81ba-8a2b-466703b97b11",
-                "4c8a990a-45e2-433b-b6da-63d9e4446a06": "606af79c-b0de-833d-a52b-43b2483b0604",
-                "c55a780c-02f1-46db-8eff-38e6b35f0ac0": "5c6c2185-e4d6-889c-a262-d9055d194e40",
                 "8bc64998-8540-461c-8976-a2e5ffa63619": "eb2c6a69-7906-8fab-be28-bf062fcd316a",
                 "a517fa50-31ea-4b6c-b648-0b4275b8b5dc": "3fede436-e9f7-44d9-a8f6-b4ea28b16bdc",
-                "c17e2113-c3cb-4614-ac51-7d5ddce05335": "7ed277f6-c1bb-8f97-bacb-8dc4e819e4d8"
+                "c17e2113-c3cb-4614-ac51-7d5ddce05335": "7ed277f6-c1bb-8f97-bacb-8dc4e819e4d8",
+                "4c8a990a-45e2-433b-b6da-63d9e4446a06": "606af79c-b0de-833d-a52b-43b2483b0604",
+                "c55a780c-02f1-46db-8eff-38e6b35f0ac0": "5c6c2185-e4d6-889c-a262-d9055d194e40"
               }
             },
             {
@@ -6479,11 +6479,11 @@
                 "bb14708b-be4d-4e2e-af66-26ae2609ea7f": "cee62453-17f0-8109-9aed-079fcf9ad1e9",
                 "261c3a46-d22c-44ae-bd12-ecf42a2b3836": "f2bc6ffb-1835-8c95-8bdb-cf9199b721c8",
                 "4ff48c6a-8561-4cbd-bba8-675416a2940f": "eff278a2-865f-8e74-99e2-85f143870179",
-                "4c8a990a-45e2-433b-b6da-63d9e4446a06": "1e2e2725-8fe7-8b09-855b-df7b96c1c8a5",
-                "c55a780c-02f1-46db-8eff-38e6b35f0ac0": "3122a9ae-c0f3-85c9-b5f3-6bf87bc523f6",
                 "8bc64998-8540-461c-8976-a2e5ffa63619": "d7c05932-e681-86b3-a5fa-2366224d250b",
                 "a517fa50-31ea-4b6c-b648-0b4275b8b5dc": "e4d1361b-234c-4d27-9663-cc9b3c72d009",
-                "c17e2113-c3cb-4614-ac51-7d5ddce05335": "527dff4f-bc76-8847-92ad-f2e48593e8c0"
+                "c17e2113-c3cb-4614-ac51-7d5ddce05335": "527dff4f-bc76-8847-92ad-f2e48593e8c0",
+                "4c8a990a-45e2-433b-b6da-63d9e4446a06": "1e2e2725-8fe7-8b09-855b-df7b96c1c8a5",
+                "c55a780c-02f1-46db-8eff-38e6b35f0ac0": "3122a9ae-c0f3-85c9-b5f3-6bf87bc523f6"
               }
             },
             {
@@ -6895,9 +6895,9 @@
                     "Maxs": "1880,1776,400"
                   },
                   "Contrast": 1,
-                  "DistanceTexture": "scenes/mainscene_scene_data/ddgi/indirect light volume_distance_dfccdca9-e208-40f0-af10-16e30df616ef.vtex",
+                  "DistanceTexture": null,
                   "InsideGeometry": "Relocate",
-                  "IrradianceTexture": "scenes/mainscene_scene_data/ddgi/indirect light volume_irradiance_dfccdca9-e208-40f0-af10-16e30df616ef.vtex",
+                  "IrradianceTexture": null,
                   "NormalBias": 5,
                   "OnComponentDestroy": null,
                   "OnComponentDisabled": null,
@@ -6906,7 +6906,7 @@
                   "OnComponentStart": null,
                   "OnComponentUpdate": null,
                   "ProbeDensity": 8,
-                  "RelocationTexture": "scenes/mainscene_scene_data/ddgi/indirect light volume_relocation_dfccdca9-e208-40f0-af10-16e30df616ef.vtex",
+                  "RelocationTexture": null,
                   "RenderExcludeTags": ""
                 }
               ],
