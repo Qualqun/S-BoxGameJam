@@ -89,7 +89,7 @@
           "component_type": "CameraComponent"
         },
         "cooldown": 1,
-        "dashDuration": 0.3,
+        "dashDuration": 0.5,
         "dashSpeed": 600,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -119,6 +119,12 @@
         "__guid": "ac55f1d4-64b7-49be-a7a3-c6e812aa6931",
         "__enabled": true,
         "Flags": 0,
+        "animation": {
+          "_type": "component",
+          "component_id": "28a49f62-74e7-4628-a817-7ee2a08eba8e",
+          "go": "30f4e803-7638-466b-8c25-308351d241f7",
+          "component_type": "PlayerAnimation"
+        },
         "bullet": {
           "_type": "gameobject",
           "prefab": "prefabs/player/playerbullet.prefab"
@@ -170,9 +176,7 @@
         "DamageMultiplier": 1,
         "FireRateMultiplier": 1,
         "Hp": 100,
-        "Life": 1,
         "MaxHp": 100,
-        "MaxLife": 1,
         "MoveSpeed": 250,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -180,8 +184,27 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "SizeMultiplier": 0.5,
+        "RewardTaken": false,
+        "SizeMultiplier": 1,
         "TimeInvulnerability": 1
+      },
+      {
+        "__type": "PlayerAnimation",
+        "__guid": "28a49f62-74e7-4628-a817-7ee2a08eba8e",
+        "__enabled": true,
+        "Flags": 0,
+        "model": {
+          "_type": "component",
+          "component_id": "e5728d85-77e1-4852-a22c-6cda78821502",
+          "go": "1d2f0ea9-6352-4453-bd44-3e3c7c69f0d0",
+          "component_type": "SkinnedModelRenderer"
+        },
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null
       }
     ],
     "Children": [
@@ -223,16 +246,16 @@
                 "__guid": "e5728d85-77e1-4852-a22c-6cda78821502",
                 "__enabled": true,
                 "Flags": 0,
-                "AnimationGraph": null,
-                "BodyGroups": 341,
+                "AnimationGraph": "animgraphs/player.vanmgrph",
+                "BodyGroups": 18446744073709551615,
                 "BoneMergeTarget": null,
                 "CreateAttachments": false,
-                "CreateBoneObjects": false,
+                "CreateBoneObjects": true,
                 "LodOverride": null,
                 "MaterialGroup": null,
                 "MaterialOverride": null,
                 "Materials": null,
-                "Model": "models/citizen/citizen.vmdl",
+                "Model": "art/asset/player/player.vmdl",
                 "Morphs": {},
                 "OnComponentDestroy": null,
                 "OnComponentDisabled": null,
@@ -264,25 +287,1120 @@
                 "UseAnimGraph": true
               }
             ],
-            "Children": []
-          },
-          {
-            "__guid": "4da7d666-9abb-84c8-8d46-b24dfdbe0ffd",
-            "__version": 2,
-            "Flags": 0,
-            "Name": "GunPoint",
-            "Position": "25,0,40",
-            "Rotation": "0,0,0,1",
-            "Scale": "1,1,1",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 2,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [],
-            "Children": []
+            "Children": [
+              {
+                "__guid": "bcb347ea-1da4-4df0-a5fa-6088ddde52cb",
+                "__version": 2,
+                "Flags": 0,
+                "Name": "Hips",
+                "Position": "0,0,0",
+                "Rotation": "0,0,0,1",
+                "Scale": "1,1,1",
+                "Tags": "",
+                "Enabled": true,
+                "NetworkMode": 2,
+                "NetworkFlags": 0,
+                "NetworkOrphaned": 0,
+                "NetworkTransmit": true,
+                "OwnerTransfer": 1,
+                "Components": [],
+                "Children": [
+                  {
+                    "__guid": "4eb5d008-fac8-4d72-ab7c-98f32bf21f52",
+                    "__version": 2,
+                    "Flags": 0,
+                    "Name": "Spine",
+                    "Position": "0,0,0",
+                    "Rotation": "0,0,0,1",
+                    "Scale": "1,1,1",
+                    "Tags": "",
+                    "Enabled": true,
+                    "NetworkMode": 2,
+                    "NetworkFlags": 0,
+                    "NetworkOrphaned": 0,
+                    "NetworkTransmit": true,
+                    "OwnerTransfer": 1,
+                    "Components": [],
+                    "Children": [
+                      {
+                        "__guid": "13cfe295-a6c0-4886-9615-890a88cb9526",
+                        "__version": 2,
+                        "Flags": 0,
+                        "Name": "Spine1",
+                        "Position": "0,0,0",
+                        "Rotation": "0,0,0,1",
+                        "Scale": "1,1,1",
+                        "Tags": "",
+                        "Enabled": true,
+                        "NetworkMode": 2,
+                        "NetworkFlags": 0,
+                        "NetworkOrphaned": 0,
+                        "NetworkTransmit": true,
+                        "OwnerTransfer": 1,
+                        "Components": [],
+                        "Children": [
+                          {
+                            "__guid": "83354bdc-dbef-499f-a161-88bf8e4226d7",
+                            "__version": 2,
+                            "Flags": 0,
+                            "Name": "Spine2",
+                            "Position": "0,0,0",
+                            "Rotation": "0,0,0,1",
+                            "Scale": "1,1,1",
+                            "Tags": "",
+                            "Enabled": true,
+                            "NetworkMode": 2,
+                            "NetworkFlags": 0,
+                            "NetworkOrphaned": 0,
+                            "NetworkTransmit": true,
+                            "OwnerTransfer": 1,
+                            "Components": [],
+                            "Children": [
+                              {
+                                "__guid": "ea2a1aae-04a3-4655-96e5-3fa820194329",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "Neck",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": [
+                                  {
+                                    "__guid": "fec1f605-846f-487c-b5cf-b780682caf42",
+                                    "__version": 2,
+                                    "Flags": 0,
+                                    "Name": "Head",
+                                    "Position": "0,0,0",
+                                    "Rotation": "0,0,0,1",
+                                    "Scale": "1,1,1",
+                                    "Tags": "",
+                                    "Enabled": true,
+                                    "NetworkMode": 2,
+                                    "NetworkFlags": 0,
+                                    "NetworkOrphaned": 0,
+                                    "NetworkTransmit": true,
+                                    "OwnerTransfer": 1,
+                                    "Components": [],
+                                    "Children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "__guid": "ccaac817-a9c8-4e07-8788-ce373843753a",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "LeftShoulder",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": [
+                                  {
+                                    "__guid": "7d43ec4b-7996-4428-8079-0f8dfb0badf5",
+                                    "__version": 2,
+                                    "Flags": 0,
+                                    "Name": "LeftArm",
+                                    "Position": "0,0,0",
+                                    "Rotation": "0,0,0,1",
+                                    "Scale": "1,1,1",
+                                    "Tags": "",
+                                    "Enabled": true,
+                                    "NetworkMode": 2,
+                                    "NetworkFlags": 0,
+                                    "NetworkOrphaned": 0,
+                                    "NetworkTransmit": true,
+                                    "OwnerTransfer": 1,
+                                    "Components": [],
+                                    "Children": [
+                                      {
+                                        "__guid": "1df97020-6a06-495e-9e9b-b6d568911c49",
+                                        "__version": 2,
+                                        "Flags": 0,
+                                        "Name": "LeftForeArm",
+                                        "Position": "0,0,0",
+                                        "Rotation": "0,0,0,1",
+                                        "Scale": "1,1,1",
+                                        "Tags": "",
+                                        "Enabled": true,
+                                        "NetworkMode": 2,
+                                        "NetworkFlags": 0,
+                                        "NetworkOrphaned": 0,
+                                        "NetworkTransmit": true,
+                                        "OwnerTransfer": 1,
+                                        "Components": [],
+                                        "Children": [
+                                          {
+                                            "__guid": "cabf48c2-ae44-4413-b60a-7a72d197b824",
+                                            "__version": 2,
+                                            "Flags": 0,
+                                            "Name": "LeftHand",
+                                            "Position": "0,0,0",
+                                            "Rotation": "0,0,0,1",
+                                            "Scale": "1,1,1",
+                                            "Tags": "",
+                                            "Enabled": true,
+                                            "NetworkMode": 2,
+                                            "NetworkFlags": 0,
+                                            "NetworkOrphaned": 0,
+                                            "NetworkTransmit": true,
+                                            "OwnerTransfer": 1,
+                                            "Components": [],
+                                            "Children": [
+                                              {
+                                                "__guid": "49a08159-f981-4082-95c3-37ae123c0d79",
+                                                "__version": 2,
+                                                "Flags": 0,
+                                                "Name": "LeftHandIndex1",
+                                                "Position": "0,0,0",
+                                                "Rotation": "0,0,0,1",
+                                                "Scale": "1,1,1",
+                                                "Tags": "",
+                                                "Enabled": true,
+                                                "NetworkMode": 2,
+                                                "NetworkFlags": 0,
+                                                "NetworkOrphaned": 0,
+                                                "NetworkTransmit": true,
+                                                "OwnerTransfer": 1,
+                                                "Components": [],
+                                                "Children": [
+                                                  {
+                                                    "__guid": "0f2b86af-9b60-48c3-aaa8-8f559925f969",
+                                                    "__version": 2,
+                                                    "Flags": 0,
+                                                    "Name": "LeftHandIndex2",
+                                                    "Position": "0,0,0",
+                                                    "Rotation": "0,0,0,1",
+                                                    "Scale": "1,1,1",
+                                                    "Tags": "",
+                                                    "Enabled": true,
+                                                    "NetworkMode": 2,
+                                                    "NetworkFlags": 0,
+                                                    "NetworkOrphaned": 0,
+                                                    "NetworkTransmit": true,
+                                                    "OwnerTransfer": 1,
+                                                    "Components": [],
+                                                    "Children": [
+                                                      {
+                                                        "__guid": "022234f6-ff81-48f8-a403-cb2c91ee5dd5",
+                                                        "__version": 2,
+                                                        "Flags": 0,
+                                                        "Name": "LeftHandIndex3",
+                                                        "Position": "0,0,0",
+                                                        "Rotation": "0,0,0,1",
+                                                        "Scale": "1,1,1",
+                                                        "Tags": "",
+                                                        "Enabled": true,
+                                                        "NetworkMode": 2,
+                                                        "NetworkFlags": 0,
+                                                        "NetworkOrphaned": 0,
+                                                        "NetworkTransmit": true,
+                                                        "OwnerTransfer": 1,
+                                                        "Components": [],
+                                                        "Children": []
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "__guid": "f8718250-9bbf-467a-a434-bc351b428e9c",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "RightShoulder",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": [
+                                  {
+                                    "__guid": "dbb6a0c3-e291-4b98-a57c-2c0beb903b35",
+                                    "__version": 2,
+                                    "Flags": 0,
+                                    "Name": "RightArm",
+                                    "Position": "0,0,0",
+                                    "Rotation": "0,0,0,1",
+                                    "Scale": "1,1,1",
+                                    "Tags": "",
+                                    "Enabled": true,
+                                    "NetworkMode": 2,
+                                    "NetworkFlags": 0,
+                                    "NetworkOrphaned": 0,
+                                    "NetworkTransmit": true,
+                                    "OwnerTransfer": 1,
+                                    "Components": [],
+                                    "Children": [
+                                      {
+                                        "__guid": "2e7381fb-1d3d-48c6-a181-346b902d8851",
+                                        "__version": 2,
+                                        "Flags": 0,
+                                        "Name": "RightForeArm",
+                                        "Position": "0,0,0",
+                                        "Rotation": "0,0,0,1",
+                                        "Scale": "1,1,1",
+                                        "Tags": "",
+                                        "Enabled": true,
+                                        "NetworkMode": 2,
+                                        "NetworkFlags": 0,
+                                        "NetworkOrphaned": 0,
+                                        "NetworkTransmit": true,
+                                        "OwnerTransfer": 1,
+                                        "Components": [],
+                                        "Children": [
+                                          {
+                                            "__guid": "ef99274e-7a12-4705-be7c-8390690110b4",
+                                            "__version": 2,
+                                            "Flags": 0,
+                                            "Name": "RightHand",
+                                            "Position": "0,0,0",
+                                            "Rotation": "0,0,0,1",
+                                            "Scale": "1,1,1",
+                                            "Tags": "",
+                                            "Enabled": true,
+                                            "NetworkMode": 2,
+                                            "NetworkFlags": 0,
+                                            "NetworkOrphaned": 0,
+                                            "NetworkTransmit": true,
+                                            "OwnerTransfer": 1,
+                                            "Components": [],
+                                            "Children": [
+                                              {
+                                                "__guid": "5f63229f-3e21-4549-b9b9-1a6e10ec139d",
+                                                "__version": 2,
+                                                "Flags": 0,
+                                                "Name": "RightHandIndex1",
+                                                "Position": "0,0,0",
+                                                "Rotation": "0,0,0,1",
+                                                "Scale": "1,1,1",
+                                                "Tags": "",
+                                                "Enabled": true,
+                                                "NetworkMode": 2,
+                                                "NetworkFlags": 0,
+                                                "NetworkOrphaned": 0,
+                                                "NetworkTransmit": true,
+                                                "OwnerTransfer": 1,
+                                                "Components": [],
+                                                "Children": [
+                                                  {
+                                                    "__guid": "1488c205-482c-4d77-b0cf-5f6b4ff5697e",
+                                                    "__version": 2,
+                                                    "Flags": 0,
+                                                    "Name": "RightHandIndex2",
+                                                    "Position": "0,0,0",
+                                                    "Rotation": "0,0,0,1",
+                                                    "Scale": "1,1,1",
+                                                    "Tags": "",
+                                                    "Enabled": true,
+                                                    "NetworkMode": 2,
+                                                    "NetworkFlags": 0,
+                                                    "NetworkOrphaned": 0,
+                                                    "NetworkTransmit": true,
+                                                    "OwnerTransfer": 1,
+                                                    "Components": [],
+                                                    "Children": [
+                                                      {
+                                                        "__guid": "abe05700-616e-4abf-9c38-07689cf943f5",
+                                                        "__version": 2,
+                                                        "Flags": 0,
+                                                        "Name": "RightHandIndex3",
+                                                        "Position": "0,0,0",
+                                                        "Rotation": "0,0,0,1",
+                                                        "Scale": "1,1,1",
+                                                        "Tags": "",
+                                                        "Enabled": true,
+                                                        "NetworkMode": 2,
+                                                        "NetworkFlags": 0,
+                                                        "NetworkOrphaned": 0,
+                                                        "NetworkTransmit": true,
+                                                        "OwnerTransfer": 1,
+                                                        "Components": [],
+                                                        "Children": []
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "__guid": "9fce0738-e352-427d-84ce-5af80bcaca94",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "3rdArmPart1",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": [
+                                  {
+                                    "__guid": "c818bd10-7dbb-4f43-be37-ebf0aadd2d45",
+                                    "__version": 2,
+                                    "Flags": 0,
+                                    "Name": "3rdArmPart2",
+                                    "Position": "0,0,0",
+                                    "Rotation": "0,0,0,1",
+                                    "Scale": "1,1,1",
+                                    "Tags": "",
+                                    "Enabled": true,
+                                    "NetworkMode": 2,
+                                    "NetworkFlags": 0,
+                                    "NetworkOrphaned": 0,
+                                    "NetworkTransmit": true,
+                                    "OwnerTransfer": 1,
+                                    "Components": [],
+                                    "Children": [
+                                      {
+                                        "__guid": "c04c2608-1a82-4ab8-bd13-666cf2ec872c",
+                                        "__version": 2,
+                                        "Flags": 0,
+                                        "Name": "3rdArmPart3",
+                                        "Position": "0,0,0",
+                                        "Rotation": "0,0,0,1",
+                                        "Scale": "1,1,1",
+                                        "Tags": "",
+                                        "Enabled": true,
+                                        "NetworkMode": 2,
+                                        "NetworkFlags": 0,
+                                        "NetworkOrphaned": 0,
+                                        "NetworkTransmit": true,
+                                        "OwnerTransfer": 1,
+                                        "Components": [],
+                                        "Children": [
+                                          {
+                                            "__guid": "5585870d-1908-40b5-9126-5154b87f3575",
+                                            "__version": 2,
+                                            "Flags": 0,
+                                            "Name": "3rdArmPart4",
+                                            "Position": "0,0,0",
+                                            "Rotation": "0,0,0,1",
+                                            "Scale": "1,1,1",
+                                            "Tags": "",
+                                            "Enabled": true,
+                                            "NetworkMode": 2,
+                                            "NetworkFlags": 0,
+                                            "NetworkOrphaned": 0,
+                                            "NetworkTransmit": true,
+                                            "OwnerTransfer": 1,
+                                            "Components": [],
+                                            "Children": [
+                                              {
+                                                "__guid": "4da7d666-9abb-84c8-8d46-b24dfdbe0ffd",
+                                                "__version": 2,
+                                                "Flags": 0,
+                                                "Name": "GunPoint",
+                                                "Position": "11.1748581,45,-6.67572021E-06",
+                                                "Rotation": "0,0,0,1",
+                                                "Scale": "1,1,1",
+                                                "Tags": "",
+                                                "Enabled": true,
+                                                "NetworkMode": 2,
+                                                "NetworkFlags": 0,
+                                                "NetworkOrphaned": 0,
+                                                "NetworkTransmit": true,
+                                                "OwnerTransfer": 1,
+                                                "Components": [],
+                                                "Children": []
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "__guid": "512a8c4a-c144-4214-b641-bf272b0a04ed",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "Ammo1",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": [
+                                  {
+                                    "__guid": "ef59a2f6-175d-4675-a059-e101425e6485",
+                                    "__version": 2,
+                                    "Flags": 0,
+                                    "Name": "Ammo2",
+                                    "Position": "0,0,0",
+                                    "Rotation": "0,0,0,1",
+                                    "Scale": "1,1,1",
+                                    "Tags": "",
+                                    "Enabled": true,
+                                    "NetworkMode": 2,
+                                    "NetworkFlags": 0,
+                                    "NetworkOrphaned": 0,
+                                    "NetworkTransmit": true,
+                                    "OwnerTransfer": 1,
+                                    "Components": [],
+                                    "Children": [
+                                      {
+                                        "__guid": "c515be7e-c3ad-46f6-9aae-88baa708a4b3",
+                                        "__version": 2,
+                                        "Flags": 0,
+                                        "Name": "Ammo3",
+                                        "Position": "0,0,0",
+                                        "Rotation": "0,0,0,1",
+                                        "Scale": "1,1,1",
+                                        "Tags": "",
+                                        "Enabled": true,
+                                        "NetworkMode": 2,
+                                        "NetworkFlags": 0,
+                                        "NetworkOrphaned": 0,
+                                        "NetworkTransmit": true,
+                                        "OwnerTransfer": 1,
+                                        "Components": [],
+                                        "Children": [
+                                          {
+                                            "__guid": "7a6b6ba0-037c-4723-8b1a-8cef9b7b0ecf",
+                                            "__version": 2,
+                                            "Flags": 0,
+                                            "Name": "Ammo4",
+                                            "Position": "0,0,0",
+                                            "Rotation": "0,0,0,1",
+                                            "Scale": "1,1,1",
+                                            "Tags": "",
+                                            "Enabled": true,
+                                            "NetworkMode": 2,
+                                            "NetworkFlags": 0,
+                                            "NetworkOrphaned": 0,
+                                            "NetworkTransmit": true,
+                                            "OwnerTransfer": 1,
+                                            "Components": [],
+                                            "Children": [
+                                              {
+                                                "__guid": "198fda16-5fee-4f18-ab72-86ee469663bb",
+                                                "__version": 2,
+                                                "Flags": 0,
+                                                "Name": "Ammo5",
+                                                "Position": "0,0,0",
+                                                "Rotation": "0,0,0,1",
+                                                "Scale": "1,1,1",
+                                                "Tags": "",
+                                                "Enabled": true,
+                                                "NetworkMode": 2,
+                                                "NetworkFlags": 0,
+                                                "NetworkOrphaned": 0,
+                                                "NetworkTransmit": true,
+                                                "OwnerTransfer": 1,
+                                                "Components": [],
+                                                "Children": [
+                                                  {
+                                                    "__guid": "4220f7d7-4379-4a2a-8188-b637710da203",
+                                                    "__version": 2,
+                                                    "Flags": 0,
+                                                    "Name": "Ammo6",
+                                                    "Position": "0,0,0",
+                                                    "Rotation": "0,0,0,1",
+                                                    "Scale": "1,1,1",
+                                                    "Tags": "",
+                                                    "Enabled": true,
+                                                    "NetworkMode": 2,
+                                                    "NetworkFlags": 0,
+                                                    "NetworkOrphaned": 0,
+                                                    "NetworkTransmit": true,
+                                                    "OwnerTransfer": 1,
+                                                    "Components": [],
+                                                    "Children": [
+                                                      {
+                                                        "__guid": "0443b72c-2c20-472b-b590-5b445c340c6f",
+                                                        "__version": 2,
+                                                        "Flags": 0,
+                                                        "Name": "Ammo7",
+                                                        "Position": "0,0,0",
+                                                        "Rotation": "0,0,0,1",
+                                                        "Scale": "1,1,1",
+                                                        "Tags": "",
+                                                        "Enabled": true,
+                                                        "NetworkMode": 2,
+                                                        "NetworkFlags": 0,
+                                                        "NetworkOrphaned": 0,
+                                                        "NetworkTransmit": true,
+                                                        "OwnerTransfer": 1,
+                                                        "Components": [],
+                                                        "Children": []
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "__guid": "f3dda9b5-9d65-4069-b888-2a05959631f2",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "Ctrl_Ammo",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": []
+                              },
+                              {
+                                "__guid": "5adfc8d2-f8cc-4dcc-91d5-921e526d6428",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "BigAmmo0",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": [
+                                  {
+                                    "__guid": "9c7f4a39-7bf6-4e4e-a33c-50139ca608f4",
+                                    "__version": 2,
+                                    "Flags": 0,
+                                    "Name": "BigAmmo1",
+                                    "Position": "0,0,0",
+                                    "Rotation": "0,0,0,1",
+                                    "Scale": "1,1,1",
+                                    "Tags": "",
+                                    "Enabled": true,
+                                    "NetworkMode": 2,
+                                    "NetworkFlags": 0,
+                                    "NetworkOrphaned": 0,
+                                    "NetworkTransmit": true,
+                                    "OwnerTransfer": 1,
+                                    "Components": [],
+                                    "Children": [
+                                      {
+                                        "__guid": "20250c6f-ae06-4993-91d8-dc3c05ac2b4b",
+                                        "__version": 2,
+                                        "Flags": 0,
+                                        "Name": "BigAmmo2",
+                                        "Position": "0,0,0",
+                                        "Rotation": "0,0,0,1",
+                                        "Scale": "1,1,1",
+                                        "Tags": "",
+                                        "Enabled": true,
+                                        "NetworkMode": 2,
+                                        "NetworkFlags": 0,
+                                        "NetworkOrphaned": 0,
+                                        "NetworkTransmit": true,
+                                        "OwnerTransfer": 1,
+                                        "Components": [],
+                                        "Children": [
+                                          {
+                                            "__guid": "3022a218-86dd-4673-8eda-eb3d757005bf",
+                                            "__version": 2,
+                                            "Flags": 0,
+                                            "Name": "BigAmmo3",
+                                            "Position": "0,0,0",
+                                            "Rotation": "0,0,0,1",
+                                            "Scale": "1,1,1",
+                                            "Tags": "",
+                                            "Enabled": true,
+                                            "NetworkMode": 2,
+                                            "NetworkFlags": 0,
+                                            "NetworkOrphaned": 0,
+                                            "NetworkTransmit": true,
+                                            "OwnerTransfer": 1,
+                                            "Components": [],
+                                            "Children": [
+                                              {
+                                                "__guid": "377bb593-4a23-4898-8627-c853243ef1ee",
+                                                "__version": 2,
+                                                "Flags": 0,
+                                                "Name": "BigAmmo4",
+                                                "Position": "0,0,0",
+                                                "Rotation": "0,0,0,1",
+                                                "Scale": "1,1,1",
+                                                "Tags": "",
+                                                "Enabled": true,
+                                                "NetworkMode": 2,
+                                                "NetworkFlags": 0,
+                                                "NetworkOrphaned": 0,
+                                                "NetworkTransmit": true,
+                                                "OwnerTransfer": 1,
+                                                "Components": [],
+                                                "Children": [
+                                                  {
+                                                    "__guid": "c4876ecd-6d06-46b9-a95d-d458e4c4ffb6",
+                                                    "__version": 2,
+                                                    "Flags": 0,
+                                                    "Name": "BigAmmo5",
+                                                    "Position": "0,0,0",
+                                                    "Rotation": "0,0,0,1",
+                                                    "Scale": "1,1,1",
+                                                    "Tags": "",
+                                                    "Enabled": true,
+                                                    "NetworkMode": 2,
+                                                    "NetworkFlags": 0,
+                                                    "NetworkOrphaned": 0,
+                                                    "NetworkTransmit": true,
+                                                    "OwnerTransfer": 1,
+                                                    "Components": [],
+                                                    "Children": [
+                                                      {
+                                                        "__guid": "2f4f812e-103d-4f8e-9fcc-82b4c2849fad",
+                                                        "__version": 2,
+                                                        "Flags": 0,
+                                                        "Name": "BigAmmo6",
+                                                        "Position": "0,0,0",
+                                                        "Rotation": "0,0,0,1",
+                                                        "Scale": "1,1,1",
+                                                        "Tags": "",
+                                                        "Enabled": true,
+                                                        "NetworkMode": 2,
+                                                        "NetworkFlags": 0,
+                                                        "NetworkOrphaned": 0,
+                                                        "NetworkTransmit": true,
+                                                        "OwnerTransfer": 1,
+                                                        "Components": [],
+                                                        "Children": [
+                                                          {
+                                                            "__guid": "2271c5f8-da4d-4d89-a120-491084c01872",
+                                                            "__version": 2,
+                                                            "Flags": 0,
+                                                            "Name": "BigAmmo7",
+                                                            "Position": "0,0,0",
+                                                            "Rotation": "0,0,0,1",
+                                                            "Scale": "1,1,1",
+                                                            "Tags": "",
+                                                            "Enabled": true,
+                                                            "NetworkMode": 2,
+                                                            "NetworkFlags": 0,
+                                                            "NetworkOrphaned": 0,
+                                                            "NetworkTransmit": true,
+                                                            "OwnerTransfer": 1,
+                                                            "Components": [],
+                                                            "Children": [
+                                                              {
+                                                                "__guid": "556e2357-302a-463e-9a50-b9f2d3cc22e5",
+                                                                "__version": 2,
+                                                                "Flags": 0,
+                                                                "Name": "BigAmmo8",
+                                                                "Position": "0,0,0",
+                                                                "Rotation": "0,0,0,1",
+                                                                "Scale": "1,1,1",
+                                                                "Tags": "",
+                                                                "Enabled": true,
+                                                                "NetworkMode": 2,
+                                                                "NetworkFlags": 0,
+                                                                "NetworkOrphaned": 0,
+                                                                "NetworkTransmit": true,
+                                                                "OwnerTransfer": 1,
+                                                                "Components": [],
+                                                                "Children": [
+                                                                  {
+                                                                    "__guid": "78715980-5083-4d1a-95a7-55fe53535cd8",
+                                                                    "__version": 2,
+                                                                    "Flags": 0,
+                                                                    "Name": "BigAmmo9",
+                                                                    "Position": "0,0,0",
+                                                                    "Rotation": "0,0,0,1",
+                                                                    "Scale": "1,1,1",
+                                                                    "Tags": "",
+                                                                    "Enabled": true,
+                                                                    "NetworkMode": 2,
+                                                                    "NetworkFlags": 0,
+                                                                    "NetworkOrphaned": 0,
+                                                                    "NetworkTransmit": true,
+                                                                    "OwnerTransfer": 1,
+                                                                    "Components": [],
+                                                                    "Children": [
+                                                                      {
+                                                                        "__guid": "24b98cc7-7fc6-4dba-a576-115511dcd9d4",
+                                                                        "__version": 2,
+                                                                        "Flags": 0,
+                                                                        "Name": "BigAmmo10",
+                                                                        "Position": "0,0,0",
+                                                                        "Rotation": "0,0,0,1",
+                                                                        "Scale": "1,1,1",
+                                                                        "Tags": "",
+                                                                        "Enabled": true,
+                                                                        "NetworkMode": 2,
+                                                                        "NetworkFlags": 0,
+                                                                        "NetworkOrphaned": 0,
+                                                                        "NetworkTransmit": true,
+                                                                        "OwnerTransfer": 1,
+                                                                        "Components": [],
+                                                                        "Children": [
+                                                                          {
+                                                                            "__guid": "fe2c08fc-4863-4be0-b89f-02620c6d6d5c",
+                                                                            "__version": 2,
+                                                                            "Flags": 0,
+                                                                            "Name": "BigAmmo11",
+                                                                            "Position": "0,0,0",
+                                                                            "Rotation": "0,0,0,1",
+                                                                            "Scale": "1,1,1",
+                                                                            "Tags": "",
+                                                                            "Enabled": true,
+                                                                            "NetworkMode": 2,
+                                                                            "NetworkFlags": 0,
+                                                                            "NetworkOrphaned": 0,
+                                                                            "NetworkTransmit": true,
+                                                                            "OwnerTransfer": 1,
+                                                                            "Components": [],
+                                                                            "Children": [
+                                                                              {
+                                                                                "__guid": "6eab85a4-26c2-4b1d-abca-ffece46442f7",
+                                                                                "__version": 2,
+                                                                                "Flags": 0,
+                                                                                "Name": "BigAmmo12",
+                                                                                "Position": "0,0,0",
+                                                                                "Rotation": "0,0,0,1",
+                                                                                "Scale": "1,1,1",
+                                                                                "Tags": "",
+                                                                                "Enabled": true,
+                                                                                "NetworkMode": 2,
+                                                                                "NetworkFlags": 0,
+                                                                                "NetworkOrphaned": 0,
+                                                                                "NetworkTransmit": true,
+                                                                                "OwnerTransfer": 1,
+                                                                                "Components": [],
+                                                                                "Children": [
+                                                                                  {
+                                                                                    "__guid": "29ca24ba-cf6b-48e5-9fb5-55ac5163f1c7",
+                                                                                    "__version": 2,
+                                                                                    "Flags": 0,
+                                                                                    "Name": "BigAmmo13",
+                                                                                    "Position": "0,0,0",
+                                                                                    "Rotation": "0,0,0,1",
+                                                                                    "Scale": "1,1,1",
+                                                                                    "Tags": "",
+                                                                                    "Enabled": true,
+                                                                                    "NetworkMode": 2,
+                                                                                    "NetworkFlags": 0,
+                                                                                    "NetworkOrphaned": 0,
+                                                                                    "NetworkTransmit": true,
+                                                                                    "OwnerTransfer": 1,
+                                                                                    "Components": [],
+                                                                                    "Children": [
+                                                                                      {
+                                                                                        "__guid": "ec8c7fd0-b56f-416b-929a-fd2a0aebba69",
+                                                                                        "__version": 2,
+                                                                                        "Flags": 0,
+                                                                                        "Name": "BigAmmo14",
+                                                                                        "Position": "0,0,0",
+                                                                                        "Rotation": "0,0,0,1",
+                                                                                        "Scale": "1,1,1",
+                                                                                        "Tags": "",
+                                                                                        "Enabled": true,
+                                                                                        "NetworkMode": 2,
+                                                                                        "NetworkFlags": 0,
+                                                                                        "NetworkOrphaned": 0,
+                                                                                        "NetworkTransmit": true,
+                                                                                        "OwnerTransfer": 1,
+                                                                                        "Components": [],
+                                                                                        "Children": [
+                                                                                          {
+                                                                                            "__guid": "9f6c9be2-09d5-404a-9b22-7af5b09eaedd",
+                                                                                            "__version": 2,
+                                                                                            "Flags": 0,
+                                                                                            "Name": "BigAmmo15",
+                                                                                            "Position": "0,0,0",
+                                                                                            "Rotation": "0,0,0,1",
+                                                                                            "Scale": "1,1,1",
+                                                                                            "Tags": "",
+                                                                                            "Enabled": true,
+                                                                                            "NetworkMode": 2,
+                                                                                            "NetworkFlags": 0,
+                                                                                            "NetworkOrphaned": 0,
+                                                                                            "NetworkTransmit": true,
+                                                                                            "OwnerTransfer": 1,
+                                                                                            "Components": [],
+                                                                                            "Children": [
+                                                                                              {
+                                                                                                "__guid": "46a7644a-4310-4960-a48b-5645ffe14e39",
+                                                                                                "__version": 2,
+                                                                                                "Flags": 0,
+                                                                                                "Name": "BigAmmo16",
+                                                                                                "Position": "0,0,0",
+                                                                                                "Rotation": "0,0,0,1",
+                                                                                                "Scale": "1,1,1",
+                                                                                                "Tags": "",
+                                                                                                "Enabled": true,
+                                                                                                "NetworkMode": 2,
+                                                                                                "NetworkFlags": 0,
+                                                                                                "NetworkOrphaned": 0,
+                                                                                                "NetworkTransmit": true,
+                                                                                                "OwnerTransfer": 1,
+                                                                                                "Components": [],
+                                                                                                "Children": [
+                                                                                                  {
+                                                                                                    "__guid": "b9682e78-5adb-4a89-8b47-566765729a49",
+                                                                                                    "__version": 2,
+                                                                                                    "Flags": 0,
+                                                                                                    "Name": "BigAmmo17",
+                                                                                                    "Position": "0,0,0",
+                                                                                                    "Rotation": "0,0,0,1",
+                                                                                                    "Scale": "1,1,1",
+                                                                                                    "Tags": "",
+                                                                                                    "Enabled": true,
+                                                                                                    "NetworkMode": 2,
+                                                                                                    "NetworkFlags": 0,
+                                                                                                    "NetworkOrphaned": 0,
+                                                                                                    "NetworkTransmit": true,
+                                                                                                    "OwnerTransfer": 1,
+                                                                                                    "Components": [],
+                                                                                                    "Children": []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "__guid": "5fcc4ecd-4079-4935-9cd6-0516a888119d",
+                    "__version": 2,
+                    "Flags": 0,
+                    "Name": "LeftUpLeg",
+                    "Position": "0,0,0",
+                    "Rotation": "0,0,0,1",
+                    "Scale": "1,1,1",
+                    "Tags": "",
+                    "Enabled": true,
+                    "NetworkMode": 2,
+                    "NetworkFlags": 0,
+                    "NetworkOrphaned": 0,
+                    "NetworkTransmit": true,
+                    "OwnerTransfer": 1,
+                    "Components": [],
+                    "Children": [
+                      {
+                        "__guid": "1021eca3-fa58-4480-a1a0-7beba33643fe",
+                        "__version": 2,
+                        "Flags": 0,
+                        "Name": "LeftLeg",
+                        "Position": "0,0,0",
+                        "Rotation": "0,0,0,1",
+                        "Scale": "1,1,1",
+                        "Tags": "",
+                        "Enabled": true,
+                        "NetworkMode": 2,
+                        "NetworkFlags": 0,
+                        "NetworkOrphaned": 0,
+                        "NetworkTransmit": true,
+                        "OwnerTransfer": 1,
+                        "Components": [],
+                        "Children": [
+                          {
+                            "__guid": "d8607be8-4be8-442e-96c1-7f02b071a814",
+                            "__version": 2,
+                            "Flags": 0,
+                            "Name": "LeftFoot",
+                            "Position": "0,0,0",
+                            "Rotation": "0,0,0,1",
+                            "Scale": "1,1,1",
+                            "Tags": "",
+                            "Enabled": true,
+                            "NetworkMode": 2,
+                            "NetworkFlags": 0,
+                            "NetworkOrphaned": 0,
+                            "NetworkTransmit": true,
+                            "OwnerTransfer": 1,
+                            "Components": [],
+                            "Children": [
+                              {
+                                "__guid": "f2d79a60-3a95-4220-9426-74f817a2ad5c",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "LeftToeBase",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "__guid": "5b3c731e-c8ba-4dda-8c6d-cf06ff9f8b9f",
+                    "__version": 2,
+                    "Flags": 0,
+                    "Name": "RightUpLeg",
+                    "Position": "0,0,0",
+                    "Rotation": "0,0,0,1",
+                    "Scale": "1,1,1",
+                    "Tags": "",
+                    "Enabled": true,
+                    "NetworkMode": 2,
+                    "NetworkFlags": 0,
+                    "NetworkOrphaned": 0,
+                    "NetworkTransmit": true,
+                    "OwnerTransfer": 1,
+                    "Components": [],
+                    "Children": [
+                      {
+                        "__guid": "d11a23ec-85b2-4915-b7e9-7d6d34f72e32",
+                        "__version": 2,
+                        "Flags": 0,
+                        "Name": "RightLeg",
+                        "Position": "0,0,0",
+                        "Rotation": "0,0,0,1",
+                        "Scale": "1,1,1",
+                        "Tags": "",
+                        "Enabled": true,
+                        "NetworkMode": 2,
+                        "NetworkFlags": 0,
+                        "NetworkOrphaned": 0,
+                        "NetworkTransmit": true,
+                        "OwnerTransfer": 1,
+                        "Components": [],
+                        "Children": [
+                          {
+                            "__guid": "e46fea0e-5c5c-420c-9a0b-fa8a500bcfa6",
+                            "__version": 2,
+                            "Flags": 0,
+                            "Name": "RightFoot",
+                            "Position": "0,0,0",
+                            "Rotation": "0,0,0,1",
+                            "Scale": "1,1,1",
+                            "Tags": "",
+                            "Enabled": true,
+                            "NetworkMode": 2,
+                            "NetworkFlags": 0,
+                            "NetworkOrphaned": 0,
+                            "NetworkTransmit": true,
+                            "OwnerTransfer": 1,
+                            "Components": [],
+                            "Children": [
+                              {
+                                "__guid": "4bc28c8b-8182-4241-a37c-d107f20e5536",
+                                "__version": 2,
+                                "Flags": 0,
+                                "Name": "RightToeBase",
+                                "Position": "0,0,0",
+                                "Rotation": "0,0,0,1",
+                                "Scale": "1,1,1",
+                                "Tags": "",
+                                "Enabled": true,
+                                "NetworkMode": 2,
+                                "NetworkFlags": 0,
+                                "NetworkOrphaned": 0,
+                                "NetworkTransmit": true,
+                                "OwnerTransfer": 1,
+                                "Components": [],
+                                "Children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           }
         ]
       },

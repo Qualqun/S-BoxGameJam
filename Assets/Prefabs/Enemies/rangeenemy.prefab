@@ -77,18 +77,27 @@
           "component_type": "NavMeshAgent"
         },
         "aimTime": 0.4,
+        "animation": {
+          "_type": "component",
+          "component_id": "b5e25898-1923-430a-ac77-1cc5b075daed",
+          "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
+          "component_type": "RangeEnemyAnimation"
+        },
         "bullet": {
           "_type": "gameobject",
           "prefab": "prefabs/enemies/enemybullet.prefab"
         },
         "bulletDamage": 6,
+        "bulletDamagePerRound": 6,
         "bulletSpeed": 180,
         "gunPoint": {
           "_type": "gameobject",
           "go": "0847bc44-9917-41af-a64c-d6173528996b"
         },
         "hp": 25,
+        "hpPerRound": 15,
         "meleDamage": 8,
+        "meleDamagePerRound": 6,
         "model": {
           "_type": "component",
           "component_id": "4c3258a9-b2d9-48d6-8c2f-809bb91a3f57",
@@ -101,7 +110,7 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "range": 500,
+        "range": 300,
         "reloadTime": 1.4,
         "repathDistance": 64,
         "shootTime": 1.2,
@@ -143,6 +152,24 @@
           "random": true
         },
         "visualHitDuration": 0.1
+      },
+      {
+        "__type": "RangeEnemyAnimation",
+        "__guid": "b5e25898-1923-430a-ac77-1cc5b075daed",
+        "__enabled": true,
+        "Flags": 0,
+        "model": {
+          "_type": "component",
+          "component_id": "55877364-1eab-4af3-a53b-76223c029f8a",
+          "go": "28e70bda-3ad6-4279-a730-d78983df1236",
+          "component_type": "SkinnedModelRenderer"
+        },
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null
       }
     ],
     "Children": [
@@ -184,16 +211,16 @@
                 "__guid": "55877364-1eab-4af3-a53b-76223c029f8a",
                 "__enabled": true,
                 "Flags": 0,
-                "AnimationGraph": null,
+                "AnimationGraph": "animgraphs/ennemi2.vanmgrph",
                 "BodyGroups": 18446744073709551615,
                 "BoneMergeTarget": null,
                 "CreateAttachments": false,
                 "CreateBoneObjects": false,
                 "LodOverride": null,
                 "MaterialGroup": null,
-                "MaterialOverride": "art/shaders/enemymat.vmat",
+                "MaterialOverride": "art/shaders/enemy.vmat",
                 "Materials": null,
-                "Model": "models/citizen_mannequin/mannequin.vmdl",
+                "Model": "art/asset/player/ennemi2.vmdl",
                 "Morphs": {},
                 "OnComponentDestroy": null,
                 "OnComponentDisabled": null,

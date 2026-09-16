@@ -6,7 +6,7 @@
     "Name": "enemybullet",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
-    "Scale": "0.25,0.25,0.25",
+    "Scale": "1,1,1",
     "Tags": "enemybullet",
     "Enabled": true,
     "NetworkMode": 1,
@@ -15,37 +15,6 @@
     "NetworkTransmit": true,
     "OwnerTransfer": 1,
     "Components": [
-      {
-        "__type": "Sandbox.ModelRenderer",
-        "__guid": "76054312-8a4e-4641-ba31-55d2eb34d8f5",
-        "__enabled": true,
-        "Flags": 0,
-        "BodyGroups": 18446744073709551615,
-        "CreateAttachments": false,
-        "LodOverride": null,
-        "MaterialGroup": null,
-        "MaterialOverride": null,
-        "Materials": {
-          "indexed": {
-            "0": "materials/default/white.vmat"
-          }
-        },
-        "Model": "models/dev/sphere.vmdl",
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "RenderOptions": {
-          "GameLayer": true,
-          "OverlayLayer": false,
-          "BloomLayer": true,
-          "AfterUILayer": false
-        },
-        "RenderType": "On",
-        "Tint": "1,0,0,1"
-      },
       {
         "__type": "EnemyBulletBehaviour",
         "__guid": "62490943-98f1-4afd-b56f-11c3d00e047b",
@@ -57,10 +26,29 @@
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null
+        "OnComponentUpdate": null,
+        "size": 16
       }
     ],
-    "Children": [],
+    "Children": [
+      {
+        "__guid": "3c42d765-5ad5-4438-b639-300b791c53d1",
+        "__version": 2,
+        "__Prefab": "art/prefabs/map/bullet/bulletsniper.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "86f0a23e-093b-447b-ade4-ecf60c9ca47f": "3c42d765-5ad5-4438-b639-300b791c53d1",
+          "5a347333-52b8-4d70-9021-a938037e0b9e": "9f1c9f8e-5e2e-439c-8312-6a77faa648b4",
+          "cbe36ccb-c522-410c-94a3-de0e28c9190b": "1472764d-3ce3-4dbb-abd8-839c8231912c",
+          "3129ac16-6d17-4392-b7ff-c04496c09a39": "74d01fe2-28af-4a94-84b8-a49a4de1a8ce"
+        }
+      }
+    ],
     "__properties": {
       "NetworkInterpolation": true,
       "PhysicsMode": "Physics3D",

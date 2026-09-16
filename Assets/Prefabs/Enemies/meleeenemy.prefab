@@ -76,6 +76,12 @@
           "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
           "component_type": "NavMeshAgent"
         },
+        "animation": {
+          "_type": "component",
+          "component_id": "ed3c0daa-8efd-41ca-adc0-79e4c1905d0f",
+          "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
+          "component_type": "BaseEnemyAnimation"
+        },
         "hp": 25,
         "hpPerRound": 15,
         "meleDamage": 8,
@@ -92,7 +98,8 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "repathDistance": 64
+        "repathDistance": 64,
+        "slowDuration": 1
       },
       {
         "__type": "BaseVisualEnemy",
@@ -118,6 +125,24 @@
           "random": true
         },
         "visualHitDuration": 0.2
+      },
+      {
+        "__type": "BaseEnemyAnimation",
+        "__guid": "ed3c0daa-8efd-41ca-adc0-79e4c1905d0f",
+        "__enabled": true,
+        "Flags": 0,
+        "model": {
+          "_type": "component",
+          "component_id": "55877364-1eab-4af3-a53b-76223c029f8a",
+          "go": "28e70bda-3ad6-4279-a730-d78983df1236",
+          "component_type": "SkinnedModelRenderer"
+        },
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null
       }
     ],
     "Children": [
@@ -159,16 +184,16 @@
                 "__guid": "55877364-1eab-4af3-a53b-76223c029f8a",
                 "__enabled": true,
                 "Flags": 0,
-                "AnimationGraph": null,
+                "AnimationGraph": "animgraphs/ennemi2.vanmgrph",
                 "BodyGroups": 18446744073709551615,
                 "BoneMergeTarget": null,
                 "CreateAttachments": false,
                 "CreateBoneObjects": false,
                 "LodOverride": null,
                 "MaterialGroup": null,
-                "MaterialOverride": "art/shaders/enemymat.vmat",
+                "MaterialOverride": "art/shaders/enemy.vmat",
                 "Materials": null,
-                "Model": "models/citizen_mannequin/mannequin.vmdl",
+                "Model": "art/asset/player/ennemi1.vmdl",
                 "Morphs": {},
                 "OnComponentDestroy": null,
                 "OnComponentDisabled": null,

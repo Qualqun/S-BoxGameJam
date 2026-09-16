@@ -6,7 +6,7 @@
     "Name": "playerbullet",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
-    "Scale": "0.25,0.25,0.25",
+    "Scale": "1,1,1",
     "Tags": "bullet",
     "Enabled": true,
     "NetworkMode": 1,
@@ -16,50 +16,52 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Sandbox.ModelRenderer",
-        "__guid": "76054312-8a4e-4641-ba31-55d2eb34d8f5",
+        "__type": "BulletBehaviour",
+        "__guid": "4d6f29fe-0c5f-4d87-b0d2-d5c4457c6b22",
         "__enabled": true,
         "Flags": 0,
-        "BodyGroups": 18446744073709551615,
-        "CreateAttachments": false,
-        "LodOverride": null,
-        "MaterialGroup": null,
-        "MaterialOverride": null,
-        "Materials": {
-          "indexed": {
-            "0": "materials/default/white.vmat"
-          }
-        },
-        "Model": "models/dev/sphere.vmdl",
+        "noCollideTag": "player,bullet,enemybullet,ground",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "RenderOptions": {
-          "GameLayer": true,
-          "OverlayLayer": false,
-          "BloomLayer": true,
-          "AfterUILayer": false
-        },
-        "RenderType": "On",
-        "Tint": "1,0.9,0,1"
-      },
-      {
-        "__type": "BulletBehaviour",
-        "__guid": "4d6f29fe-0c5f-4d87-b0d2-d5c4457c6b22",
-        "__enabled": true,
-        "Flags": 0,
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null
+        "size": 16
       }
     ],
-    "Children": [],
+    "Children": [
+      {
+        "__guid": "1a16bf6c-2685-4bcb-80de-5fb8ffbbe984",
+        "__version": 2,
+        "__Prefab": "art/prefabs/map/bullet/bulletplayer.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [
+            {
+              "Id": {
+                "Type": "GameObject",
+                "IdValue": "121716ff-9978-41a8-893b-2ac17653befa"
+              }
+            },
+            {
+              "Id": {
+                "Type": "Component",
+                "IdValue": "a5a39b67-981c-44a7-a9d6-9dd1652538ea"
+              }
+            }
+          ],
+          "PropertyOverrides": [],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "921d48a5-04db-46af-b862-4d1d684616dd": "1a16bf6c-2685-4bcb-80de-5fb8ffbbe984",
+          "121716ff-9978-41a8-893b-2ac17653befa": "05e6b8cc-0cf9-4a94-905d-94c8904c93a9",
+          "8f2037b8-269d-4cd7-88a2-9380b23f1b3b": "cf2a172e-4ee3-4773-acde-01591c50b5d6",
+          "a5a39b67-981c-44a7-a9d6-9dd1652538ea": "c01ad97e-f469-407a-97a8-9a1226025495"
+        }
+      }
+    ],
     "__properties": {
       "NetworkInterpolation": true,
       "PhysicsMode": "Physics3D",
