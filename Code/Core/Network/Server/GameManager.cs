@@ -117,19 +117,25 @@ public sealed class GameManager : Component
 
 	public bool AreAllPlayersDeadC()
 	{
-		if ( !Networking.IsHost ) 
+		if ( !Networking.IsHost )
 			return false;
 
+		var allPlayers = Scene.GetAllComponents<PlayerBehaviour>().ToList();
+		Log.Info( $"[AreAllPlayersDeadC] Checking {allPlayers.Count} players in scene..." );
+
+		if ( allPlayers.Count == 0 ) return false;
+
 		bool allDead = true;
-		// check if all players are dead
-		foreach ( var player in GameState.Players )
+
+		foreach ( var player in allPlayers )
 		{
-			if ( player.State.Hp > 0 )
+			if ( player != null && player.IsValid() && !player.isDead )
 			{
 				allDead = false;
 				break;
 			}
 		}
+
 		return allDead;
 	}
 
@@ -202,34 +208,52 @@ public sealed class GameManager : Component
 
 	public void PlayerEnteredStartArea( PlayerBehaviour player )
 	{
-		if ( !Networking.IsHost ) 
+		if ( !Networking.IsHost )
 			return;
 
-		if ( GameState == null ) 
+		if ( GameState == null )
 			return;
 
-		if ( GameState.State != GameStateType.WaitingForPlayers ) 
+		if ( player.isInStartZone )
 			return;
 
-		GameState.Server_SetPhaseTimer( TimeStart );
-		GameState.Server_SetGameState( GameStateType.Starting );
-		Log.Info( "[GameManager] Game starting countdown..." );
+		player.isInStartZone = true;
+		GameState.Server_SetPlayerReadyCount( GameState.PlayerReadyCount + 1 );
+
+		if ( GameState.State == GameStateType.WaitingForPlayers )
+		{
+			if ( GameState.Players.Count > 0 && GameState.PlayerReadyCount >= GameState.Players.Count )
+			{
+				GameState.Server_SetPhaseTimer( TimeStart );
+				GameState.Server_SetGameState( GameStateType.Starting );
+				Log.Info( "[GameManager] Game starting countdown..." );
+			}
+		}
 	}
 
 	public void PlayerLeftStartArea( PlayerBehaviour player )
 	{
-		if ( !Networking.IsHost ) 
+		if ( !Networking.IsHost )
 			return;
 
-		if ( GameState == null ) 
+		if ( GameState == null )
 			return;
 
-		if ( GameState.State != GameStateType.Starting ) 
+		if ( !player.isInStartZone )
 			return;
 
-		GameState.Server_SetPhaseTimer( 0f );
-		GameState.Server_SetGameState( GameStateType.WaitingForPlayers );
-		Log.Info( "[GameManager] Game starting countdown canceled." );
+		player.isInStartZone = false;
+		GameState.Server_SetPlayerReadyCount( GameState.PlayerReadyCount - 1 );
+
+		if ( GameState.State == GameStateType.Starting )
+		{
+			if ( GameState.PlayerReadyCount < GameState.Players.Count )
+			{
+				GameState.Server_SetPhaseTimer( 0f );
+				GameState.Server_SetGameState( GameStateType.WaitingForPlayers );
+				Log.Info( "[GameManager] Game starting countdown canceled." );
+			}
+		}
 	}
 
 	#endregion
@@ -254,16 +278,21 @@ public sealed class GameManager : Component
 			return;
 
 		StopRoundSpawner();
-
-		GameState.Server_SetGameState( GameStateType.GameOver );
-
 		RemoveAllEnemies();
 		Broadcast_ShowContinuePrompt();
 
-		//GameState.Server_SetPhaseTimer( 0f );
-		
-	}
+		var allPlayers = Scene.GetAllComponents<PlayerBehaviour>().ToList();
+		foreach ( var player in allPlayers )
+		{
+			if ( player != null && player.IsValid() && player.State != null )
+			{
+				player.State.RewardTaken = false;
+			}
+		}
 
+		GameState.Server_SetPhaseTimer( 0f );
+		GameState.Server_SetGameState( GameStateType.GameOver );
+	}
 	public void StartNextRound( bool isGameOver = false )
 	{
 		if ( !Networking.IsHost )
@@ -336,24 +365,44 @@ public sealed class GameManager : Component
 		if ( !Networking.IsHost )
 			return false;
 
-		foreach ( var player in GameState.Players )
+		var allPlayers = Scene.GetAllComponents<PlayerBehaviour>().ToList();
+		int readyCount = 0;
+		int validPlayers = 0;
+
+		foreach ( var player in allPlayers )
 		{
-			if ( !player.State.RewardTaken )
+			if ( player == null || !player.IsValid() )
+				continue;
+
+			validPlayers++;
+
+			if ( player.State != null && player.State.RewardTaken )
 			{
-				return false;
+				readyCount++;
 			}
 		}
-		return true;
+
+		if ( validPlayers == 0 )
+			return false;
+
+		return readyCount == validPlayers;
 	}
 
 	private void GameOverRoutine()
 	{
 		if ( AreAllPlayersTakedBoost() )
 		{
-			foreach ( var player in GameState.Players )
+			var allPlayers = Scene.GetAllComponents<PlayerBehaviour>().ToList();
+			foreach ( var player in allPlayers )
 			{
-				player.State.RewardTaken = false;
-				player.Revive();
+				if ( player != null && player.IsValid() )
+				{
+					if ( player.State != null )
+					{
+						player.State.RewardTaken = false;
+					}
+					player.Revive();
+				}
 			}
 			StartNextRound( true );
 		}
@@ -391,18 +440,24 @@ public sealed class GameManager : Component
 	[Rpc.Broadcast]
 	public void PlayerTakeDamage( PlayerBehaviour player, float amount )
 	{
-		player.TakeHit( amount );
+		player.Server_TakeHit( amount );
 	}
 
 	[Rpc.Host]
 	public void PlayerTakeDamageFromEnemy( PlayerBehaviour player, GameObject enemyObj )
 	{
+		if ( player == null || !player.IsValid() ) 
+			return;
+
+		if ( enemyObj == null || !enemyObj.IsValid() ) 
+			return;
+
 		BaseEnemyBehaviour enemy = enemyObj.GetComponent<BaseEnemyBehaviour>();
 
-		using ( Rpc.FilterInclude( c => c == Rpc.Caller ) )
-		{
-			PlayerTakeDamage( player, enemy.meleDamage );
-		}
+		if ( enemy == null ) 
+			return;
+
+		player.Server_TakeHit( enemy.meleDamage );
 	}
 
 	#region Enemies methods

@@ -97,6 +97,7 @@ public sealed class GameState : Component
 	{
 		if ( !Networking.IsHost )
 			return;
+
 		Enemies.Add( enemy );
 	}
 
@@ -104,6 +105,7 @@ public sealed class GameState : Component
 	{
 		if ( !Networking.IsHost )
 			return;
+
 		Enemies.Remove( enemy );
 	}
 
@@ -111,6 +113,7 @@ public sealed class GameState : Component
 	{
 		if ( !Networking.IsHost )
 			return;
+
 		PlayerReadyCount = count;
 	}
 

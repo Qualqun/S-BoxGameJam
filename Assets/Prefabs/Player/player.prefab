@@ -155,7 +155,12 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "State": null,
+        "State": {
+          "_type": "component",
+          "component_id": "28a22751-d9f3-44e3-b3e2-af68d1912b50",
+          "go": "30f4e803-7638-466b-8c25-308351d241f7",
+          "component_type": "PlayerState"
+        },
         "ui": {
           "_type": "component",
           "component_id": "99aaa9a6-603c-426a-be59-df844272564b",

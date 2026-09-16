@@ -1,12 +1,14 @@
 using Sandbox;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using static Sandbox.Sprite;
 
 public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 {
-	[Sync] public bool isInvulnerable { get; set; }
-	[Sync] public bool isDead { get; set; } = false;
+	[Sync( SyncFlags.FromHost )] public bool isInvulnerable { get; set; }
+	[Sync( SyncFlags.FromHost )] public bool isDead { get; set; } = false;
+	[Sync( SyncFlags.FromHost )] public bool isInStartZone { get; set; } = false;
 
 	[Property, Group( "Refs" )] public PlayerAnimation animation { get; set; }
 	[Property, Group( "Refs" )] public PlayerState State { get; set; }
@@ -96,48 +98,56 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	public void OnCollisionStart( Collision collision )
 	{
+		if ( IsProxy ) 
+			return; 
+
 		GameObject otherObj = collision.Other.Collider.GameObject;
 
 		if ( otherObj.Tags.Has( "enemy" ) )
-		{
 			gameManager.PlayerTakeDamageFromEnemy( this, otherObj );
-		}
 	}
 
-	public void TakeHit( float amount )
+	public void Server_TakeHit( float amount )
 	{
+		if ( !Networking.IsHost ) 
+			return;
 
-		if ( !isInvulnerable && !isDead )
+		if ( isDead || isInvulnerable ) 
+			return;
+
+		State.Hp = MathF.Max( 0f, State.Hp - amount );
+		Broadcast_RefreshHealth();
+
+		if ( State.Hp <= 0f )
 		{
-			State.TakeDamage( amount );
+			isDead = true;              
+			Broadcast_SetDead();        
 
-			// Only update the UI if this is not a proxy
-			//if ( !IsProxy && ui != null )
+			cancellation?.Cancel();
+			cancellation?.Dispose();
+			cancellation = null;
 
-			ui?.SetHealth( State.Hp, State.MaxHp );
-
-			if ( State.Hp <= 0 )
-			{
-				SetDead();
-
-				if (Networking.IsHost )
-				{
-					if ( gameManager.AreAllPlayersDeadC() )
-						gameManager.GameOver();
-				}
-				
-
-				cancellation?.Cancel();
-				cancellation?.Dispose();
-				cancellation = null;		
-			}
-			else
-			{
-				_ = TimerHit();
-			}
+			if ( gameManager.AreAllPlayersDeadC() )
+				gameManager.GameOver();
+		}
+		else
+		{
+			SetInvulnerability( true );
+			_ = TimerHit();          
 		}
 	}
 
+	[Rpc.Broadcast]
+	public void Broadcast_RefreshHealth()
+	{
+		ui?.SetHealth( State.Hp, State.MaxHp );
+	}
+
+	[Rpc.Broadcast]
+	public void Broadcast_SetDead()
+	{
+		SetDead(); 
+	}
 	public void Fire()
 	{
 		if ( canShoot )
@@ -197,7 +207,6 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		}
 	}
 
-	[Rpc.Broadcast]
 	public void SetDead()
 	{
 		Color colorTint = model.Tint;
@@ -208,8 +217,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		Tags.Add( "invulnerability" );
 
 		canShoot = false;
-		isDead = true;
 	}
+
 	[Rpc.Broadcast]
 	public void Revive()
 	{

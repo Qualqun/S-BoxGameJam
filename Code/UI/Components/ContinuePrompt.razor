@@ -44,14 +44,16 @@
 
 	private void OnYesClicked()
 	{
-		GameManager gameManager = Scene.GetAllComponents<GameManager>().FirstOrDefault();
+		DeathRewards deathRewards = Scene.GetAllComponents<DeathRewards>().FirstOrDefault();
 
-		if (gameManager != null)
+		if (deathRewards != null)
 		{
-			gameManager.Broadcast_ShowDeathRewards();
-			Hide(); 
+			deathRewards.Show();
+			Hide();
 		}
 		else
-			Log.Warning("GameManager not found in the scene!");
+		{
+			Log.Warning("DeathRewards not found in the scene!");
+		}
 	}
 }

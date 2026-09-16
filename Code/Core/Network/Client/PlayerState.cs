@@ -33,7 +33,7 @@ public enum ModifierType
 public sealed class PlayerState : Component
 {
 	[Property, Sync] public float MaxHp { get; set; } = 100f;
-	[Property, Sync] public float Hp { get; set; } = 100f;
+	[Sync( SyncFlags.FromHost )] public float Hp { get; set; } = 100f;
 	[Property, Sync] public float MoveSpeed { get; set; } = 250f;
 	[Property, Sync] public float TimeInvulnerability { get; set; } = 1f;
 	[Property, Sync] public float BaseFireRate { get; set; } = 4f;
