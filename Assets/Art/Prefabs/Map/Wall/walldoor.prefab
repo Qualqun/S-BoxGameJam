@@ -52,7 +52,7 @@
         "Position": "0,0,0",
         "Rotation": "0,0,0,1",
         "Scale": "1,1,1",
-        "Tags": "",
+        "Tags": "door",
         "Enabled": true,
         "NetworkMode": 2,
         "NetworkFlags": 0,
@@ -108,7 +108,7 @@
           {
             "__type": "Sandbox.BoxCollider",
             "__guid": "4c8a990a-45e2-433b-b6da-63d9e4446a06",
-            "__enabled": false,
+            "__enabled": true,
             "Flags": 0,
             "Center": "-89.9108047,2.2737236,14.5856857",
             "ColliderFlags": 0,
@@ -198,7 +198,7 @@
             "OnTriggerEnter": null,
             "OnTriggerExit": null,
             "RollingResistance": null,
-            "Scale": "162,81.8299179",
+            "Scale": "223.609909,81.8299179",
             "Static": true,
             "Surface": null,
             "SurfaceVelocity": "0,0,0"

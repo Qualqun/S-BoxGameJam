@@ -11,18 +11,8 @@
 				[
 					{
 						_class = "DefaultMaterialGroup"
-						remaps = 
-						[
-							{
-								from = "emmisivebleu.vmat"
-								to = "art/material/emmisiveblue.vmat"
-							},
-							{
-								from = "plalette.vmat"
-								to = "art/material/map.vmat"
-							},
-						]
-						use_global_default = false
+						remaps = [  ]
+						use_global_default = true
 						global_default_material = "art/material/map.vmat"
 					},
 				]
@@ -33,7 +23,7 @@
 				[
 					{
 						_class = "RenderMeshFile"
-						filename = "art/asset/map/props/neonb.fbx"
+						filename = "art/asset/map/wall/wallcap.fbx"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 0.4
@@ -46,7 +36,7 @@
 							exclude_by_default = true
 							exception_list = 
 							[
-								"NeonB",
+								"WallCap",
 							]
 						}
 					},
