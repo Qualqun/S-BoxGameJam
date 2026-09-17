@@ -89,6 +89,7 @@
         },
         "bulletDamage": 6,
         "bulletDamagePerRound": 6,
+        "bulletSize": 16,
         "bulletSpeed": 1000,
         "gunPoint": {
           "_type": "gameobject",

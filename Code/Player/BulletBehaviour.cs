@@ -57,6 +57,7 @@ public sealed class BulletBehaviour : Component
 {
 	[Property, WideMode] TagSet noCollideTag { get; set; }
 	[Property] float size { get; set; } = 32f;
+	[Property] BulletSound sound { get; set; }
 
 
 	public BulletInfo bulletInfo { get; set; }
@@ -126,6 +127,8 @@ public sealed class BulletBehaviour : Component
 				enemyHit.Add( collideObj );
 				gameManager.EnemyTakeDamage( collideObj, bulletInfo.damage );
 				gameManager.UiManager.HitNumbers.ShowNumber( bulletInfo.damage, traceResult.HitPosition );
+
+				sound.Hit();
 			}
 
 			if ( updateNextStep )
@@ -169,7 +172,6 @@ public sealed class BulletBehaviour : Component
 
 		bulletInfo = newInfo;
 		WorldRotation = Rotation.LookAt( bulletInfo.direction );
-
 
 	}
 

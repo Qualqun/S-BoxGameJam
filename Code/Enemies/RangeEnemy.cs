@@ -12,13 +12,14 @@ public class RangeEnemy : BaseEnemyBehaviour
 	[Property, Group( "Stats" )] public float aimTime { get; set; } = 0.4f;
 	[Property, Group( "Stats" )] public float shootTime { get; set; } = 1.2f;
 	[Property, Group( "Stats" )] public float reloadTime { get; set; } = 1.4f;
+	[Property, Group( "Stats" )] public float bulletSize { get; set; } = 32f;
 
 	[Property, Group( "Growth stats" )] public float bulletDamagePerRound { get; set; } = 6f;
 
 	[Property, Group( "Refs" )] RangeEnemyAnimation animation { get; set; }
 
 	[Property, Group( "Refs" )] public RangeVisualEnemy visual { get; set; }
-	[Property, Group( "Refs" )] public EnemyBulletBehaviour bullet { get; set; }
+	[Property, Group( "Refs" )] public GameObject bullet { get; set; }
 	[Property, Group( "Refs" )] public GameObject gunPoint { get; set; }
 
 	Task attackTask;
@@ -39,8 +40,9 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 			if ( canShoot )
 			{
+	
 				SceneTraceResult hit = Scene.Trace
-					.Sphere( bullet.size, gunPoint.WorldPosition, target.WorldPosition )
+					.Sphere( bulletSize, gunPoint.WorldPosition, target.WorldPosition )
 					.WithAnyTags( "enemy" ).Run();
 
 				if ( hit.Hit && !hit.StartedSolid )
@@ -93,7 +95,7 @@ public class RangeEnemy : BaseEnemyBehaviour
 		visual.ResetLaser();
 		animation.Shoot();
 
-		newBullet = bullet.GameObject.Clone( gunPoint.WorldPosition );
+		newBullet = bullet.Clone( gunPoint.WorldPosition );
 		bulletBehaviour = newBullet.GetComponent<EnemyBulletBehaviour>();
 
 		bulletBehaviour.speed = bulletSpeed;
