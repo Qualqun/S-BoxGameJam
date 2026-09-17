@@ -435,7 +435,17 @@
           "OnComponentEnabled": null,
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
-          "OnComponentUpdate": null
+          "OnComponentUpdate": null,
+          "platform": {
+            "_type": "component",
+            "component_id": "3985a2bf-0cb4-4cc9-8ea6-d5da31f9609c",
+            "go": "42aa72ec-049d-4c76-8eb5-400b1438acd6",
+            "component_type": "ModelRenderer"
+          },
+          "platforms": [
+            "art/asset/map/props/startzonered.vmdl",
+            "art/asset/map/props/startzone.vmdl"
+          ]
         }
       ],
       "Children": [
@@ -526,6 +536,14 @@
                 },
                 "Property": "Rotation",
                 "Value": "0,0,0.707106769,0.707106769"
+              },
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "1d80cffb-9c37-4f09-844c-98233f6796a4"
+                },
+                "Property": "Model",
+                "Value": "art/asset/map/props/startzonered.vmdl"
               }
             ],
             "MovedObjects": []
