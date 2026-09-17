@@ -18,14 +18,14 @@ public class RangeEnemy : BaseEnemyBehaviour
 	[Property, Group( "Refs" )] RangeEnemyAnimation animation { get; set; }
 
 	[Property, Group( "Refs" )] public RangeVisualEnemy visual { get; set; }
-	[Property, Group( "Refs" )] public GameObject bullet { get; set; }
+	[Property, Group( "Refs" )] public EnemyBulletBehaviour bullet { get; set; }
 	[Property, Group( "Refs" )] public GameObject gunPoint { get; set; }
 
 	Task attackTask;
 
 	protected override void OnUpdate()
 	{
-		if(IsProxy)
+		if ( IsProxy )
 		{
 			return;
 		}
@@ -40,7 +40,7 @@ public class RangeEnemy : BaseEnemyBehaviour
 			if ( canShoot )
 			{
 				SceneTraceResult hit = Scene.Trace
-					.Ray( gunPoint.WorldPosition, target.WorldPosition + Vector3.Up * 32 )
+					.Sphere( bullet.size, gunPoint.WorldPosition, target.WorldPosition )
 					.WithAnyTags( "enemy" ).Run();
 
 				if ( hit.Hit && !hit.StartedSolid )
@@ -79,22 +79,21 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 		_ = AimRotate( direction, aimTime );
 
-		
 
 		await Task.DelaySeconds( aimTime );
 
-		visual.UpdateLaser( gunPoint.WorldPosition, gunPoint.WorldPosition + direction  * 10000f);
+		visual.UpdateLaser( gunPoint.WorldPosition, gunPoint.WorldPosition + direction * 10000f );
 
-		await Task.DelaySeconds( shootTime / 4 * 3);
+		await Task.DelaySeconds( shootTime / 4 * 3 );
 
 		visual.StartBlink();
 
-		await Task.DelaySeconds( shootTime / 4);
+		await Task.DelaySeconds( shootTime / 4 );
 
 		visual.ResetLaser();
 		animation.Shoot();
 
-		newBullet = bullet.Clone( gunPoint.WorldPosition );
+		newBullet = bullet.GameObject.Clone( gunPoint.WorldPosition );
 		bulletBehaviour = newBullet.GetComponent<EnemyBulletBehaviour>();
 
 		bulletBehaviour.speed = bulletSpeed;

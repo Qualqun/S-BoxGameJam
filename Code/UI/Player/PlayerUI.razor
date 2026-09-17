@@ -36,6 +36,8 @@
 	[Property] public bool ShowWorldArrow { get; set; }
 	[Property] public Texture WorldArrowTexture { get; set; }
 	[Property] public float WorldArrowEdgeMargin { get; set; } = 56f;
+	/// <summary>Distance from the on-screen target in pixels. The arrow follows its rotation around the target; positive values keep it pointing toward the target.</summary>
+	[Property] public float WorldArrowOnScreenOffset { get; set; } = 0f;
 
 	Vector3 arrowWorldPosition;
 	bool hasArrowTarget;
@@ -107,7 +109,13 @@
 		if ( direction.LengthSquared < 0.0001f )
 			direction = Vector2.Up;
 
-		if ( !onScreen )
+		if ( onScreen )
+		{
+			Vector2 offset = direction.Normal * WorldArrowOnScreenOffset;
+			position.x -= Screen.Width > 0f ? offset.x / Screen.Width : 0f;
+			position.y -= Screen.Height > 0f ? offset.y / Screen.Height : 0f;
+		}
+		else
 		{
 			Vector2 edge = direction.Normal;
 			float scale = MathF.Min(

@@ -66,6 +66,7 @@ public sealed class BulletBehaviour : Component
 	protected override void OnStart()
 	{
 		base.OnStart();
+
 		if ( IsProxy )
 		{
 			Destroy();

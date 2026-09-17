@@ -35,6 +35,7 @@ public sealed class GameManager : Component
 	[Property, Group( "Refs" )] public GameState GameState { get; set; }
 
 	[Property, Group( "Refs" )] public GameObject PlayerPrefab { get; set; }
+	[Property, Group( "Refs" )] public GameObject StartZonePoint { get; set; }
 	[Property, Group( "Refs" )] public UIManager UiManager { get; set; }
 
 	[Property, Group( "List Refs" )] public List<GameObject> EnemiesPrefabs { get; set; }
@@ -42,11 +43,8 @@ public sealed class GameManager : Component
 	[Property, Group( "List Refs" )] public List<GameObject> SpawnPoints { get; set; }
 	CancellationTokenSource Cancellation;
 
-
-
 	protected override void OnStart()
 	{
-
 		LobbyConfig config = new();
 
 		config.MaxPlayers = 4;

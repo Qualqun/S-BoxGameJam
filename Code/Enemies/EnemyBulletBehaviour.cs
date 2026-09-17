@@ -4,7 +4,7 @@ using static Sandbox.Services.Stats;
 public sealed class EnemyBulletBehaviour : Component
 {
 	[Property, WideMode] TagSet noCollideTag { get; set; }
-	[Property] float size { get; set; } = 32f;
+	[Property] public float size { get; set; } = 32f;
 
 	public float speed { get; set; }
 	public float damage { get; set; }

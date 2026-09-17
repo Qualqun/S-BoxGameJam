@@ -248,6 +248,20 @@
             },
             "RenderType": "On",
             "Tint": "1,1,1,1"
+          },
+          {
+            "__type": "RotateMap",
+            "__guid": "a2d1590d-dd6a-4734-b2a8-f11ec3cd314e",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "rotate": "1,0,0",
+            "speed": 100
           }
         ],
         "Children": [

@@ -18,7 +18,9 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	[Property, Group( "Refs" )] GameObject cameraPivot { get; set; }
 
 	[Property, Group( "Refs" )] public PlayerUI ui { get; set; }
+
 	[Property, Group( "Refs" )] MPlayerController controller { get; set; }
+	[Property, Group( "Refs" )] PlayerSound sound { get; set; }
 	[Property, Group( "Refs" )] ModelRenderer model { get; set; }
 
 	[Property, Group( "Sound" )] public SoundEvent mainMusic { get; set; }
@@ -41,7 +43,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		else
 		{
 			ui?.SetHealth( State.Hp, State.MaxHp );
-			ui?.ShowArrowToWorldPosition( gameManager.StartZone.WorldPosition );
+			ui?.ShowArrowToWorldPosition( gameManager.StartZonePoint.WorldPosition );
 
 			GameObject.PlaySound( mainMusic );
 		}
@@ -177,6 +179,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 			animation.speedShoot = State.FireRate;
 			animation.Shoot();
+			sound.Shoot();
 
 			bullets.Add( baseBullet );
 

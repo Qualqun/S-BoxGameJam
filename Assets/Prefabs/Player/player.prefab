@@ -156,6 +156,12 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
+        "sound": {
+          "_type": "component",
+          "component_id": "0b2b7ccb-3cd0-4b72-8872-b5965653f2fc",
+          "go": "30f4e803-7638-466b-8c25-308351d241f7",
+          "component_type": "PlayerSound"
+        },
         "State": {
           "_type": "component",
           "component_id": "28a22751-d9f3-44e3-b3e2-af68d1912b50",
@@ -204,6 +210,18 @@
           "go": "1d2f0ea9-6352-4453-bd44-3e3c7c69f0d0",
           "component_type": "SkinnedModelRenderer"
         },
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null
+      },
+      {
+        "__type": "PlayerSound",
+        "__guid": "0b2b7ccb-3cd0-4b72-8872-b5965653f2fc",
+        "__enabled": true,
+        "Flags": 0,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -1595,6 +1613,7 @@
                 "OnComponentUpdate": null,
                 "ShowWorldArrow": false,
                 "WorldArrowEdgeMargin": 56,
+                "WorldArrowOnScreenOffset": 50,
                 "WorldArrowTexture": "art/asset/arrow.vtex"
               }
             ],
