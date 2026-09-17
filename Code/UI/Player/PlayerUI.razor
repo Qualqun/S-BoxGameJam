@@ -6,16 +6,19 @@
 @namespace Sandbox
 
 <root class="player-ui">
-	<div class="health-panel">
-		<div class="health-bar">
-			<div class="health-fill" style="width: @(HealthPercent * 100f)%"></div>
+	@if (GameState?.State == GameStateType.Playing)
+	{
+		<div class="health-panel">
+			<div class="health-bar">
+				<div class="health-fill" style="width: @(HealthPercent * 100f)%"></div>
+			</div>
 		</div>
-	</div>
+	}
 
-	@if ( ShowWorldArrow && arrowVisible )
+	@if (ShowWorldArrow && arrowVisible)
 	{
 		<div class="world-arrow" style="@arrowStyle">
-			@if ( WorldArrowTexture is not null )
+			@if (WorldArrowTexture is not null)
 			{
 				<div class="world-arrow-image">
 					<Image Texture="@WorldArrowTexture" />
@@ -31,12 +34,13 @@
 
 @code
 {
+	[Property] public GameState GameState { get; set; }
 	[Property] public float MaxHealth { get; set; } = 100f;
 	[Property] public float CurrentHealth { get; set; } = 100f;
 	[Property] public bool ShowWorldArrow { get; set; }
 	[Property] public Texture WorldArrowTexture { get; set; }
 	[Property] public float WorldArrowEdgeMargin { get; set; } = 56f;
-	/// <summary>Distance from the on-screen target in pixels. The arrow follows its rotation around the target; positive values keep it pointing toward the target.</summary>
+
 	[Property] public float WorldArrowOnScreenOffset { get; set; } = 0f;
 
 	Vector3 arrowWorldPosition;
@@ -48,14 +52,14 @@
 	{
 		get
 		{
-			if ( MaxHealth <= 0f )
+			if (MaxHealth <= 0f)
 				return 0f;
 
-			return (CurrentHealth / MaxHealth).Clamp( 0f, 1f );
+			return (CurrentHealth / MaxHealth).Clamp(0f, 1f);
 		}
 	}
 
-	public void SetHealth( float currentHealth, float maxHealth )
+	public void SetHealth(float currentHealth, float maxHealth)
 	{
 		CurrentHealth = currentHealth;
 		MaxHealth = maxHealth;
@@ -63,7 +67,7 @@
 		StateHasChanged();
 	}
 
-	public void ShowArrowToWorldPosition( Vector3 worldPosition )
+	public void ShowArrowToWorldPosition(Vector3 worldPosition)
 	{
 		arrowWorldPosition = worldPosition;
 		hasArrowTarget = true;
@@ -87,29 +91,29 @@
 	{
 		arrowVisible = false;
 
-		if ( !ShowWorldArrow || !hasArrowTarget )
+		if (!ShowWorldArrow || !hasArrowTarget)
 			return;
 
 		CameraComponent camera = Scene.Camera;
-		if ( !camera.IsValid() )
+		if (!camera.IsValid())
 			return;
 
-		Vector2 screen = camera.PointToScreenNormal( arrowWorldPosition );
-		if ( !float.IsFinite( screen.x ) || !float.IsFinite( screen.y ) )
+		Vector2 screen = camera.PointToScreenNormal(arrowWorldPosition);
+		if (!float.IsFinite(screen.x) || !float.IsFinite(screen.y))
 			return;
 
-		bool inFront = Vector3.Dot( arrowWorldPosition - camera.WorldPosition, camera.WorldRotation.Forward ) > 0f;
+		bool inFront = Vector3.Dot(arrowWorldPosition - camera.WorldPosition, camera.WorldRotation.Forward) > 0f;
 		bool onScreen = inFront && screen.x >= 0f && screen.x <= 1f && screen.y >= 0f && screen.y <= 1f;
 		Vector2 position = screen;
-		Vector2 direction = screen - new Vector2( 0.5f, 0.5f );
+		Vector2 direction = screen - new Vector2(0.5f, 0.5f);
 
-		if ( !inFront )
+		if (!inFront)
 			direction = -direction;
 
-		if ( direction.LengthSquared < 0.0001f )
+		if (direction.LengthSquared < 0.0001f)
 			direction = Vector2.Up;
 
-		if ( onScreen )
+		if (onScreen)
 		{
 			Vector2 offset = direction.Normal * WorldArrowOnScreenOffset;
 			position.x -= Screen.Width > 0f ? offset.x / Screen.Width : 0f;
@@ -119,35 +123,33 @@
 		{
 			Vector2 edge = direction.Normal;
 			float scale = MathF.Min(
-				edge.x == 0f ? float.MaxValue : 0.5f / MathF.Abs( edge.x ),
-				edge.y == 0f ? float.MaxValue : 0.5f / MathF.Abs( edge.y )
+				edge.x == 0f ? float.MaxValue : 0.5f / MathF.Abs(edge.x),
+				edge.y == 0f ? float.MaxValue : 0.5f / MathF.Abs(edge.y)
 			);
 
-			position = new Vector2( 0.5f, 0.5f ) + edge * scale;
+			position = new Vector2(0.5f, 0.5f) + edge * scale;
 		}
 
-		float marginX = Screen.Width > 0f ? (WorldArrowEdgeMargin / Screen.Width).Clamp( 0f, 0.45f ) : 0f;
-		float marginY = Screen.Height > 0f ? (WorldArrowEdgeMargin / Screen.Height).Clamp( 0f, 0.45f ) : 0f;
+		float marginX = Screen.Width > 0f ? (WorldArrowEdgeMargin / Screen.Width).Clamp(0f, 0.45f) : 0f;
+		float marginY = Screen.Height > 0f ? (WorldArrowEdgeMargin / Screen.Height).Clamp(0f, 0.45f) : 0f;
 
-		position.x = position.x.Clamp( marginX, 1f - marginX );
-		position.y = position.y.Clamp( marginY, 1f - marginY );
+		position.x = position.x.Clamp(marginX, 1f - marginX);
+		position.y = position.y.Clamp(marginY, 1f - marginY);
 
-		float angle = MathF.Atan2( direction.y, direction.x ) * 180f / MathF.PI;
-		arrowStyle = string.Format( CultureInfo.InvariantCulture,
+		float angle = MathF.Atan2(direction.y, direction.x) * 180f / MathF.PI;
+		arrowStyle = string.Format(CultureInfo.InvariantCulture,
 			"left: {0:0.###}%; top: {1:0.###}%; transform: translate( -50%, -50% ) rotate( {2:0.###}deg );",
 			position.x * 100f,
 			position.y * 100f,
-			angle );
+			angle);
 
 		arrowVisible = true;
 	}
 
-	/// <summary>
-	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
-	/// </summary>
 	protected override int BuildHash() => HashCode.Combine(
-		MathF.Ceiling( CurrentHealth ),
-		MathF.Ceiling( MaxHealth ),
+		GameState?.State,
+		MathF.Ceiling(CurrentHealth),
+		MathF.Ceiling(MaxHealth),
 		ShowWorldArrow,
 		arrowVisible,
 		arrowStyle

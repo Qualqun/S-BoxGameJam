@@ -1,53 +1,59 @@
-root
-{
+root {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
 	pointer-events: none;
-	font-family: Poppins;
+	font-family: 'Cynosure', sans-serif;
 	color: white;
 }
 
-.player-ui
-{
+.player-ui {
 	width: 100%;
 	height: 100%;
 }
 
-.health-panel
-{
+.health-panel {
 	position: absolute;
-	top: 32px;
-	left: 32px;
+	top: 40px;
+	left: 40px;
 	width: 350px;
-	height: 50px;
-	padding: 5px;
-	background-color: rgba( 12, 14, 18, 0.72 );
-	border: 1px solid rgba( 255, 255, 255, 0.14 );
-	border-radius: 8px;
-	box-shadow: 0 8px 24px rgba( 0, 0, 0, 0.28 );
+	height: 35px;
+	padding: 4px;
+	background-color: rgba(10, 10, 15, 0.75);
+	border-left: 3px solid rgba(255, 0, 0, 0.8);
+	border-bottom: 1px solid rgba(255, 0, 0, 0.3);
+	box-shadow: -5px 5px 15px rgba(255, 0, 0, 0.15);
+	transform: skewX(-15deg);
 }
 
-.health-bar
-{
+	.health-panel::before {
+		content: '';
+		position: absolute;
+		top: -10px;
+		left: -3px;
+		width: 120px;
+		height: 2px;
+		background: linear-gradient(to right, rgba(255, 0, 0, 0.8), transparent);
+	}
+
+.health-bar {
 	width: 100%;
 	height: 100%;
-	background-color: rgba( 255, 255, 255, 0.13 );
-	border-radius: 4px;
+	background-color: rgba(255, 255, 255, 0.05);
 	overflow: hidden;
+	box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
 }
 
-.health-fill
-{
+.health-fill {
 	height: 100%;
-	background-color: rgb( 232, 54, 65 );
-	border-radius: 4px;
+	background: linear-gradient(90deg, rgba(180, 20, 20, 1) 0%, rgba(255, 60, 60, 1) 100%);
+	box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+	transition: width 0.2s ease-out;
 }
 
-.world-arrow
-{
+.world-arrow {
 	position: absolute;
 	width: 192px;
 	height: 192px;
@@ -55,30 +61,27 @@ root
 	justify-content: center;
 }
 
-.world-arrow-icon
-{
+.world-arrow-icon {
 	position: absolute;
 	width: 0;
 	height: 0;
 	border-top: 56px solid transparent;
 	border-bottom: 56px solid transparent;
-	border-left: 116px solid rgb( 255, 230, 40 );
-	filter: drop-shadow( 0 0 3px rgba( 0, 0, 0, 1 ) ) drop-shadow( 0 4px 10px rgba( 0, 0, 0, 0.85 ) );
+	border-left: 116px solid rgba(255, 20, 20, 0.9);
+	filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.8));
 }
 
-.world-arrow-image
-{
+.world-arrow-image {
 	position: absolute;
 	width: 176px;
 	height: 176px;
 	align-items: center;
 	justify-content: center;
-	filter: drop-shadow( 0 0 3px rgba( 0, 0, 0, 1 ) ) drop-shadow( 0 4px 10px rgba( 0, 0, 0, 0.85 ) );
+	filter: drop-shadow( 0 0 5px rgba(255, 0, 0, 0.8) );
 }
 
-.world-arrow-image img
-{
-	width: 176px;
-	height: 176px;
-	object-fit: contain;
-}
+	.world-arrow-image img {
+		width: 176px;
+		height: 176px;
+		object-fit: contain;
+	}

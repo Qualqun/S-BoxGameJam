@@ -1604,6 +1604,12 @@
                 "__enabled": true,
                 "Flags": 0,
                 "CurrentHealth": 100,
+                "GameState": {
+                  "_type": "component",
+                  "component_id": "40841857-4b79-438c-b036-d1581eeedb17",
+                  "go": "6308e9fd-2ee1-40c4-aa6b-0deb242610a3",
+                  "component_type": "GameState"
+                },
                 "MaxHealth": 100,
                 "OnComponentDestroy": null,
                 "OnComponentDisabled": null,
@@ -1650,9 +1656,6 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [
-    "drakefruit.lugerpistolfire#91245",
-    "projectwolves.calm#233118"
-  ],
+  "__references": [],
   "__version": 2
 }

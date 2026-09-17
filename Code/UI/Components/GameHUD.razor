@@ -6,8 +6,25 @@
 @namespace Sandbox
 
 <root class="game-hud">
+	@if (GameState?.State == GameStateType.WaitingForPlayers)
+	{
+		<div class="lobby-layout">
+			<div class="logo-container">
+				<img src="/art/asset/icons/logo.png" class="game-logo" alt="Devil Pact" />
+			</div>
 
-	@if (GameState?.State != GameStateType.WaitingForPlayers)
+			<div class="lobby-bottom-bar">
+				<div class="phase-text lobby-instructions" @ref="PhaseTextPanel">
+					@PhaseText
+				</div>
+
+				<div class="player-count" @ref="PlayerCountPanel">
+					@PlayerCountText
+				</div>
+			</div>
+		</div>
+	}
+	else
 	{
 		<div class="timer">
 			@TimerText
@@ -16,16 +33,9 @@
 		<div class="enemy-count hidden" @ref="EnemyCountPanel">
 			@EnemyCountText
 		</div>
-	}
 
-	<div class="phase-text" @ref="PhaseTextPanel">
-		@PhaseText
-	</div>
-
-	@if (GameState?.State == GameStateType.WaitingForPlayers)
-	{
-		<div class="player-count" @ref="PlayerCountPanel">
-			@PlayerCountText
+		<div class="phase-text" @ref="PhaseTextPanel">
+			@PhaseText
 		</div>
 	}
 </root>
@@ -88,8 +98,6 @@
 	protected override void OnStart()
 	{
 		base.OnStart();
-
-		// Panel.AddClass("hidden");
 	}
 
 	public void Show()
@@ -114,7 +122,6 @@
 	{
 		EnemyCountPanel?.AddClass("hidden");
 
-		// Réaffiche les autres textes
 		PhaseTextPanel?.RemoveClass("hidden");
 		PlayerCountPanel?.RemoveClass("hidden");
 	}

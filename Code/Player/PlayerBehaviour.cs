@@ -31,7 +31,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	protected override void OnStart()
 	{
-		if ( State == null ) State = Components.Get<PlayerState>();
+		if ( State == null ) 
+			State = Components.Get<PlayerState>();
 
 		
 		if ( IsProxy )
@@ -42,6 +43,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		}
 		else
 		{
+			ui.GameState = gameManager.GameState;
 			ui?.SetHealth( State.Hp, State.MaxHp );
 			ui?.ShowArrowToWorldPosition( gameManager.StartZonePoint.WorldPosition );
 
