@@ -13,6 +13,11 @@
 				<img src="/art/asset/icons/logo.png" class="game-logo" alt="Devil Pact" />
 			</div>
 
+			<div class="ready-status-container">
+				<div class="ready-status-text">Waiting for all players ready</div>
+				<div class="ready-status-count">@ReadyCountText</div>
+			</div>
+
 			<div class="lobby-bottom-bar">
 				<div class="phase-text lobby-instructions" @ref="PhaseTextPanel">
 					@PhaseText
@@ -22,6 +27,20 @@
 					@PlayerCountText
 				</div>
 			</div>
+		</div>
+	}
+	else if (GameState?.State == GameStateType.Starting)
+	{
+		<div class="starting-container">
+			<div class="playing-timer">@TimerText</div>
+			<div class="starting-subtitle">The round is starting</div>
+		</div>
+	}
+	else if (GameState?.State == GameStateType.Playing)
+	{
+		<div class="playing-container">
+			<div class="playing-timer">@TimerText</div>
+			<div class="playing-enemy-count">@EnemyCountText</div>
 		</div>
 	}
 	else
@@ -77,6 +96,11 @@
 			? "0/4"
 			: $"{GameState.PlayerCount}/4";
 
+	private string ReadyCountText =>
+		GameState is null
+			? "0/0"
+			: $"{GameState.PlayerReadyCount}/{GameState.PlayerCount}";
+
 	protected override int BuildHash()
 	{
 		if (GameState is null)
@@ -88,6 +112,7 @@
 			GameState.State,
 			(int)MathF.Ceiling(GameState.PhaseTimer),
 			GameState.PlayerCount,
+			GameState.PlayerReadyCount,
 			enemiesCount
 		);
 	}

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public enum BoostType
 {
 	Hp,
+	Lives,
 	MoveSpeed,
 	FireRate,
 	TimeInvulnerability,
@@ -33,23 +34,22 @@ public sealed class PlayerState : Component
 {
 	[Property, Sync] public float MaxHp { get; set; } = 100f;
 	[Sync( SyncFlags.FromHost )] public float Hp { get; set; } = 100f;
+	[Property, Sync] public int MaxLives { get; set; } = 5;
+	[Sync( SyncFlags.FromHost )] public int Lives { get; set; } = 5;
+	[Property, Sync] public int Experience { get; set; } = 0;
+	[Property, Sync] public int MaxExperience { get; set; } = 100;
+	[Property, Sync] public int XpMultiplier { get; set; } = 1;
 	[Property, Sync] public float MoveSpeed { get; set; } = 250f;
 	[Property, Sync] public float TimeInvulnerability { get; set; } = 1f;
 	[Property, Sync] public float BaseFireRate { get; set; } = 4f;
 	[Property, Sync] public float BaseBulletDamage { get; set; } = 20f;
 	[Property, Sync] public float BaseBulletSize { get; set; } = 1f;
 	[Property, Sync] public float BaseBulletSpeed { get; set; } = 700f;
-
 	[Property, Sync] public bool RewardTaken { get; set; } = false;
-	// Multipliers
 	[Property, Sync] public float FireRateMultiplier { get; set; } = 1f;
 	[Property, Sync] public float DamageMultiplier { get; set; } = 1f;
 	[Property, Sync] public float SizeMultiplier { get; set; } = 1f;
-
-	// Sync modifiers
 	[Property, Sync] public NetList<ModifierType> ActiveModifiers { get; set; } = new();
-
-	// Properties that calculate the final values based on base values and multipliers
 	public float FireRate => BaseFireRate * FireRateMultiplier;
 	public float BulletDamage => BaseBulletDamage * DamageMultiplier;
 	public float BulletSize => BaseBulletSize * SizeMultiplier;
@@ -65,6 +65,11 @@ public sealed class PlayerState : Component
 		Hp -= amount;
 	}
 
+	public void LoseLife()
+	{
+		Lives = System.Math.Max( 0, Lives - 1 );
+	}
+
 	#region Authority Methods
 
 	[Authority]
@@ -72,6 +77,10 @@ public sealed class PlayerState : Component
 	{
 		MaxHp = 100f;
 		Hp = 100f;
+		MaxLives = 5;
+		Lives = 5;
+		Experience = 0;
+		MaxExperience = 100;
 		MoveSpeed = 250f;
 		TimeInvulnerability = 1f;
 
@@ -83,6 +92,7 @@ public sealed class PlayerState : Component
 		FireRateMultiplier = 1f;
 		DamageMultiplier = 1f;
 		SizeMultiplier = 0.5f;
+		XpMultiplier = 1;
 
 		ActiveModifiers.Clear();
 	}
@@ -97,6 +107,10 @@ public sealed class PlayerState : Component
 			case BoostType.Hp:
 				MaxHp += 30f;
 				Hp += 30f;
+				break;
+			case BoostType.Lives:
+				MaxLives += 1;
+				Lives += 1;
 				break;
 			case BoostType.MoveSpeed:
 				MoveSpeed += 25f;

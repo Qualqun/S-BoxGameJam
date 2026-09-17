@@ -8,9 +8,23 @@
 <root class="player-ui">
 	@if (GameState?.State == GameStateType.Playing)
 	{
-		<div class="health-panel">
-			<div class="health-bar">
-				<div class="health-fill" style="width: @(HealthPercent * 100f)%"></div>
+		<div class="health-panel-container">
+			<div class="health-panel">
+				<div class="health-bar">
+					<div class="health-fill" style="width: @(HealthPercent * 100f)%"></div>
+				</div>
+				<div class="lives-counter">
+					x@(PlayerState?.Lives ?? 5)
+				</div>
+			</div>
+
+			<div class="xp-panel">
+				<div class="xp-bar">
+					<div class="xp-fill" style="width: @(XpPercent * 100f)%"></div>
+				</div>
+				<div class="xp-counter">
+					x@(PlayerState?.XpMultiplier ?? 1)
+				</div>
 			</div>
 		</div>
 	}
@@ -35,6 +49,7 @@
 @code
 {
 	[Property] public GameState GameState { get; set; }
+	[Property] public PlayerState PlayerState { get; set; }
 	[Property] public float MaxHealth { get; set; } = 100f;
 	[Property] public float CurrentHealth { get; set; } = 100f;
 	[Property] public bool ShowWorldArrow { get; set; }
@@ -56,6 +71,19 @@
 				return 0f;
 
 			return (CurrentHealth / MaxHealth).Clamp(0f, 1f);
+		}
+	}
+
+	public float XpPercent
+	{
+		get
+		{
+			int max = PlayerState?.MaxExperience ?? 100;
+			if (max <= 0f)
+				return 0f;
+
+			int current = PlayerState?.Experience ?? 0;
+			return ((float)current / max).Clamp(0f, 1f);
 		}
 	}
 
@@ -147,11 +175,19 @@
 	}
 
 	protected override int BuildHash() => HashCode.Combine(
-		GameState?.State,
-		MathF.Ceiling(CurrentHealth),
-		MathF.Ceiling(MaxHealth),
-		ShowWorldArrow,
-		arrowVisible,
-		arrowStyle
+		GameState == null ? 0 : (int)GameState.State,
+		PlayerState == null ? 0 : HashCode.Combine(
+			PlayerState.Lives,
+			PlayerState.Experience,
+			PlayerState.MaxExperience,
+			PlayerState.XpMultiplier
+		),
+		HashCode.Combine(
+			MathF.Ceiling(CurrentHealth),
+			MathF.Ceiling(MaxHealth),
+			ShowWorldArrow,
+			arrowVisible,
+			arrowStyle
+		)
 	);
 }

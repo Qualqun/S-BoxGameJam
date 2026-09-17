@@ -364,9 +364,9 @@
             "go": "f9834c81-f700-4cd7-9492-add1d640059e"
           },
           "TimeGameOver": 5,
-          "TimePerRound": 30,
+          "TimePerRound": 5,
           "TimePerWaitingRound": 5,
-          "TimeStart": 3,
+          "TimeStart": 5,
           "UiManager": {
             "_type": "component",
             "component_id": "5d508ba5-953d-4fa7-8cf4-5a0b37c23fdd",
