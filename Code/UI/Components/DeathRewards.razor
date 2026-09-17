@@ -2,23 +2,30 @@
 @using Sandbox.UI
 @using System.Collections.Generic
 @using System.Linq
-@using System;
+@using System
 @inherits PanelComponent
 @namespace Sandbox
 
 <root class="death-rewards">
-	<div class="death-title">
-		You Died
-	</div>
+	<div class="death-overlay-glow"></div>
 
-	<div class="death-subtitle">
-		Choose a reward to come back stronger!
+	<div class="death-header">
+		<div class="death-title">DEVIL'S BARGAIN</div>
+		<div class="death-subtitle">CLAIM YOUR FORBIDDEN POWER</div>
+
+		<div class="reward-counter-badge">
+			<span class="badge-label">CHOICES REMAINING</span>
+			<span class="badge-value">@RemainingPicks</span>
+			<span class="badge-total">/ @TotalPicks</span>
+		</div>
 	</div>
 
 	<div class="rewards">
 		@foreach (var power in ActivePowers)
 		{
 			<div class="reward-card" @onclick=@( () => OnRewardClicked( power ) )>
+				<div class="card-glow"></div>
+
 				<div class="reward-image">
 					<Image Texture="@power.Image" />
 				</div>
@@ -30,6 +37,8 @@
 				<div class="reward-passive">
 					@power.Description
 				</div>
+
+				<button class="reward-select-btn">CLAIM</button>
 			</div>
 		}
 	</div>
@@ -37,7 +46,15 @@
 
 @code
 {
+	[Property] public PlayerState PlayerState { get; set; }
+
 	public List<Power> ActivePowers { get; set; } = new List<Power>();
+
+	public int RemainingPicks { get; private set; } = 1;
+	public int TotalPicks { get; private set; } = 1;
+
+	private PlayerState GetLocalPlayer() =>
+		PlayerState ?? Scene?.GetAllComponents<PlayerState>().FirstOrDefault(p => !p.IsProxy);
 
 	protected override void OnStart()
 	{
@@ -47,6 +64,10 @@
 
 	public void Show()
 	{
+		var player = GetLocalPlayer();
+		TotalPicks = Math.Max(1, player?.XpMultiplier ?? 1);
+		RemainingPicks = TotalPicks;
+
 		GenerateRandomRewards();
 		Panel.RemoveClass("hidden");
 	}
@@ -73,23 +94,32 @@
 
 		ActivePowers = shuffledPowers.Take(3).ToList();
 
-		foreach (var power in ActivePowers)
-		{
-			Log.Info($"Power: {power.Title} | Image: {power.Image} | Description: {power.Description}");
-		}
-
 		StateHasChanged();
 	}
 
 	private void OnRewardClicked(Power selectedPower)
 	{
-		PlayerState localPlayerState = Scene.GetAllComponents<PlayerState>().FirstOrDefault(p => !p.IsProxy);
+		var localPlayerState = GetLocalPlayer();
 
 		if (localPlayerState != null)
 		{
 			localPlayerState.ApplyBoost(selectedPower.BoostType);
+		}
 
+		RemainingPicks--;
+
+		if (RemainingPicks <= 0)
+		{
 			Hide();
 		}
+		else
+		{
+			GenerateRandomRewards();
+		}
+	}
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(RemainingPicks, TotalPicks, ActivePowers.Count);
 	}
 }

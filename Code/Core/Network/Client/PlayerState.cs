@@ -38,7 +38,7 @@ public sealed class PlayerState : Component
 	[Sync( SyncFlags.FromHost )] public int Lives { get; set; } = 5;
 	[Property, Sync] public int Experience { get; set; } = 0;
 	[Property, Sync] public int MaxExperience { get; set; } = 100;
-	[Property, Sync] public int XpMultiplier { get; set; } = 1;
+	[Property, Sync] public int XpMultiplier { get; set; } = 3;
 	[Property, Sync] public float MoveSpeed { get; set; } = 250f;
 	[Property, Sync] public float TimeInvulnerability { get; set; } = 1f;
 	[Property, Sync] public float BaseFireRate { get; set; } = 4f;
@@ -68,6 +68,21 @@ public sealed class PlayerState : Component
 	public void LoseLife()
 	{
 		Lives = System.Math.Max( 0, Lives - 1 );
+	}
+
+	[Rpc.Host]
+	public void Host_LoseLife()
+	{
+		LoseLife();
+	}
+
+	[Rpc.Broadcast]
+	public void ResetRewardTaken()
+	{
+		if ( IsProxy )
+			return;
+
+		RewardTaken = false;
 	}
 
 	#region Authority Methods

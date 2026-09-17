@@ -1,0 +1,187 @@
+@using Sandbox
+@using Sandbox.UI
+@using System
+@using System.Linq
+@inherits PanelComponent
+@namespace Sandbox
+
+<root class="game-hud">
+	@if ( GameState != null && GameState.State == GameStateType.WaitingForPlayers )
+	{
+		<div class="lobby-layout">
+			<div class="logo-container">
+				<img src="/art/asset/icons/logo.png" class="game-logo" alt="Devil Pact" />
+			</div>
+
+			<div class="ready-status-container">
+				<div class="ready-status-text">Waiting for all players ready</div>
+				<div class="ready-status-count">@ReadyCountText</div>
+			</div>
+
+			<div class="lobby-bottom-bar">
+				<div class="phase-text lobby-instructions" @ref="PhaseTextPanel">
+					@PhaseText
+				</div>
+
+				<div class="player-count" @ref="PlayerCountPanel">
+					@PlayerCountText
+				</div>
+			</div>
+		</div>
+	}
+	else if ( GameState != null && GameState.State == GameStateType.Starting )
+	{
+		<div class="starting-container">
+			<div class="playing-timer">@TimerText</div>
+			<div class="starting-subtitle">The round is starting</div>
+		</div>
+	}
+	else if ( GameState != null && GameState.State == GameStateType.Playing )
+	{
+		<div class="playing-container">
+			<div class="playing-timer">@TimerText</div>
+			<div class="playing-enemy-count">@EnemyCountText</div>
+		</div>
+	}
+	else if ( GameState != null && GameState.State == GameStateType.WaitingForNextRound )
+	{
+		<div class="devil-pact-hud">
+			<div class="pact-container">
+				<!-- Côté Lumière : One More Round -->
+				<div class="pact-side light-side">
+					<div class="pact-content">
+						<div class="pact-title">ONE MORE ROUND</div>
+						<div class="pact-description">Embrace the light. Continue the fight with your current strength.</div>
+						<button class="pact-button light-button" onclick="@OnLightChosen">ACCEPT</button>
+					</div>
+				</div>
+
+				<!-- Côté Ténèbres : Devil Pact -->
+				<div class="pact-side dark-side">
+					<div class="pact-content">
+						<div class="pact-title">DEVIL PACT</div>
+						<div class="pact-description">Yield to the shadows. Trade your essence for forbidden power.</div>
+						<button class="pact-button dark-button" onclick="@OnDarkChosen">MAKE A PACT</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+	else
+	{
+		<div class="timer">
+			@TimerText
+		</div>
+
+		<div class="enemy-count hidden" @ref="EnemyCountPanel">
+			@EnemyCountText
+		</div>
+
+		<div class="phase-text" @ref="PhaseTextPanel">
+			@PhaseText
+		</div>
+	}
+</root>
+
+@code
+{
+	[Property]
+	public GameState GameState { get; set; }
+
+	public Panel EnemyCountPanel { get; set; }
+	public Panel PhaseTextPanel { get; set; }
+	public Panel PlayerCountPanel { get; set; }
+
+	private string TimerText =>
+		GameState is null
+			? "0"
+			: $"{MathF.Ceiling( GameState.PhaseTimer )}";
+
+	private string EnemyCountText =>
+		GameState?.Enemies == null
+			? "0 enemies remaining"
+			: $"{GameState.Enemies.Count()} enemies remaining";
+
+	private string PhaseText =>
+		GameState is null
+			? ""
+			: GameState.State switch
+			{
+				GameStateType.WaitingForPlayers => "Head to the start zone or wait for your team...",
+				GameStateType.Starting => "All players are ready, the game is starting!",
+				GameStateType.Playing => "",
+				GameStateType.WaitingForNextRound => "Next round starting...",
+				GameStateType.GameOver => "Game Over",
+				_ => ""
+			};
+
+	private string PlayerCountText =>
+		GameState is null
+			? "0/4"
+			: $"{GameState.PlayerCount}/4";
+
+	private string ReadyCountText =>
+		GameState is null
+			? "0/0"
+			: $"{GameState.PlayerReadyCount}/{GameState.PlayerCount}";
+
+	private void OnLightChosen()
+	{
+		Log.Info( "[DevilPact] Light side chosen: One More Round" );
+	}
+
+	private void OnDarkChosen()
+	{
+		Log.Info( "[DevilPact] Dark side chosen: Devil Pact" );
+	}
+
+	protected override int BuildHash()
+	{
+		if ( GameState is null )
+			return 0;
+
+		int enemiesCount = GameState?.Enemies != null ? GameState.Enemies.Count() : 0;
+
+		return HashCode.Combine(
+			GameState.State,
+			(int)MathF.Ceiling( GameState.PhaseTimer ),
+			GameState.PlayerCount,
+			GameState.PlayerReadyCount,
+			enemiesCount
+		);
+	}
+}
+
+@code
+{
+	protected override void OnStart()
+	{
+		base.OnStart();
+	}
+
+	public void Show()
+	{
+		Panel.RemoveClass( "hidden" );
+	}
+
+	public void Hide()
+	{
+		Panel.AddClass( "hidden" );
+	}
+
+	public void ShowEnemyCount()
+	{
+		EnemyCountPanel?.RemoveClass( "hidden" );
+
+		PhaseTextPanel?.AddClass( "hidden" );
+		PlayerCountPanel?.AddClass( "hidden" );
+	}
+
+	public void HideEnemyCount()
+	{
+		EnemyCountPanel?.AddClass( "hidden" );
+
+		PhaseTextPanel?.RemoveClass( "hidden" );
+		PlayerCountPanel?.RemoveClass( "hidden" );
+	}
+}

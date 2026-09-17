@@ -43,6 +43,71 @@
 			<div class="playing-enemy-count">@EnemyCountText</div>
 		</div>
 	}
+	else if (GameState?.State == GameStateType.WaitingForNextRound)
+	{
+		@if (ShowRoundWonBanner)
+		{
+			<div class="round-won-container">
+				<div class="round-won-text">ROUND WON</div>
+			</div>
+		}
+		else if (AreAllPlayersReady() && (GameState?.PhaseTimer ?? 0f) > 0f)
+		{
+			<div class="starting-container">
+				<div class="playing-timer">@TimerText</div>
+				<div class="starting-subtitle">Next round will start</div>
+			</div>
+		}
+		else if (ShowWaitingForPlayersBanner)
+		{
+			<div class="waiting-rewards-container">
+				<div class="waiting-rewards-card">
+					<div class="waiting-rewards-title">WAITING FOR OTHER PLAYERS</div>
+					<div class="waiting-rewards-subtitle">The next round will start once everyone claims their power...</div>
+					<div class="waiting-spinner"></div>
+				</div>
+			</div>
+		}
+		else if (!_pactCompleted)
+		{
+			<div class="devil-pact-hud @(_isFadingOutPact ? "fade-out" : "")">
+				<div class="pact-container">
+					<div class="pact-side light-side">
+						<div class="pact-hover-glow"></div>
+						<div class="pact-content">
+							<div class="pact-title">ONE MORE ROUND</div>
+							<div class="pact-description">Embrace the light. Continue the fight with your current strength.</div>
+							<button class="pact-button light-button" onclick="@OnLightChosen">ACCEPT</button>
+						</div>
+					</div>
+
+					<div class="pact-side dark-side">
+						<div class="pact-hover-glow"></div>
+						<div class="pact-content">
+							<div class="pact-title">DEVIL PACT</div>
+							<div class="pact-description">Yield to the shadows. Trade your essence for forbidden power.</div>
+
+							<div class="pact-trade-details">
+								<div class="trade-item cost">
+									<span class="trade-prefix">-</span>
+									<span class="trade-value">1</span>
+									<span class="trade-label">LIFE</span>
+								</div>
+								<div class="trade-divider">➔</div>
+								<div class="trade-item gain">
+									<span class="trade-prefix">+</span>
+									<span class="trade-value">@BonusCount</span>
+									<span class="trade-label">@(BonusCount > 1 ? "BONUSES" : "BONUS")</span>
+								</div>
+							</div>
+
+							<button class="pact-button dark-button" onclick="@OnDarkChosen">MAKE A PACT</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	}
 	else
 	{
 		<div class="timer">
@@ -61,22 +126,79 @@
 
 @code
 {
-	[Property]
-	public GameState GameState { get; set; }
+	[Property] public GameState GameState { get; set; }
+	[Property] public PlayerState PlayerState { get; set; }
+	[Property] public DeathRewards DeathRewardsPanel { get; set; }
 
 	public Panel EnemyCountPanel { get; set; }
 	public Panel PhaseTextPanel { get; set; }
 	public Panel PlayerCountPanel { get; set; }
+
+	private GameStateType? _lastState;
+	private RealTimeSince _timeSinceStateChange;
+	private bool _isFadingOutPact = false;
+	private bool _pactCompleted = false;
+
+	private PlayerState LocalPlayer =>
+		PlayerState ?? Scene?.GetAllComponents<PlayerState>().FirstOrDefault(p => !p.IsProxy);
+
+	private int BonusCount
+	{
+		get
+		{
+			var player = LocalPlayer;
+			return Math.Max(1, player?.XpMultiplier ?? 1);
+		}
+	}
+
+	private bool ShowRoundWonBanner =>
+		GameState?.State == GameStateType.WaitingForNextRound && _timeSinceStateChange < 2.0f;
+
+	private bool AreAllPlayersReady()
+	{
+		var players = Scene?.GetAllComponents<PlayerBehaviour>().ToList();
+		if (players == null || players.Count == 0)
+			return false;
+
+		int readyCount = 0;
+		int total = 0;
+
+		foreach (var p in players)
+		{
+			if (p == null || !p.IsValid())
+				continue;
+
+			total++;
+			if (p.State != null && p.State.RewardTaken)
+				readyCount++;
+		}
+
+		return total > 0 && readyCount == total;
+	}
+
+	private bool ShowWaitingForPlayersBanner
+	{
+		get
+		{
+			if (GameState?.State != GameStateType.WaitingForNextRound)
+				return false;
+
+			if (ShowRoundWonBanner)
+				return false;
+
+			var player = LocalPlayer;
+			bool localRewardTaken = player != null && player.RewardTaken;
+
+			return localRewardTaken && !AreAllPlayersReady();
+		}
+	}
 
 	private string TimerText =>
 		GameState is null
 			? "0"
 			: $"{MathF.Ceiling(GameState.PhaseTimer)}";
 
-	private string EnemyCountText =>
-		GameState?.Enemies == null
-			? "0 enemies remaining"
-			: $"{GameState.Enemies.Count()} enemies remaining";
+	private string EnemyCountText => $"{GameState?.EnemyCount ?? 0} enemies remaining";
 
 	private string PhaseText =>
 		GameState is null
@@ -101,28 +223,60 @@
 			? "0/0"
 			: $"{GameState.PlayerReadyCount}/{GameState.PlayerCount}";
 
-	protected override int BuildHash()
+	private void OnLightChosen()
 	{
-		if (GameState is null)
-			return 0;
+		Log.Info("[DevilPact] Light side chosen: One More Round");
+		var player = LocalPlayer;
+		if (player != null)
+		{
+			player.RewardTaken = true;
+		}
 
-		int enemiesCount = GameState?.Enemies != null ? GameState.Enemies.Count() : 0;
-
-		return HashCode.Combine(
-			GameState.State,
-			(int)MathF.Ceiling(GameState.PhaseTimer),
-			GameState.PlayerCount,
-			GameState.PlayerReadyCount,
-			enemiesCount
-		);
+		_pactCompleted = true;
 	}
-}
 
-@code
-{
+	private async void OnDarkChosen()
+	{
+		if (_isFadingOutPact || _pactCompleted)
+			return;
+
+		Log.Info($"[DevilPact] Dark side chosen: Devil Pact (Cost: 1 Life, Gain: {BonusCount} Bonuses)");
+
+		var player = LocalPlayer;
+		player?.Host_LoseLife();
+
+		_isFadingOutPact = true;
+		StateHasChanged();
+
+		await Task.DelayRealtimeSeconds(0.35f);
+
+		_pactCompleted = true;
+		_isFadingOutPact = false;
+		StateHasChanged();
+
+		var rewards = DeathRewardsPanel ?? Scene?.GetAllComponents<DeathRewards>().FirstOrDefault();
+		rewards?.Show();
+	}
+
 	protected override void OnStart()
 	{
 		base.OnStart();
+	}
+
+	protected override void OnUpdate()
+	{
+		base.OnUpdate();
+
+		if (GameState is null)
+			return;
+
+		if (GameState.State != _lastState)
+		{
+			_lastState = GameState.State;
+			_timeSinceStateChange = 0;
+			_isFadingOutPact = false;
+			_pactCompleted = false;
+		}
 	}
 
 	public void Show()
@@ -149,5 +303,43 @@
 
 		PhaseTextPanel?.RemoveClass("hidden");
 		PlayerCountPanel?.RemoveClass("hidden");
+	}
+
+	protected override int BuildHash()
+	{
+		if (GameState is null)
+			return 0;
+
+		if (GameState.State == GameStateType.WaitingForPlayers)
+		{
+			return HashCode.Combine(
+				GameState.State,
+				GameState.PlayerCount,
+				GameState.PlayerReadyCount
+			);
+		}
+
+		if (GameState.State == GameStateType.WaitingForNextRound)
+		{
+			var player = LocalPlayer;
+			return HashCode.Combine(
+				GameState.State,
+				ShowRoundWonBanner,
+				ShowWaitingForPlayersBanner,
+				AreAllPlayersReady(),
+				(int)MathF.Ceiling(GameState.PhaseTimer),
+				_isFadingOutPact,
+				_pactCompleted,
+				player?.RewardTaken ?? false
+			);
+		}
+
+		return HashCode.Combine(
+			GameState.State,
+			(int)MathF.Ceiling(GameState.PhaseTimer),
+			GameState.PlayerCount,
+			GameState.PlayerReadyCount,
+			GameState.EnemyCount
+		);
 	}
 }

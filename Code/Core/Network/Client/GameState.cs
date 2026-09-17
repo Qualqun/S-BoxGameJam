@@ -31,9 +31,11 @@ public sealed class GameState : Component
 	[Sync( SyncFlags.FromHost )]
 	public float PhaseTimer { get; private set; }
 
-	public List<PlayerBehaviour> Players { get; private set; } = new List<PlayerBehaviour>();
-	public List<GameObject> Enemies { get; set; } = new List<GameObject>();
+	[Sync( SyncFlags.FromHost )]
+	public int EnemyCount { get; private set; }
 
+	public List<PlayerBehaviour> Players { get; private set; } = new List<PlayerBehaviour>();
+	[Sync] public NetList<GameObject> Enemies { get; set; } = new();
 
 	#region Server Setters
 
@@ -42,8 +44,7 @@ public sealed class GameState : Component
 		if ( !Networking.IsHost )
 			return;
 		PhaseTimer = timer;
-	}	
-
+	}
 	public void Server_SetGameState( GameStateType state )
 	{
 		if ( !Networking.IsHost )
@@ -107,6 +108,14 @@ public sealed class GameState : Component
 			return;
 
 		Enemies.Remove( enemy );
+	}
+
+	public void Server_SetEnemyCount( int count )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		EnemyCount = count;
 	}
 
 	public void Server_SetPlayerReadyCount( int count )

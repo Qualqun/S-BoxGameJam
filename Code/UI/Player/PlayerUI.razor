@@ -13,8 +13,11 @@
 				<div class="health-bar">
 					<div class="health-fill" style="width: @(HealthPercent * 100f)%"></div>
 				</div>
-				<div class="lives-counter">
-					x@(PlayerState?.Lives ?? 5)
+				<div class="stat-indicator health-indicator">
+					<div class="stat-icon hp-icon"></div>
+					<div class="lives-counter">
+						x@(PlayerState?.Lives ?? 5)
+					</div>
 				</div>
 			</div>
 
@@ -22,12 +25,16 @@
 				<div class="xp-bar">
 					<div class="xp-fill" style="width: @(XpPercent * 100f)%"></div>
 				</div>
-				<div class="xp-counter">
-					x@(PlayerState?.XpMultiplier ?? 1)
+				<div class="stat-indicator xp-indicator">
+					<div class="stat-icon xp-icon"></div>
+					<div class="xp-counter">
+						x@(PlayerState?.XpMultiplier ?? 1)
+					</div>
 				</div>
 			</div>
 		</div>
 	}
+
 
 	@if (ShowWorldArrow && arrowVisible)
 	{
@@ -55,7 +62,6 @@
 	[Property] public bool ShowWorldArrow { get; set; }
 	[Property] public Texture WorldArrowTexture { get; set; }
 	[Property] public float WorldArrowEdgeMargin { get; set; } = 56f;
-
 	[Property] public float WorldArrowOnScreenOffset { get; set; } = 0f;
 
 	Vector3 arrowWorldPosition;
@@ -63,25 +69,14 @@
 	bool arrowVisible;
 	string arrowStyle;
 
-	public float HealthPercent
-	{
-		get
-		{
-			if (MaxHealth <= 0f)
-				return 0f;
-
-			return (CurrentHealth / MaxHealth).Clamp(0f, 1f);
-		}
-	}
+	public float HealthPercent => MaxHealth <= 0f ? 0f : (CurrentHealth / MaxHealth).Clamp(0f, 1f);
 
 	public float XpPercent
 	{
 		get
 		{
 			int max = PlayerState?.MaxExperience ?? 100;
-			if (max <= 0f)
-				return 0f;
-
+			if (max <= 0f) return 0f;
 			int current = PlayerState?.Experience ?? 0;
 			return ((float)current / max).Clamp(0f, 1f);
 		}
@@ -91,7 +86,6 @@
 	{
 		CurrentHealth = currentHealth;
 		MaxHealth = maxHealth;
-
 		StateHasChanged();
 	}
 
@@ -102,44 +96,32 @@
 		ShowWorldArrow = true;
 	}
 
-	public void HideWorldArrow()
-	{
-		ShowWorldArrow = false;
-	}
+	public void HideWorldArrow() => ShowWorldArrow = false;
 
 	protected override void OnPreRender()
 	{
 		base.OnPreRender();
-
 		UpdateWorldArrow();
-		StateHasChanged();
 	}
 
 	void UpdateWorldArrow()
 	{
 		arrowVisible = false;
-
-		if (!ShowWorldArrow || !hasArrowTarget)
-			return;
+		if (!ShowWorldArrow || !hasArrowTarget) return;
 
 		CameraComponent camera = Scene.Camera;
-		if (!camera.IsValid())
-			return;
+		if (!camera.IsValid()) return;
 
 		Vector2 screen = camera.PointToScreenNormal(arrowWorldPosition);
-		if (!float.IsFinite(screen.x) || !float.IsFinite(screen.y))
-			return;
+		if (!float.IsFinite(screen.x) || !float.IsFinite(screen.y)) return;
 
 		bool inFront = Vector3.Dot(arrowWorldPosition - camera.WorldPosition, camera.WorldRotation.Forward) > 0f;
 		bool onScreen = inFront && screen.x >= 0f && screen.x <= 1f && screen.y >= 0f && screen.y <= 1f;
 		Vector2 position = screen;
 		Vector2 direction = screen - new Vector2(0.5f, 0.5f);
 
-		if (!inFront)
-			direction = -direction;
-
-		if (direction.LengthSquared < 0.0001f)
-			direction = Vector2.Up;
+		if (!inFront) direction = -direction;
+		if (direction.LengthSquared < 0.0001f) direction = Vector2.Up;
 
 		if (onScreen)
 		{
@@ -154,7 +136,6 @@
 				edge.x == 0f ? float.MaxValue : 0.5f / MathF.Abs(edge.x),
 				edge.y == 0f ? float.MaxValue : 0.5f / MathF.Abs(edge.y)
 			);
-
 			position = new Vector2(0.5f, 0.5f) + edge * scale;
 		}
 
@@ -167,9 +148,7 @@
 		float angle = MathF.Atan2(direction.y, direction.x) * 180f / MathF.PI;
 		arrowStyle = string.Format(CultureInfo.InvariantCulture,
 			"left: {0:0.###}%; top: {1:0.###}%; transform: translate( -50%, -50% ) rotate( {2:0.###}deg );",
-			position.x * 100f,
-			position.y * 100f,
-			angle);
+			position.x * 100f, position.y * 100f, angle);
 
 		arrowVisible = true;
 	}

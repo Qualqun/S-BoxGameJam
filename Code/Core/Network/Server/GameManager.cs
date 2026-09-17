@@ -81,6 +81,8 @@ public sealed class GameManager : Component
 		if ( GameState.State != GameStateType.WaitingForPlayers && GameState.State != GameStateType.GameOver )
 			GameState.Server_SetPhaseTimer( MathF.Max( 0f, GameState.PhaseTimer - FixedDeltaTime ) );
 
+		GameState.Server_SetEnemyCount( GameState.Enemies.Count( enemy => enemy != null && enemy.IsValid() ) );
+
 		switch ( GameState.State )
 		{
 			case GameStateType.Starting:
@@ -273,6 +275,22 @@ public sealed class GameManager : Component
 		return GameState.Enemies.All( enemy => enemy == null || !enemy.IsValid() );
 	}
 
+	public void ResetAllRewardTaken()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		var allPlayers = Scene.GetAllComponents<PlayerBehaviour>().ToList();
+
+		foreach ( var player in allPlayers )
+		{
+			if ( player == null || !player.IsValid() || player.State == null )
+				continue;
+
+			player.State.ResetRewardTaken();
+		}
+	}
+
 
 	public void GameOver()
 	{
@@ -289,14 +307,7 @@ public sealed class GameManager : Component
 		RemoveAllEnemies();
 		Broadcast_ShowContinuePrompt();
 
-		var allPlayers = Scene.GetAllComponents<PlayerBehaviour>().ToList();
-		foreach ( var player in allPlayers )
-		{
-			if ( player != null && player.IsValid() && player.State != null )
-			{
-				player.State.RewardTaken = false;
-			}
-		}
+		ResetAllRewardTaken();
 
 		GameState.Server_SetPhaseTimer( 0f );
 		GameState.Server_SetGameState( GameStateType.GameOver );
@@ -314,7 +325,7 @@ public sealed class GameManager : Component
 
 		Broadcast_HideEnemyCount();
 
-		GameState.Server_SetPhaseTimer( TimePerWaitingRound );
+		//GameState.Server_SetPhaseTimer( TimePerWaitingRound );
 		GameState.Server_SetGameState( GameStateType.WaitingForNextRound );
 
 		if ( isGameOver )
@@ -327,25 +338,44 @@ public sealed class GameManager : Component
 		}
 	}
 
+	public void StartRound()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		if ( GameState == null )
+			return;
+
+		ResetAllRewardTaken();
+
+		GameState.Server_SetCurrentRound( GameState.CurrentRound + 1 );
+		GameState.Server_SetPhaseTimer( TimePerRound );
+		GameState.Server_SetGameState( GameStateType.Playing );
+		StartRoundSpawner();
+	}
+
 	void StartRoutine()
 	{
 		if ( GameState.PhaseTimer <= 0f )
-		{
-			GameState.Server_SetCurrentRound( GameState.CurrentRound + 1 );
-			GameState.Server_SetPhaseTimer( TimePerRound );
-			GameState.Server_SetGameState( GameStateType.Playing );
-			StartRoundSpawner();
-		}
+			StartRound();
 	}
 
 	private void WaitingForNextRoundRoutine()
 	{
-		if ( GameState.PhaseTimer <= 0f )
+		if ( AreAllPlayersTakedBoost() )
 		{
-			StopRoundSpawner();
-			GameState.Server_SetPhaseTimer( TimePerRound );
-			GameState.Server_SetGameState( GameStateType.Playing );
-			StartRoundSpawner();
+			if ( GameState.PhaseTimer <= 0f )
+			{
+				float waitTime = TimePerWaitingRound > 0f ? TimePerWaitingRound : 5f;
+				GameState.Server_SetPhaseTimer( waitTime );
+				Log.Info( $"[GameManager] All players took their boost! Next round starts in {waitTime}s" );
+				return;
+			}
+
+			if ( GameState.PhaseTimer <= 0.05f )
+			{
+				StartRound();
+			}
 		}
 	}
 
@@ -400,21 +430,21 @@ public sealed class GameManager : Component
 	{
 		if ( AreAllPlayersTakedBoost() )
 		{
+			ResetAllRewardTaken();
+
 			var allPlayers = Scene.GetAllComponents<PlayerBehaviour>().ToList();
 			foreach ( var player in allPlayers )
 			{
 				if ( player != null && player.IsValid() )
 				{
-					if ( player.State != null )
-					{
-						player.State.RewardTaken = false;
-					}
 					player.Revive();
 				}
 			}
 			StartNextRound( true );
 		}
 	}
+
+	
 
 	public void RemoveAllEnemies()
 	{
