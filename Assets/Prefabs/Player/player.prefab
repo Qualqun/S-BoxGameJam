@@ -143,6 +143,7 @@
           "_type": "gameobject",
           "go": "4da7d666-9abb-84c8-8d46-b24dfdbe0ffd"
         },
+        "mainMusic": "sounds/calm.sound",
         "model": {
           "_type": "component",
           "component_id": "e5728d85-77e1-4852-a22c-6cda78821502",
@@ -208,7 +209,8 @@
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null
+        "OnComponentUpdate": null,
+        "shoot": "sounds/luger pistol fire.sound"
       }
     ],
     "Children": [
@@ -1590,7 +1592,10 @@
                 "OnComponentEnabled": null,
                 "OnComponentFixedUpdate": null,
                 "OnComponentStart": null,
-                "OnComponentUpdate": null
+                "OnComponentUpdate": null,
+                "ShowWorldArrow": false,
+                "WorldArrowEdgeMargin": 56,
+                "WorldArrowTexture": "art/asset/arrow.vtex"
               }
             ],
             "Children": []
@@ -1626,6 +1631,9 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [],
+  "__references": [
+    "drakefruit.lugerpistolfire#91245",
+    "projectwolves.calm#233118"
+  ],
   "__version": 2
 }

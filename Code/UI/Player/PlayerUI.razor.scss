@@ -45,3 +45,40 @@ root
 	background-color: rgb( 232, 54, 65 );
 	border-radius: 4px;
 }
+
+.world-arrow
+{
+	position: absolute;
+	width: 192px;
+	height: 192px;
+	align-items: center;
+	justify-content: center;
+}
+
+.world-arrow-icon
+{
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-top: 56px solid transparent;
+	border-bottom: 56px solid transparent;
+	border-left: 116px solid rgb( 255, 230, 40 );
+	filter: drop-shadow( 0 0 3px rgba( 0, 0, 0, 1 ) ) drop-shadow( 0 4px 10px rgba( 0, 0, 0, 0.85 ) );
+}
+
+.world-arrow-image
+{
+	position: absolute;
+	width: 176px;
+	height: 176px;
+	align-items: center;
+	justify-content: center;
+	filter: drop-shadow( 0 0 3px rgba( 0, 0, 0, 1 ) ) drop-shadow( 0 4px 10px rgba( 0, 0, 0, 0.85 ) );
+}
+
+.world-arrow-image img
+{
+	width: 176px;
+	height: 176px;
+	object-fit: contain;
+}

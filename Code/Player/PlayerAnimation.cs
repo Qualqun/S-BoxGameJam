@@ -3,9 +3,13 @@ using Sandbox;
 public sealed class PlayerAnimation : Component
 {
 	[Property] SkinnedModelRenderer model {  get; set; }
+	[Property, Group( "Sound" )] public SoundEvent shoot { get; set; }
 
 	[Sync] public Vector2 move { get; set; }
 	[Sync] public float speedShoot { get; set; } = 1f;
+
+
+
 
 	bool shootAnim = false;
 	bool dash = false;
@@ -29,6 +33,7 @@ public sealed class PlayerAnimation : Component
 	public void Shoot()
 	{
 		shootAnim = true;
+		GameObject.PlaySound( shoot );
 	}
 
 	[Rpc.Broadcast]

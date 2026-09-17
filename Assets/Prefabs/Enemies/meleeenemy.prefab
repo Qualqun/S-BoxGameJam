@@ -26,7 +26,7 @@
         "AutoTraverseLinks": true,
         "ForbiddenAreas": [],
         "Height": 64,
-        "MaxSpeed": 110,
+        "MaxSpeed": 180,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -208,7 +208,7 @@
                   "vectors": {},
                   "rotations": {}
                 },
-                "PlaybackRate": 1,
+                "PlaybackRate": 1.5,
                 "RenderOptions": {
                   "GameLayer": true,
                   "OverlayLayer": false,

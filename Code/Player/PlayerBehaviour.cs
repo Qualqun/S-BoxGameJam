@@ -17,10 +17,11 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	[Property, Group( "Refs" )] GameObject bullet { get; set; }
 	[Property, Group( "Refs" )] GameObject cameraPivot { get; set; }
 
-	[Property, Group( "Refs" )] PlayerUI ui { get; set; }
+	[Property, Group( "Refs" )] public PlayerUI ui { get; set; }
 	[Property, Group( "Refs" )] MPlayerController controller { get; set; }
 	[Property, Group( "Refs" )] ModelRenderer model { get; set; }
 
+	[Property, Group( "Sound" )] public SoundEvent mainMusic { get; set; }
 	[Sync( SyncFlags.FromHost )] public GameManager gameManager { get; set; }
 
 	bool canShoot = true;
@@ -30,16 +31,32 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	{
 		if ( State == null ) State = Components.Get<PlayerState>();
 
-		ui.SetHealth( State.Hp, State.MaxHp );
-
+		
 		if ( IsProxy )
 		{
 			cameraPivot.Destroy();
 			controller.Destroy();
 			ui.Destroy();
 		}
+		else
+		{
+			ui?.SetHealth( State.Hp, State.MaxHp );
+			ui?.ShowArrowToWorldPosition( gameManager.StartZone.WorldPosition );
+
+			GameObject.PlaySound( mainMusic );
+		}
 
 		base.OnStart();
+	}
+
+	protected override void OnUpdate()
+	{
+		base.OnUpdate();
+
+		if( gameManager.GameState.State == GameStateType.Playing)
+		{
+			ui?.HideWorldArrow();
+		}
 	}
 
 	BulletInfo InitBaseBullet()
@@ -148,6 +165,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	{
 		SetDead(); 
 	}
+
 	public void Fire()
 	{
 		if ( canShoot )
@@ -239,6 +257,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 		ui?.SetHealth( State.Hp, State.MaxHp );
 	}
+
 	[Rpc.Broadcast]
 	public void SetInvulnerability( bool mode )
 	{

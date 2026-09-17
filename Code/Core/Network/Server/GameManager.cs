@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using Sandbox.Network;
 
 public struct StatsPerRound
 {
@@ -45,6 +46,13 @@ public sealed class GameManager : Component
 
 	protected override void OnStart()
 	{
+
+		LobbyConfig config = new();
+
+		config.MaxPlayers = 4;
+
+		Networking.CreateLobby( config );
+
 		if ( !Networking.IsHost ) return;
 
 		if ( GameState == null )
@@ -187,7 +195,9 @@ public sealed class GameManager : Component
 
 	public void SpawnPlayer( Connection connection )
 	{
-		if ( !Networking.IsHost ) 
+		Log.Info( $"[GameManager] Start spawn player for {connection.DisplayName}" );
+
+		if ( !Networking.IsHost )
 			return;
 
 		if ( PlayerPrefab == null )
@@ -344,7 +354,7 @@ public sealed class GameManager : Component
 	private void PlayRoutine()
 	{
 
-		
+
 
 		if ( GameState.PhaseTimer <= 0f )
 		{
@@ -356,7 +366,7 @@ public sealed class GameManager : Component
 			//GameState.Server_SetGameState( GameStateType.WaitingForNextRound );
 		}
 
-	
+
 
 	}
 
@@ -427,7 +437,7 @@ public sealed class GameManager : Component
 		_ = RoundSpawner( Cancellation.Token );
 	}
 
-	public	void StopRoundSpawner()
+	public void StopRoundSpawner()
 	{
 		if ( Cancellation == null ) return;
 		Cancellation.Cancel();
@@ -446,15 +456,15 @@ public sealed class GameManager : Component
 	[Rpc.Host]
 	public void PlayerTakeDamageFromEnemy( PlayerBehaviour player, GameObject enemyObj )
 	{
-		if ( player == null || !player.IsValid() ) 
+		if ( player == null || !player.IsValid() )
 			return;
 
-		if ( enemyObj == null || !enemyObj.IsValid() ) 
+		if ( enemyObj == null || !enemyObj.IsValid() )
 			return;
 
 		BaseEnemyBehaviour enemy = enemyObj.GetComponent<BaseEnemyBehaviour>();
 
-		if ( enemy == null ) 
+		if ( enemy == null )
 			return;
 
 		player.Server_TakeHit( enemy.meleDamage );
