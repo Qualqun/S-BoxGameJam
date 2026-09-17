@@ -24308,6 +24308,7 @@
               "__guid": "ffea8af1-ef9b-412e-abe0-ce1d034e7496",
               "__enabled": true,
               "Flags": 0,
+              "DeathRewardsPanel": null,
               "GameState": {
                 "_type": "component",
                 "component_id": "40841857-4b79-438c-b036-d1581eeedb17",
@@ -24319,7 +24320,8 @@
               "OnComponentEnabled": null,
               "OnComponentFixedUpdate": null,
               "OnComponentStart": null,
-              "OnComponentUpdate": null
+              "OnComponentUpdate": null,
+              "PlayerState": null
             }
           ],
           "Children": []
@@ -24369,7 +24371,8 @@
               "OnComponentEnabled": null,
               "OnComponentFixedUpdate": null,
               "OnComponentStart": null,
-              "OnComponentUpdate": null
+              "OnComponentUpdate": null,
+              "PlayerState": null
             }
           ],
           "Children": []
