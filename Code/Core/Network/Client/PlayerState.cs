@@ -46,7 +46,7 @@ public sealed class PlayerState : Component
 	[Property, Sync] public float BaseBulletDamage { get; set; } = 20f;
 	[Property, Sync] public float BaseBulletSize { get; set; } = 1f;
 	[Property, Sync] public float BaseBulletSpeed { get; set; } = 700f;
-	[Property, Sync] public bool RewardTaken { get; set; } = false;
+	[Property, Sync( SyncFlags.FromHost )] public bool RewardTaken { get; set; } = false;
 	[Property, Sync] public float FireRateMultiplier { get; set; } = 1f;
 	[Property, Sync] public float DamageMultiplier { get; set; } = 1f;
 	[Property, Sync] public float SizeMultiplier { get; set; } = 1f;
@@ -112,6 +112,9 @@ public sealed class PlayerState : Component
 
 	public void TakeDamage( float amount )
 	{
+		if ( !Networking.IsHost )
+			return;
+
 		Hp -= amount;
 	}
 
@@ -138,13 +141,41 @@ public sealed class PlayerState : Component
 		LoseLife();
 	}
 
-	[Rpc.Broadcast]
-	public void Broadcast_LoseHalfLevels()
+	public void LoseHalfLevels()
 	{
-		if ( IsProxy )
+		if ( !Networking.IsHost )
 			return;
 
 		XpMultiplier = System.Math.Max( 0, XpMultiplier / 2 );
+	}
+
+	[Description( "Spends one level up. The host decides when the player is done picking." )]
+	[Rpc.Host]
+	public void Host_ConsumeLevel()
+	{
+		XpMultiplier = System.Math.Max( 0, XpMultiplier - 1 );
+
+		if ( XpMultiplier <= 0 )
+			RewardTaken = true;
+	}
+
+	[Rpc.Host]
+	public void Host_TakeReward()
+	{
+		RewardTaken = true;
+	}
+	[Rpc.Host]
+	public void Host_ApplyBoost( BoostType boost )
+	{
+		switch ( boost )
+		{
+			case BoostType.Hp:
+				Hp += 30f;
+				break;
+			case BoostType.Lives:
+				Lives += 1;
+				break;
+		}
 	}
 
 	[Rpc.Broadcast]
@@ -156,6 +187,9 @@ public sealed class PlayerState : Component
 		{
 			Hp = spawnMaxHp;
 			Lives = spawnMaxLives;
+			Experience = spawnExperience;
+			XpMultiplier = spawnXpMultiplier;
+			RewardTaken = false;
 		}
 
 		if ( IsProxy )
@@ -163,9 +197,7 @@ public sealed class PlayerState : Component
 
 		MaxHp = spawnMaxHp;
 		MaxLives = spawnMaxLives;
-		Experience = spawnExperience;
 		MaxExperience = spawnMaxExperience;
-		XpMultiplier = spawnXpMultiplier;
 		MoveSpeed = spawnMoveSpeed;
 		TimeInvulnerability = spawnTimeInvulnerability;
 
@@ -179,15 +211,13 @@ public sealed class PlayerState : Component
 		SizeMultiplier = 1f;
 
 		Dead = false;
-		RewardTaken = false;
 
 		ActiveModifiers.Clear();
 	}
 
-	[Rpc.Broadcast]
 	public void ResetRewardTaken()
 	{
-		if ( IsProxy )
+		if ( !Networking.IsHost )
 			return;
 
 		RewardTaken = false;
@@ -196,48 +226,18 @@ public sealed class PlayerState : Component
 	#region Authority Methods
 
 	[Authority]
-	public void Reset()
-	{
-		MaxHp = 100f;
-		Hp = 100f;
-		MaxLives = 5;
-		Lives = 5;
-		Experience = 0;
-		MaxExperience = 100;
-		MoveSpeed = 250f;
-		TimeInvulnerability = 1f;
-		Dead = false;
-
-		BaseFireRate = 4f;
-		BaseBulletDamage = 20f;
-		BaseBulletSize = 1f;
-		BaseBulletSpeed = 700f;
-
-		FireRateMultiplier = 1f;
-		DamageMultiplier = 1f;
-		SizeMultiplier = 0.5f;
-		XpMultiplier = 1;
-
-		ActiveModifiers.Clear();
-	}
-
-	[Authority]
 	public void ApplyBoost( BoostType boost )
 	{
-		XpMultiplier = System.Math.Max( 0, XpMultiplier - 1 );
-
-		if ( XpMultiplier <= 0 )
-			RewardTaken = true;
+		Host_ConsumeLevel();
+		Host_ApplyBoost( boost );
 
 		switch ( boost )
 		{
 			case BoostType.Hp:
 				MaxHp += 30f;
-				Hp += 30f;
 				break;
 			case BoostType.Lives:
 				MaxLives += 1;
-				Lives += 1;
 				break;
 			case BoostType.MoveSpeed:
 				MoveSpeed += 25f;

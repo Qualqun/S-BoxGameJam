@@ -331,10 +331,7 @@
 	{
 		Log.Info("[DevilPact] Light side chosen: One More Round");
 		var player = LocalPlayer;
-		if (player != null)
-		{
-			player.RewardTaken = true;
-		}
+		player?.Host_TakeReward();
 
 		_pactCompleted = true;
 	}

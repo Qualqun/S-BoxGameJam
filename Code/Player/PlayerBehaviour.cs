@@ -170,7 +170,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		State.Hp = 0f;
 
 		State.LoseLife();
-		State.Broadcast_LoseHalfLevels();
+		State.LoseHalfLevels();
 
 		isPermanentlyDead = State.Lives <= 0;
 		mustDevilPact = !isPermanentlyDead;
