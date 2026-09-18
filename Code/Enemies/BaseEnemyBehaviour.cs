@@ -75,7 +75,7 @@ public class BaseEnemyBehaviour : Component
 		if (Networking.IsHost)
 		{
 			gameManager?.GameState?.Enemies.Remove( GameObject );
-			//gameManager?.SpawnXp( WorldPosition );
+			gameManager?.SpawnExperience( WorldPosition );
 
 
 			if ( gameManager != null && gameManager.AllEnemiesDead() && gameManager.GameState.State != GameStateType.GameOver )

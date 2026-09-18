@@ -70,6 +70,17 @@ public sealed class PlayerState : Component
 		Lives = System.Math.Max( 0, Lives - 1 );
 	}
 
+	public void AddExperience( int amount )
+	{
+		Experience += amount;
+
+		if( Experience >= MaxExperience)
+		{
+			Experience -= MaxExperience;
+			XpMultiplier += 1;
+		}
+	}
+
 	[Rpc.Host]
 	public void Host_LoseLife()
 	{

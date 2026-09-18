@@ -3,7 +3,7 @@
     "__guid": "0b94640e-1bc1-44cb-9f28-fd9a7e7f469d",
     "__version": 2,
     "Flags": 0,
-    "Name": "xp",
+    "Name": "experience",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
@@ -42,16 +42,19 @@
         "SurfaceVelocity": "0,0,0"
       },
       {
-        "__type": "XpBehaviour",
-        "__guid": "2ab12b0c-cb2d-445e-b9b9-c79984f8d50e",
+        "__type": "ExperienceBehaviour",
+        "__guid": "268178bf-b22f-478c-875b-f03e6b89ee21",
         "__enabled": true,
         "Flags": 0,
+        "levitateAmount": 10,
+        "levitateSpeed": 2,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null
+        "OnComponentUpdate": null,
+        "speed": 60
       }
     ],
     "Children": [
@@ -80,10 +83,10 @@
             "CreateAttachments": false,
             "LodOverride": null,
             "MaterialGroup": null,
-            "MaterialOverride": "art/asset/materiaux/xpmat.vmat",
+            "MaterialOverride": "art/asset/materiaux/experiencemat.vmat",
             "Materials": {
               "indexed": {
-                "0": "art/asset/materiaux/xpmat.vmat"
+                "0": "art/asset/materiaux/experiencemat.vmat"
               }
             },
             "Model": "models/dev/sphere.vmdl",

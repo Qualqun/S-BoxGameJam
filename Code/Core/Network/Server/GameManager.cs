@@ -30,14 +30,16 @@ public sealed class GameManager : Component
 	[Property, Group( "Timers" )] public float TimeStart { get; set; } = 5f;
 
 	[Description( "Number of enemy in one second" )]
-	[Property, Group( "Stats" )] public int baseEnemy { get; set; } = 10;
-	[Property, Group( "Stats" )] public int enemyPerRound { get; set; } = 20;
-	[Property, Group( "Stats" )] public float XpSpawnDist { get; set; } = 32f;
+	[Property, Group( "Stats" )] public int BaseNbEnemy { get; set; } = 10;
+	[Property, Group( "Stats" )] public int EnemyPerRound { get; set; } = 20;
+	[Property, Group( "Stats" )] public int ExperienceBase { get; set; } = 100;
+	[Property, Group( "Stats" )] public int ExperiencePerRound { get; set; } = 100;
+	[Property, Group( "Stats" )] public float ExperienceSpawnDist { get; set; } = 32f;
 
 	[Property, Group( "Refs" )] public GameState GameState { get; set; }
 
 	[Property, Group( "Refs" )] GameObject PlayerPrefab { get; set; }
-	[Property, Group( "Refs" )] GameObject XpPrefab { get; set; }
+	[Property, Group( "Refs" )] GameObject ExperiencePrefab { get; set; }
 
 	[Property, Group( "Refs" )] public GameObject StartZonePoint { get; set; }
 	[Property, Group( "Refs" )] public UIManager UiManager { get; set; }
@@ -46,6 +48,9 @@ public sealed class GameManager : Component
 
 	[Property, Group( "List Refs" )] public List<GameObject> SpawnPoints { get; set; }
 	CancellationTokenSource Cancellation;
+
+	int NbPlayerThisRound => BaseNbEnemy + (EnemyPerRound * GameState.CurrentRound);
+	int AmountExperienceThisRound => ExperienceBase + (ExperiencePerRound * GameState.CurrentRound);
 
 	protected override void OnStart()
 	{
@@ -507,7 +512,7 @@ public sealed class GameManager : Component
 
 	async Task RoundSpawner( CancellationToken token )
 	{
-		float spawnDelay = TimePerRound / ( baseEnemy + (enemyPerRound  * GameState.CurrentRound));
+		float spawnDelay = TimePerRound / NbPlayerThisRound;
 
 		while ( !token.IsCancellationRequested )
 		{
@@ -556,25 +561,37 @@ public sealed class GameManager : Component
 
 	#endregion
 
-	#region Xp methods
+	#region Experience methods
 
-	public void SpawnXp( Vector3 spawnPoint )
+	public void SpawnExperience( Vector3 spawnPoint )
 	{
 		int nbPlayer;
 		Vector3 offSet;
+		float angle;
 
-		if ( !Networking.IsHost || XpPrefab == null ) return;
+		if ( !Networking.IsHost || ExperiencePrefab == null ) return;
 
 		nbPlayer = 2; //GameState.Players.Count;
-		offSet = Vector3.Forward * XpSpawnDist;
+		offSet = Vector3.Forward * ExperienceSpawnDist;
+		angle = 360f / nbPlayer;
+
+		spawnPoint += Vector3.Up * ExperienceSpawnDist;
 
 		for ( int i = 0; i < nbPlayer; i++ )
 		{
 			GameObject xpObject;
+			ExperienceBehaviour xpBehaviour;
 
-			offSet = Rotation.FromYaw( 360f / nbPlayer ) * offSet;
+			offSet = Rotation.FromYaw( angle ) * offSet;
 
-			xpObject = XpPrefab.Clone( spawnPoint + offSet + Vector3.Up * XpSpawnDist );
+			xpObject = ExperiencePrefab.Clone( spawnPoint + offSet );
+			xpBehaviour = xpObject.GetComponent<ExperienceBehaviour>();
+
+			xpBehaviour.AmountExperience = AmountExperienceThisRound / NbPlayerThisRound;
+			xpBehaviour.offset = ExperienceSpawnDist;
+			xpBehaviour.center = spawnPoint;
+			xpBehaviour.angle = angle * i;
+
 			xpObject.NetworkSpawn();
 		}
 

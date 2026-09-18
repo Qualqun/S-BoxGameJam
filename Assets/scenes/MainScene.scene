@@ -311,7 +311,7 @@
           "__guid": "2ccac9a4-4081-413f-9f54-2271993ac5c7",
           "__enabled": true,
           "Flags": 0,
-          "baseEnemy": 10,
+          "BaseNbEnemy": 2,
           "EnemiesPrefabs": [
             {
               "_type": "gameobject",
@@ -322,7 +322,14 @@
               "prefab": "prefabs/enemies/meleeenemy.prefab"
             }
           ],
-          "enemyPerRound": 20,
+          "EnemyPerRound": 0,
+          "ExperienceBase": 100,
+          "ExperiencePerRound": 100,
+          "ExperiencePrefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/experience.prefab"
+          },
+          "ExperienceSpawnDist": 32,
           "GameState": {
             "_type": "component",
             "component_id": "40841857-4b79-438c-b036-d1581eeedb17",
@@ -361,10 +368,10 @@
           },
           "StartZonePoint": {
             "_type": "gameobject",
-            "go": "f9834c81-f700-4cd7-9492-add1d640059e"
+            "go": "f8e3f4be-b2d6-4bdd-920e-b3be61f28c31"
           },
           "TimeGameOver": 5,
-          "TimePerRound": 10,
+          "TimePerRound": 1,
           "TimePerWaitingRound": 5,
           "TimeStart": 2,
           "UiManager": {
@@ -372,12 +379,7 @@
             "component_id": "5d508ba5-953d-4fa7-8cf4-5a0b37c23fdd",
             "go": "c81d4dc8-62a2-43f3-a538-bd82ef8d1b48",
             "component_type": "UIManager"
-          },
-          "XpPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/xp.prefab"
-          },
-          "XpSpawnDist": 32
+          }
         }
       ],
       "Children": []
