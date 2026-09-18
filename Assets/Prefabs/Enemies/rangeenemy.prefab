@@ -58,7 +58,7 @@
         "OnObjectTriggerExit": null,
         "OnTriggerEnter": null,
         "OnTriggerExit": null,
-        "Radius": 12,
+        "Radius": 18,
         "RollingResistance": null,
         "Start": "5,0,8",
         "Static": false,
@@ -91,6 +91,12 @@
         "bulletDamagePerRound": 6,
         "bulletSize": 16,
         "bulletSpeed": 1000,
+        "capsuleCollider": {
+          "_type": "component",
+          "component_id": "c2889749-06cd-4885-baf4-6b6e9d308f12",
+          "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
+          "component_type": "CapsuleCollider"
+        },
         "gunPoint": {
           "_type": "gameobject",
           "go": "0847bc44-9917-41af-a64c-d6173528996b"

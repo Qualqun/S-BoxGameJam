@@ -17,7 +17,7 @@ public class RangeEnemy : BaseEnemyBehaviour
 	[Property, Group( "Growth stats" )] public float bulletDamagePerRound { get; set; } = 6f;
 
 	[Property, Group( "Refs" )] RangeEnemyAnimation animation { get; set; }
-
+	[Property, Group( "Refs" )] CapsuleCollider capsuleCollider { get; set; }
 	[Property, Group( "Refs" )] public RangeVisualEnemy visual { get; set; }
 	[Property, Group( "Refs" )] public GameObject bullet { get; set; }
 	[Property, Group( "Refs" )] public GameObject gunPoint { get; set; }
@@ -40,15 +40,19 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 			if ( canShoot )
 			{
+				Capsule enemyCapsule = new Capsule( capsuleCollider.Start, capsuleCollider.End, capsuleCollider.Radius );
 	
 				SceneTraceResult hit = Scene.Trace
-					.Sphere( bulletSize, gunPoint.WorldPosition, target.WorldPosition )
-					.WithAnyTags( "enemy" ).Run();
+					.Sphere( bulletSize, gunPoint.WorldPosition, target.WorldPosition + Vector3.Up * 32f)
+					.WithoutTags( "enemy" ).Run();
+
+				canShoot = false;
 
 				if ( hit.Hit && !hit.StartedSolid )
 				{
 					canShoot = hit.Collider.Tags.Has( "player" );
 				}
+
 			}
 
 			animation.stand = canShoot || attackTask != null;
@@ -150,7 +154,46 @@ public class RangeEnemy : BaseEnemyBehaviour
 	{
 		base.DrawGizmos();
 
+		Gizmo.Transform = global::Transform.Zero;
 		Gizmo.Draw.Color = Color.Green;
 		Gizmo.Draw.LineSphere( WorldPosition, range );
+
+		if ( gunPoint is null || target is null )
+			return;
+
+		var start = gunPoint.WorldPosition;
+		var end = target.WorldPosition + Vector3.Up * 32f;
+
+		using ( Gizmo.Scope() )
+		{
+			// Les positions sont déjà en coordonnées monde.
+			Gizmo.Transform = global::Transform.Zero;
+			Gizmo.Draw.IgnoreDepth = true;
+			Gizmo.Draw.LineThickness = 2f;
+
+			// Volume balayé par le sphere trace.
+			Gizmo.Draw.Color = Color.Yellow;
+			Gizmo.Draw.LineSphere( start, bulletSize );
+			Gizmo.Draw.LineSphere( end, bulletSize );
+			Gizmo.Draw.Line( start, end );
+
+			// Point réellement atteint, seulement pendant le jeu.
+			if ( GameObject.IsValid )
+			{
+				SceneTraceResult hit = Scene.Trace
+					.Sphere( bulletSize, start, end )
+					.WithAnyTags( "enemy" )
+					.IgnoreGameObject( GameObject )
+					.Run();
+
+				if ( hit.Hit )
+				{
+					Gizmo.Draw.Color = Color.Red;
+					Gizmo.Draw.LineSphere( hit.EndPosition, bulletSize * 0.35f );
+				}
+			}
+		}
 	}
+
+	
 }
