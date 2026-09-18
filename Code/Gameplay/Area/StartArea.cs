@@ -40,7 +40,8 @@ public sealed class StartArea : Component
 		if ( player == null )
 			return;
 
-		if ( GameManager.GameState.State == GameStateType.Starting )
+		if ( GameManager.GameState.State == GameStateType.Starting
+			|| GameManager.GameState.State == GameStateType.WaitingForPlayers )
 		{
 			platform.Model = platforms[0];
 		}

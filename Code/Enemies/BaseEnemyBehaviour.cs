@@ -76,10 +76,6 @@ public class BaseEnemyBehaviour : Component
 		{
 			gameManager?.GameState?.Enemies.Remove( GameObject );
 			gameManager?.SpawnExperience( WorldPosition );
-
-
-			if ( gameManager != null && gameManager.AllEnemiesDead() && gameManager.GameState.State != GameStateType.GameOver )
-				gameManager?.StartNextRound();
 		}
 	}
 
@@ -119,7 +115,7 @@ public class BaseEnemyBehaviour : Component
 	}
 	public void SetPlayers( List<PlayerBehaviour> allPlayers )
 	{
-		players = allPlayers;
+		players = new List<PlayerBehaviour>( allPlayers );
 	}
 	
 }

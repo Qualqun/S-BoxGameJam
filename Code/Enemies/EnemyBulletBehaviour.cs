@@ -29,17 +29,12 @@ public sealed class EnemyBulletBehaviour : Component
 
 		if ( traceResult.Hit )
 		{
-			if ( traceResult.HasTag( "player" ) )
+			if ( traceResult.HasTag( "player" ) && !IsProxy )
 			{
 				PlayerBehaviour player = traceResult.Collider.GetComponent<PlayerBehaviour>();
 
 				if ( player != null )
-				{
-					using ( Rpc.FilterInclude( c => c == player.GameObject.Network.Owner ) )
-					{
-						gameManager.PlayerTakeDamage( player, damage );
-					}
-				}
+					gameManager.PlayerTakeDamage( player, damage );
 			}
 
 			GameObject.Destroy();

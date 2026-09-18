@@ -38,7 +38,6 @@
 	}
 	else if (GameState?.State == GameStateType.Playing)
 	{
-		<!-- Badge Round en haut à droite -->
 		<div class="round-corner-panel">
 			<div class="round-badge-content">
 				<span class="round-badge-label">ROUND</span>
@@ -50,6 +49,14 @@
 			<div class="playing-timer">@TimerText</div>
 			<div class="playing-enemy-count">@EnemyCountText</div>
 		</div>
+
+		@if (IsLocalPlayerDown)
+		{
+			<div class="ghost-banner">
+				<div class="ghost-title">@(IsLocalPlayerOut ? "YOU ARE GONE" : "YOU ARE A GHOST")</div>
+				<div class="ghost-subtitle">@GhostSubtitle</div>
+			</div>
+		}
 	}
 	else if (GameState?.State == GameStateType.WaitingForNextRound)
 	{
@@ -66,6 +73,16 @@
 				<div class="starting-subtitle">Next round will start</div>
 			</div>
 		}
+		else if (IsLocalPlayerOut)
+		{
+			<div class="waiting-rewards-container">
+				<div class="waiting-rewards-card eliminated-card">
+					<div class="waiting-rewards-title">YOU ARE GONE</div>
+					<div class="waiting-rewards-subtitle">No life left to trade. Haunt the arena while your team keeps going...</div>
+					<div class="waiting-spinner"></div>
+				</div>
+			</div>
+		}
 		else if (ShowWaitingForPlayersBanner)
 		{
 			<div class="waiting-rewards-container">
@@ -76,11 +93,40 @@
 				</div>
 			</div>
 		}
+		else if (MustDevilPact && !_pactCompleted)
+		{
+			<div class="devil-pact-hud forced @(_isFadingOutPact ? "fade-out" : "")">
+				<div class="pact-container">
+					<div class="pact-side dark-side forced-side">
+						<div class="pact-hover-glow"></div>
+						<div class="pact-content">
+							<div class="pact-forced-tag">YOU FELL THIS ROUND</div>
+							<div class="pact-title">DEVIL PACT</div>
+							<div class="pact-description">Death already took its life and half of your levels. The shadows are the only way back.</div>
+
+							<div class="pact-trade-details">
+								<div class="trade-item cost">
+									<span class="trade-value">@LivesLeft</span>
+									<span class="trade-label">@(LivesLeft > 1 ? "LIVES LEFT" : "LIFE LEFT")</span>
+								</div>
+								<div class="trade-divider">➔</div>
+								<div class="trade-item gain">
+									<span class="trade-prefix">+</span>
+									<span class="trade-value">@BonusCount</span>
+									<span class="trade-label">@(BonusCount > 1 ? "BONUSES" : "BONUS")</span>
+								</div>
+							</div>
+
+							<button class="pact-button dark-button" onclick="@OnDarkChosen">MAKE A PACT</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
 		else if (!_pactCompleted)
 		{
 			<div class="devil-pact-hud @(_isFadingOutPact ? "fade-out" : "")">
 				<div class="pact-container">
-					<!-- Côté Lumière : One More Round -->
 					<div class="pact-side light-side">
 						<div class="pact-hover-glow"></div>
 						<div class="pact-content">
@@ -90,7 +136,6 @@
 						</div>
 					</div>
 
-					<!-- Côté Ténèbres : Devil Pact -->
 					<div class="pact-side dark-side">
 						<div class="pact-hover-glow"></div>
 						<div class="pact-content">
@@ -111,12 +156,35 @@
 								</div>
 							</div>
 
-							<button class="pact-button dark-button" onclick="@OnDarkChosen">MAKE A PACT</button>
+							@if (CanAffordPact)
+							{
+								<button class="pact-button dark-button" onclick="@OnDarkChosen">MAKE A PACT</button>
+							}
+							else
+							{
+								<button class="pact-button dark-button disabled">LAST LIFE, NO PACT</button>
+							}
 						</div>
 					</div>
 				</div>
 			</div>
 		}
+	}
+	else if (GameState?.State == GameStateType.GameOver)
+	{
+		<div class="game-over-container">
+			<div class="game-over-card">
+				<div class="game-over-title">GAME OVER</div>
+				<div class="game-over-subtitle">The devil collected every soul.</div>
+
+				<div class="game-over-stat">
+					<span class="game-over-stat-value">@CurrentRoundText</span>
+					<span class="game-over-stat-label">@(GameState.CurrentRound > 1 ? "ROUNDS SURVIVED" : "ROUND SURVIVED")</span>
+				</div>
+
+				<div class="game-over-restart">Back to the lobby in @TimerText...</div>
+			</div>
+		</div>
 	}
 	else
 	{
@@ -152,6 +220,24 @@
 	private PlayerState LocalPlayer =>
 		PlayerState ?? Scene?.GetAllComponents<PlayerState>().FirstOrDefault(p => !p.IsProxy);
 
+	private PlayerBehaviour LocalPlayerBehaviour =>
+		Scene?.GetAllComponents<PlayerBehaviour>().FirstOrDefault(p => !p.IsProxy);
+
+	private bool IsLocalPlayerDown => LocalPlayerBehaviour?.isDead ?? false;
+
+	private bool IsLocalPlayerOut => LocalPlayerBehaviour?.isPermanentlyDead ?? false;
+
+	private bool MustDevilPact => LocalPlayerBehaviour?.mustDevilPact ?? false;
+
+	private int LivesLeft => LocalPlayer?.Lives ?? 0;
+
+	private bool CanAffordPact => LivesLeft > 1;
+
+	private string GhostSubtitle =>
+		IsLocalPlayerOut
+			? "You ran out of lives. This run is over for you."
+			: "Your team has to clear the round to bring you back.";
+
 	private int BonusCount
 	{
 		get
@@ -176,6 +262,9 @@
 		foreach (var p in players)
 		{
 			if (p == null || !p.IsValid())
+				continue;
+
+			if (p.isPermanentlyDead)
 				continue;
 
 			total++;
@@ -211,14 +300,9 @@
 			? "0"
 			: $"{MathF.Ceiling(GameState.PhaseTimer)}";
 
-	private string EnemyCountText
-	{
-		get
-		{
-			int count = Scene?.GetAllComponents<BaseEnemyBehaviour>().Count(e => e != null && e.IsValid()) ?? 0;
-			return $"{count} enemies remaining";
-		}
-	}
+	private int RemainingEnemies => GameState?.EnemyCount ?? 0;
+
+	private string EnemyCountText => $"{RemainingEnemies} enemies remaining";
 
 	private string PhaseText =>
 		GameState is null
@@ -260,10 +344,17 @@
 		if (_isFadingOutPact || _pactCompleted)
 			return;
 
-		Log.Info($"[DevilPact] Dark side chosen: Devil Pact (Cost: 1 Life, Gain: {BonusCount} Bonuses)");
+		bool forced = MustDevilPact;
+
+		if (!forced && !CanAffordPact)
+			return;
+
+		Log.Info($"[DevilPact] Dark side chosen: Devil Pact (Forced: {forced}, Gain: {BonusCount} Bonuses)");
 
 		var player = LocalPlayer;
-		player?.LoseLife();
+
+		if (!forced)
+			player?.Host_LoseLife();
 
 		_isFadingOutPact = true;
 		StateHasChanged();
@@ -343,18 +434,19 @@
 		{
 			var player = LocalPlayer;
 			return HashCode.Combine(
-				GameState.State,
-				ShowRoundWonBanner,
-				ShowWaitingForPlayersBanner,
-				AreAllPlayersReady(),
-				(int)MathF.Ceiling(GameState.PhaseTimer),
-				_isFadingOutPact,
-				_pactCompleted,
-				player?.RewardTaken ?? false
+				HashCode.Combine(
+					GameState.State,
+					ShowRoundWonBanner,
+					ShowWaitingForPlayersBanner,
+					AreAllPlayersReady(),
+					(int)MathF.Ceiling(GameState.PhaseTimer),
+					_isFadingOutPact,
+					_pactCompleted,
+					player?.RewardTaken ?? false
+				),
+				HashCode.Combine(MustDevilPact, IsLocalPlayerOut, LivesLeft, BonusCount)
 			);
 		}
-
-		int enemyCount = Scene?.GetAllComponents<BaseEnemyBehaviour>().Count(e => e != null && e.IsValid()) ?? 0;
 
 		return HashCode.Combine(
 			GameState.State,
@@ -362,7 +454,9 @@
 			(int)MathF.Ceiling(GameState.PhaseTimer),
 			GameState.PlayerCount,
 			GameState.PlayerReadyCount,
-			enemyCount
+			RemainingEnemies,
+			IsLocalPlayerDown,
+			IsLocalPlayerOut
 		);
 	}
 }

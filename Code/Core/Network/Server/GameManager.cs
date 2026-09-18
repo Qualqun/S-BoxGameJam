@@ -48,6 +48,7 @@ public sealed class GameManager : Component
 
 	[Property, Group( "List Refs" )] public List<GameObject> SpawnPoints { get; set; }
 	CancellationTokenSource Cancellation;
+	bool enemyCountShown;
 
 	int NbPlayerThisRound => BaseNbEnemy + (EnemyPerRound * GameState.CurrentRound);
 	int AmountExperienceThisRound => ExperienceBase + (ExperiencePerRound * GameState.CurrentRound);
@@ -87,7 +88,7 @@ public sealed class GameManager : Component
 
 		const float FixedDeltaTime = 0.02f;
 
-		if ( GameState.State != GameStateType.WaitingForPlayers && GameState.State != GameStateType.GameOver )
+		if ( GameState.State != GameStateType.WaitingForPlayers )
 			GameState.Server_SetPhaseTimer( MathF.Max( 0f, GameState.PhaseTimer - FixedDeltaTime ) );
 
 		GameState.Server_SetEnemyCount( GameState.Enemies.Count( enemy => enemy != null && enemy.IsValid() ) );
@@ -132,28 +133,37 @@ public sealed class GameManager : Component
 		}
 	}
 
-	public bool AreAllPlayersDeadC()
+	public List<PlayerBehaviour> GetAllPlayers()
+	{
+		return Scene.GetAllComponents<PlayerBehaviour>()
+			.Where( player => player != null && player.IsValid() )
+			.ToList();
+	}
+
+	public bool AreAllPlayersDead()
 	{
 		if ( !Networking.IsHost )
 			return false;
 
-		var allPlayers = Scene.GetAllComponents<PlayerBehaviour>().ToList();
-		Log.Info( $"[AreAllPlayersDeadC] Checking {allPlayers.Count} players in scene..." );
+		var allPlayers = GetAllPlayers();
 
-		if ( allPlayers.Count == 0 ) return false;
+		if ( allPlayers.Count == 0 )
+			return false;
 
-		bool allDead = true;
+		return allPlayers.All( player => player.isDead );
+	}
 
-		foreach ( var player in allPlayers )
-		{
-			if ( player != null && player.IsValid() && !player.isDead )
-			{
-				allDead = false;
-				break;
-			}
-		}
+	public bool AreAllPlayersPermanentlyDead()
+	{
+		if ( !Networking.IsHost )
+			return false;
 
-		return allDead;
+		var allPlayers = GetAllPlayers();
+
+		if ( allPlayers.Count == 0 )
+			return false;
+
+		return allPlayers.All( player => player.isPermanentlyDead );
 	}
 
 	[Rpc.Broadcast]
@@ -190,14 +200,13 @@ public sealed class GameManager : Component
 	}
 
 	[Rpc.Broadcast]
-	public void Broadcast_ShowContinuePrompt()
+	public void Broadcast_HideAllPanels()
 	{
-		ContinuePrompt panel = Scene.GetAllComponents<ContinuePrompt>().FirstOrDefault();
+		foreach ( var panel in Scene.GetAllComponents<DeathRewards>() )
+			panel.Hide();
 
-		if ( panel != null )
-			panel.Show();
-		else
-			Log.Warning( "ContinuePrompt not found in the scene!" );
+		foreach ( var panel in Scene.GetAllComponents<ContinuePrompt>() )
+			panel.Hide();
 	}
 
 	#region Game Initialization
@@ -301,6 +310,33 @@ public sealed class GameManager : Component
 	}
 
 
+	public void Server_OnPlayerDied( PlayerBehaviour player )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		if ( GameState == null )
+			return;
+
+		if ( GameState.State == GameStateType.WaitingForPlayers || GameState.State == GameStateType.GameOver )
+			return;
+
+		if ( !AreAllPlayersDead() )
+			return;
+
+		if ( AreAllPlayersPermanentlyDead() )
+		{
+			GameOver();
+			return;
+		}
+
+		if ( GameState.State != GameStateType.Playing && GameState.State != GameStateType.Starting )
+			return;
+
+		Log.Info( "[GameManager] The whole team is down, the round is lost..." );
+		StartNextRound( true );
+	}
+
 	public void GameOver()
 	{
 		if ( !Networking.IsHost )
@@ -309,19 +345,21 @@ public sealed class GameManager : Component
 		if ( GameState == null )
 			return;
 
-		if ( GameState.State != GameStateType.Playing )
+		if ( GameState.State == GameStateType.GameOver || GameState.State == GameStateType.WaitingForPlayers )
 			return;
 
 		StopRoundSpawner();
 		RemoveAllEnemies();
-		Broadcast_ShowContinuePrompt();
+		Broadcast_HideEnemyCount();
+		Broadcast_HideAllPanels();
 
-		ResetAllRewardTaken();
-
-		GameState.Server_SetPhaseTimer( 0f );
+		GameState.Server_SetPhaseTimer( TimeGameOver > 0f ? TimeGameOver : 5f );
 		GameState.Server_SetGameState( GameStateType.GameOver );
+
+		Log.Info( "[GameManager] Game over, nobody has a life left." );
 	}
-	public void StartNextRound( bool isGameOver = false )
+
+	public void Server_ResetGame()
 	{
 		if ( !Networking.IsHost )
 			return;
@@ -329,21 +367,72 @@ public sealed class GameManager : Component
 		if ( GameState == null )
 			return;
 
-		if ( GameState.State != GameStateType.Playing && GameState.State != GameStateType.GameOver )
+		StopRoundSpawner();
+		RemoveAllEnemies();
+		Broadcast_HideEnemyCount();
+		Broadcast_HideAllPanels();
+
+		GameState.Server_SetCurrentRound( 0 );
+		GameState.Server_SetPhaseTimer( 0f );
+		GameState.Server_SetPlayerReadyCount( 0 );
+
+		RemoveAllExperience();
+
+		Vector3 spawnPosition = WorldPosition;
+
+		foreach ( var player in GetAllPlayers() )
+		{
+			player.Server_FullReset( spawnPosition );
+		}
+
+		GameState.Server_SetGameState( GameStateType.WaitingForPlayers );
+
+		Log.Info( "[GameManager] Game reset, waiting for players again." );
+	}
+
+	public void StartNextRound( bool roundLost = false )
+	{
+		if ( !Networking.IsHost )
 			return;
 
-		Broadcast_HideEnemyCount();
+		if ( GameState == null )
+			return;
 
-		//GameState.Server_SetPhaseTimer( TimePerWaitingRound );
+		if ( GameState.State != GameStateType.Playing && GameState.State != GameStateType.Starting )
+			return;
+
+		GameState.Server_SetPhaseTimer( 0f );
 		GameState.Server_SetGameState( GameStateType.WaitingForNextRound );
 
-		if ( isGameOver )
+		StopRoundSpawner();
+		RemoveAllEnemies();
+		Broadcast_HideEnemyCount();
+
+		ResetAllRewardTaken();
+		Server_ReviveDownedPlayers();
+
+		if ( roundLost )
 		{
-			Log.Info( "[GameManager] Restart after game over..." );
+			Log.Info( "[GameManager] Round lost, the survivors get one more chance..." );
 		}
 		else
 		{
 			Log.Info( "[GameManager] Starting next round all enemies are dead..." );
+		}
+	}
+
+	[Description( "Brings every downed player back for the inter round. Players out of lives stay ghosts." )]
+	public void Server_ReviveDownedPlayers()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		foreach ( var player in GetAllPlayers() )
+		{
+			if ( !player.isDead )
+				continue;
+
+			player.Server_Revive();
 		}
 	}
 
@@ -356,6 +445,13 @@ public sealed class GameManager : Component
 			return;
 
 		ResetAllRewardTaken();
+
+		foreach ( var player in GetAllPlayers() )
+		{
+			player.mustDevilPact = false;
+		}
+
+		enemyCountShown = false;
 
 		GameState.Server_SetCurrentRound( GameState.CurrentRound + 1 );
 		GameState.Server_SetPhaseTimer( TimePerRound );
@@ -371,6 +467,12 @@ public sealed class GameManager : Component
 
 	private void WaitingForNextRoundRoutine()
 	{
+		if ( AreAllPlayersPermanentlyDead() )
+		{
+			GameOver();
+			return;
+		}
+
 		if ( AreAllPlayersTakedBoost() )
 		{
 			if ( GameState.PhaseTimer <= 0f )
@@ -390,21 +492,19 @@ public sealed class GameManager : Component
 
 	private void PlayRoutine()
 	{
+		if ( GameState.PhaseTimer > 0f )
+			return;
 
+		StopRoundSpawner();
 
-
-		if ( GameState.PhaseTimer <= 0f )
+		if ( !enemyCountShown )
 		{
-			StopRoundSpawner();
-
+			enemyCountShown = true;
 			Broadcast_ShowEnemyCount();
-
-			//GameState.Server_SetPhaseTimer( TimePerWaitingRound );
-			//GameState.Server_SetGameState( GameStateType.WaitingForNextRound );
 		}
 
-
-
+		if ( AllEnemiesDead() )
+			StartNextRound();
 	}
 
 	public bool AreAllPlayersTakedBoost()
@@ -419,6 +519,9 @@ public sealed class GameManager : Component
 		foreach ( var player in allPlayers )
 		{
 			if ( player == null || !player.IsValid() )
+				continue;
+
+			if ( player.isPermanentlyDead )
 				continue;
 
 			validPlayers++;
@@ -437,23 +540,23 @@ public sealed class GameManager : Component
 
 	private void GameOverRoutine()
 	{
-		if ( AreAllPlayersTakedBoost() )
-		{
-			ResetAllRewardTaken();
-
-			var allPlayers = Scene.GetAllComponents<PlayerBehaviour>().ToList();
-			foreach ( var player in allPlayers )
-			{
-				if ( player != null && player.IsValid() )
-				{
-					player.Revive();
-				}
-			}
-			StartNextRound( true );
-		}
+		if ( GameState.PhaseTimer <= 0f )
+			Server_ResetGame();
 	}
 
 
+
+	public void RemoveAllExperience()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		foreach ( var experience in Scene.GetAllComponents<ExperienceBehaviour>().ToList() )
+		{
+			if ( experience != null && experience.IsValid() )
+				experience.GameObject.Destroy();
+		}
+	}
 
 	public void RemoveAllEnemies()
 	{
@@ -465,6 +568,12 @@ public sealed class GameManager : Component
 			}
 		}
 		GameState.Server_ClearEnemies();
+
+		foreach ( var bullet in Scene.GetAllComponents<EnemyBulletBehaviour>().ToList() )
+		{
+			if ( bullet != null && bullet.IsValid() )
+				bullet.GameObject.Destroy();
+		}
 	}
 
 	void StartRoundSpawner()
@@ -485,9 +594,12 @@ public sealed class GameManager : Component
 
 	#endregion
 
-	[Rpc.Broadcast]
+	[Rpc.Host]
 	public void PlayerTakeDamage( PlayerBehaviour player, float amount )
 	{
+		if ( player == null || !player.IsValid() )
+			return;
+
 		player.Server_TakeHit( amount );
 	}
 
@@ -570,6 +682,8 @@ public sealed class GameManager : Component
 		float angle;
 
 		if ( !Networking.IsHost || ExperiencePrefab == null ) return;
+
+		if ( GameState == null || GameState.State != GameStateType.Playing ) return;
 
 		nbPlayer = 2; //GameState.Players.Count;
 		offSet = Vector3.Forward * ExperienceSpawnDist;

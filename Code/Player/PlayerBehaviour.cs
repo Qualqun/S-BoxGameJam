@@ -8,6 +8,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 {
 	[Sync( SyncFlags.FromHost )] public bool isInvulnerable { get; set; }
 	[Sync( SyncFlags.FromHost )] public bool isDead { get; set; } = false;
+	[Sync( SyncFlags.FromHost )] public bool isPermanentlyDead { get; set; } = false;
+	[Sync( SyncFlags.FromHost )] public bool mustDevilPact { get; set; } = false;
 	[Sync( SyncFlags.FromHost )] public bool isInStartZone { get; set; } = false;
 
 	[Property, Group( "Refs" )] public PlayerAnimation animation { get; set; }
@@ -137,19 +139,11 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 			return;
 
 		State.Hp = MathF.Max( 0f, State.Hp - amount );
-		Broadcast_RefreshHealth();
+		Broadcast_RefreshHealth( State.Hp, State.MaxHp );
 
 		if ( State.Hp <= 0f )
 		{
-			isDead = true;              
-			Broadcast_SetDead();        
-
-			cancellation?.Cancel();
-			cancellation?.Dispose();
-			cancellation = null;
-
-			if ( gameManager.AreAllPlayersDeadC() )
-				gameManager.GameOver();
+			Server_Die();
 		}
 		else
 		{
@@ -159,20 +153,78 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	}
 
 	[Rpc.Broadcast]
-	public void Broadcast_RefreshHealth()
+	public void Broadcast_RefreshHealth( float hp, float maxHp )
 	{
-		ui?.SetHealth( State.Hp, State.MaxHp );
+		ui?.SetHealth( hp, maxHp );
+	}
+
+	public void Server_Die()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		if ( isDead )
+			return;
+
+		isDead = true;
+		State.Hp = 0f;
+
+		State.LoseLife();
+		State.Broadcast_LoseHalfLevels();
+
+		isPermanentlyDead = State.Lives <= 0;
+		mustDevilPact = !isPermanentlyDead;
+
+		cancellation?.Cancel();
+		cancellation?.Dispose();
+		cancellation = null;
+
+		Broadcast_SetDead( isPermanentlyDead );
+		Broadcast_RefreshHealth( State.Hp, State.MaxHp );
+
+		gameManager?.Server_OnPlayerDied( this );
+	}
+
+	public void Server_Revive()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		if ( isPermanentlyDead )
+			return;
+
+		isDead = false;
+		isInvulnerable = false;
+		State.Hp = State.MaxHp;
+
+		Broadcast_Revive( State.Hp, State.MaxHp );
+	}
+
+	public void Server_FullReset( Vector3 spawnPosition )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		isDead = false;
+		isPermanentlyDead = false;
+		mustDevilPact = false;
+		isInvulnerable = false;
+		isInStartZone = false;
+
+		State.Broadcast_ResetAll();
+		Broadcast_FullReset( spawnPosition );
 	}
 
 	[Rpc.Broadcast]
-	public void Broadcast_SetDead()
+	public void Broadcast_SetDead( bool permanent )
 	{
-		SetDead(); 
+		SetDead( permanent ); 
 	}
 
 	public void Fire()
 	{
-		if ( canShoot )
+		// canShoot is local, a pending fire rate timer would hand the gun back to a ghost
+		if ( canShoot && !isDead )
 		{
 			List<BulletInfo> bullets = new();
 			List<GunOutPut> gunModifiers = new();
@@ -230,11 +282,10 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		}
 	}
 
-	public void SetDead()
+	public void SetDead( bool permanent = false )
 	{
-		Color colorTint = model.Tint;
-		colorTint = Color.Blue;
-		colorTint.a = 0.5f;
+		Color colorTint = permanent ? Color.Black : Color.Blue;
+		colorTint.a = permanent ? 0.3f : 0.5f;
 
 		model.Tint = colorTint;
 		Tags.Add( "invulnerability" );
@@ -243,24 +294,45 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	}
 
 	[Rpc.Broadcast]
-	public void Revive()
+	public void Broadcast_Revive( float hp, float maxHp )
 	{
-		isDead = false;
 		canShoot = true;
-		isInvulnerable = false;
 		Tags.Remove( "invulnerability" );
 
-		Color colorTint = model.Tint;
-		colorTint = Color.White;
+		Color colorTint = Color.White;
 		colorTint.a = 1f;
 		model.Tint = colorTint;
 
-		if ( Networking.IsHost )
-		{
-			State.Hp = State.MaxHp;
-		}
+		ui?.SetHealth( hp, maxHp );
+	}
 
-		ui?.SetHealth( State.Hp, State.MaxHp );
+	[Rpc.Broadcast]
+	public void Broadcast_FullReset( Vector3 spawnPosition )
+	{
+		canShoot = true;
+		Tags.Remove( "invulnerability" );
+
+		Color colorTint = Color.White;
+		colorTint.a = 1f;
+		model.Tint = colorTint;
+
+		if ( !IsProxy )
+		{
+			WorldPosition = spawnPosition;
+
+			Rigidbody body = Components.Get<Rigidbody>();
+
+			if ( body != null )
+			{
+				body.Velocity = Vector3.Zero;
+				body.AngularVelocity = Vector3.Zero;
+			}
+
+			ui?.SetHealth( State.SpawnMaxHp, State.SpawnMaxHp );
+
+			if ( gameManager?.StartZonePoint != null )
+				ui?.ShowArrowToWorldPosition( gameManager.StartZonePoint.WorldPosition );
+		}
 	}
 
 	[Rpc.Broadcast]

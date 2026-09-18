@@ -111,6 +111,12 @@
 			PlayerState = Scene.GetAllComponents<PlayerState>()
 				.FirstOrDefault(p => !p.IsProxy);
 		}
+
+		if (PlayerState.IsValid())
+		{
+			CurrentHealth = PlayerState.Hp;
+			MaxHealth = PlayerState.MaxHp;
+		}
 	}
 
 	protected override void OnPreRender()
