@@ -466,6 +466,9 @@ public sealed class GameManager : Component
 	{
 		StopRoundSpawner();
 		Cancellation = new CancellationTokenSource();
+
+		Log.Info( "nb enemy this round " + (baseEnemy + (enemyPerRound * GameState.CurrentRound) + " round time " + TimePerRound));
+
 		_ = RoundSpawner( Cancellation.Token );
 	}
 
@@ -506,7 +509,8 @@ public sealed class GameManager : Component
 
 	async Task RoundSpawner( CancellationToken token )
 	{
-		float spawnDelay = (baseEnemy + (enemyPerRound  * GameState.CurrentRound)) / TimePerRound;
+		float spawnDelay = TimePerRound / ( baseEnemy + (enemyPerRound  * GameState.CurrentRound));
+
 
 		while ( !token.IsCancellationRequested )
 		{
