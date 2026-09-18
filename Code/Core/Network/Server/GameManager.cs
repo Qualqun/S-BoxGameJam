@@ -1,10 +1,11 @@
 using Sandbox;
+using Sandbox.Network;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using Sandbox.Network;
+using System.Threading;
+using System.Threading.Tasks;
+using static Sandbox.UI.PanelTransform;
 
 public struct StatsPerRound
 {
@@ -29,12 +30,15 @@ public sealed class GameManager : Component
 	[Property, Group( "Timers" )] public float TimeStart { get; set; } = 5f;
 
 	[Description( "Number of enemy in one second" )]
-	[Property, Group( "Stats" )] public float BaseSpawnRate { get; set; } = 0.1f;
-	[Property, Group( "Stats" )] public float RoundSpawnRate { get; set; } = 0.35f;
+	[Property, Group( "Stats" )] public int baseEnemy { get; set; } = 10;
+	[Property, Group( "Stats" )] public int enemyPerRound { get; set; } = 20;
+	[Property, Group( "Stats" )] public float XpSpawnDist { get; set; } = 32f;
 
 	[Property, Group( "Refs" )] public GameState GameState { get; set; }
 
-	[Property, Group( "Refs" )] public GameObject PlayerPrefab { get; set; }
+	[Property, Group( "Refs" )] GameObject PlayerPrefab { get; set; }
+	[Property, Group( "Refs" )] GameObject XpPrefab { get; set; }
+
 	[Property, Group( "Refs" )] public GameObject StartZonePoint { get; set; }
 	[Property, Group( "Refs" )] public UIManager UiManager { get; set; }
 
@@ -444,7 +448,7 @@ public sealed class GameManager : Component
 		}
 	}
 
-	
+
 
 	public void RemoveAllEnemies()
 	{
@@ -502,7 +506,7 @@ public sealed class GameManager : Component
 
 	async Task RoundSpawner( CancellationToken token )
 	{
-		float spawnDelay = 1f / (BaseSpawnRate + RoundSpawnRate * GameState.CurrentRound);
+		float spawnDelay = (baseEnemy + (enemyPerRound  * GameState.CurrentRound)) / TimePerRound;
 
 		while ( !token.IsCancellationRequested )
 		{
@@ -539,6 +543,8 @@ public sealed class GameManager : Component
 	[Rpc.Host]
 	public void EnemyTakeDamage( GameObject enemyObj, float amount )
 	{
+		if ( !enemyObj.IsValid ) return;
+
 		BaseEnemyBehaviour enemy = enemyObj.GetComponent<BaseEnemyBehaviour>();
 
 		if ( enemy == null )
@@ -546,6 +552,33 @@ public sealed class GameManager : Component
 
 		enemy.TakeDamage( amount );
 	}
+
+	#endregion
+
+	#region Xp methods
+
+	public void SpawnXp( Vector3 spawnPoint )
+	{
+		int nbPlayer;
+		Vector3 offSet;
+
+		if ( !Networking.IsHost || XpPrefab == null ) return;
+
+		nbPlayer = 2; //GameState.Players.Count;
+		offSet = Vector3.Forward * XpSpawnDist;
+
+		for ( int i = 0; i < nbPlayer; i++ )
+		{
+			GameObject xpObject;
+
+			offSet = Rotation.FromYaw( 360f / nbPlayer ) * offSet;
+
+			xpObject = XpPrefab.Clone( spawnPoint + offSet + Vector3.Up * XpSpawnDist );
+			xpObject.NetworkSpawn();
+		}
+
+	}
+
 
 	#endregion
 }

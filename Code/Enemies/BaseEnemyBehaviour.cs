@@ -38,7 +38,6 @@ public class BaseEnemyBehaviour : Component
 	}
 	protected override void OnUpdate()
 	{
-
 		base.OnUpdate();
 
 		if ( players.Count > 0 )
@@ -76,6 +75,8 @@ public class BaseEnemyBehaviour : Component
 		if (Networking.IsHost)
 		{
 			gameManager?.GameState?.Enemies.Remove( GameObject );
+			//gameManager?.SpawnXp( WorldPosition );
+
 
 			if ( gameManager != null && gameManager.AllEnemiesDead() && gameManager.GameState.State != GameStateType.GameOver )
 				gameManager?.StartNextRound();
