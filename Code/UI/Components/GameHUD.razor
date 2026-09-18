@@ -38,6 +38,14 @@
 	}
 	else if (GameState?.State == GameStateType.Playing)
 	{
+		<!-- Badge Round en haut à droite -->
+		<div class="round-corner-panel">
+			<div class="round-badge-content">
+				<span class="round-badge-label">ROUND</span>
+				<span class="round-badge-number">@CurrentRoundText</span>
+			</div>
+		</div>
+
 		<div class="playing-container">
 			<div class="playing-timer">@TimerText</div>
 			<div class="playing-enemy-count">@EnemyCountText</div>
@@ -72,6 +80,7 @@
 		{
 			<div class="devil-pact-hud @(_isFadingOutPact ? "fade-out" : "")">
 				<div class="pact-container">
+					<!-- Côté Lumière : One More Round -->
 					<div class="pact-side light-side">
 						<div class="pact-hover-glow"></div>
 						<div class="pact-content">
@@ -81,6 +90,7 @@
 						</div>
 					</div>
 
+					<!-- Côté Ténèbres : Devil Pact -->
 					<div class="pact-side dark-side">
 						<div class="pact-hover-glow"></div>
 						<div class="pact-content">
@@ -193,12 +203,22 @@
 		}
 	}
 
+	private string CurrentRoundText =>
+		GameState is null ? "1" : $"{Math.Max(1, GameState.CurrentRound)}";
+
 	private string TimerText =>
 		GameState is null
 			? "0"
 			: $"{MathF.Ceiling(GameState.PhaseTimer)}";
 
-	private string EnemyCountText => $"{GameState?.EnemyCount ?? 0} enemies remaining";
+	private string EnemyCountText
+	{
+		get
+		{
+			int count = Scene?.GetAllComponents<BaseEnemyBehaviour>().Count(e => e != null && e.IsValid()) ?? 0;
+			return $"{count} enemies remaining";
+		}
+	}
 
 	private string PhaseText =>
 		GameState is null
@@ -243,7 +263,7 @@
 		Log.Info($"[DevilPact] Dark side chosen: Devil Pact (Cost: 1 Life, Gain: {BonusCount} Bonuses)");
 
 		var player = LocalPlayer;
-		player?.Host_LoseLife();
+		player?.LoseLife();
 
 		_isFadingOutPact = true;
 		StateHasChanged();
@@ -334,12 +354,15 @@
 			);
 		}
 
+		int enemyCount = Scene?.GetAllComponents<BaseEnemyBehaviour>().Count(e => e != null && e.IsValid()) ?? 0;
+
 		return HashCode.Combine(
 			GameState.State,
+			GameState.CurrentRound,
 			(int)MathF.Ceiling(GameState.PhaseTimer),
 			GameState.PlayerCount,
 			GameState.PlayerReadyCount,
-			GameState.EnemyCount
+			enemyCount
 		);
 	}
 }

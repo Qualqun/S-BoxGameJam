@@ -147,6 +147,53 @@
 	transform-origin: center;
 }
 
+/* Badge Round en haut à droite */
+.round-corner-panel {
+	position: absolute;
+	top: 40px;
+	right: 40px;
+	display: flex;
+	align-items: center;
+	padding: 6px 18px;
+	background-color: rgba(10, 10, 15, 0.75);
+	border-right: 3px solid rgba(255, 50, 50, 0.9);
+	border-bottom: 1px solid rgba(255, 50, 50, 0.3);
+	box-shadow: 5px 5px 15px rgba(255, 0, 0, 0.15);
+	transform: skewX(-15deg);
+
+	&::before {
+		content: '';
+		position: absolute;
+		top: -8px;
+		right: -3px;
+		width: 100px;
+		height: 2px;
+		background: linear-gradient(to left, rgba(255, 0, 0, 0.8), transparent);
+	}
+}
+
+.round-badge-content {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	transform: skewX(15deg);
+}
+
+.round-badge-label {
+	font-family: 'Cynosure', sans-serif;
+	font-size: 14px;
+	letter-spacing: 2px;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.round-badge-number {
+	font-family: 'Demonized', sans-serif;
+	font-size: 26px;
+	font-weight: bold;
+	color: rgb(255, 60, 60);
+	text-shadow: 0 0 12px rgba(255, 0, 0, 0.7);
+}
+
 .playing-container {
 	position: absolute;
 	top: 4vh;
@@ -256,6 +303,7 @@
 	}
 }
 
+/* --- Round Won Banner --- */
 .round-won-container {
 	position: absolute;
 	top: 0;
@@ -277,6 +325,7 @@
 	text-shadow: 0 0 25px rgba(255, 180, 0, 0.8), 0 4px 10px rgba(0, 0, 0, 0.9);
 }
 
+/* --- Waiting For Other Players Banner --- */
 .waiting-rewards-container {
 	position: absolute;
 	top: 0;
@@ -330,6 +379,7 @@
 	animation: spin 1s linear infinite;
 }
 
+/* --- Écran Devil Pact (WaitingForNextRound) --- */
 .devil-pact-hud {
 	position: absolute;
 	top: 0;
