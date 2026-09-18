@@ -685,7 +685,7 @@ public sealed class GameManager : Component
 
 		if ( GameState == null || GameState.State != GameStateType.Playing ) return;
 
-		nbPlayer = 2; //GameState.Players.Count;
+		nbPlayer = GameState.Players.Count;
 		offSet = Vector3.Forward * ExperienceSpawnDist;
 		angle = 360f / nbPlayer;
 
