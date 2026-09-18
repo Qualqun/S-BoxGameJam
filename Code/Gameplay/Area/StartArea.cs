@@ -4,6 +4,9 @@ public sealed class StartArea : Component
 	public GameManager GameManager { get; set; }
 	[Property] ModelRenderer platform { get; set; }
 	[Property] List<Model> platforms { get; set; }
+
+	int nbPlayerOnPlatform = 0;
+
 	protected override void OnStart()
 	{
 		base.OnStart();
@@ -25,6 +28,8 @@ public sealed class StartArea : Component
 
 		Log.Info( "Player entered!" );
 
+		nbPlayerOnPlatform++;
+
 		platform.Model = platforms[1];
 		GameManager?.PlayerEnteredStartArea( player );
 	}
@@ -39,9 +44,9 @@ public sealed class StartArea : Component
 		
 		if ( player == null )
 			return;
-
-		if ( GameManager.GameState.State == GameStateType.Starting
-			|| GameManager.GameState.State == GameStateType.WaitingForPlayers )
+		nbPlayerOnPlatform--;
+		if ( (GameManager.GameState.State == GameStateType.Starting
+			|| GameManager.GameState.State == GameStateType.WaitingForPlayers ) && nbPlayerOnPlatform  == 0)
 		{
 			platform.Model = platforms[0];
 		}

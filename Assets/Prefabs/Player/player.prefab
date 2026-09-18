@@ -187,11 +187,11 @@
         "BaseFireRate": 1,
         "DamageMultiplier": 1,
         "Dead": false,
-        "Experience": 20,
+        "Experience": 0,
         "FireRateMultiplier": 1,
         "MaxExperience": 100,
         "MaxHp": 100,
-        "MaxLives": 0,
+        "MaxLives": 5,
         "MoveSpeed": 250,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -202,7 +202,7 @@
         "RewardTaken": false,
         "SizeMultiplier": 1,
         "TimeInvulnerability": 1,
-        "XpMultiplier": 3
+        "XpMultiplier": 0
       },
       {
         "__type": "PlayerAnimation",

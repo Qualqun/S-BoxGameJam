@@ -21,7 +21,9 @@ public sealed class ExperienceBehaviour : Component, Component.ITriggerListener
 		if ( !other.Tags.Has( "player" ) || IsProxy ) return;
 
 		player = other.GetComponent<PlayerBehaviour>();
+
 		player.State.AddExperience( AmountExperience );
+
 
 		GameObject.Destroy();
 	}
@@ -38,7 +40,7 @@ public sealed class ExperienceBehaviour : Component, Component.ITriggerListener
 	{
 		base.OnUpdate();
 
-		
+
 		angle += speed * Time.Delta;
 		timerLevitate += Time.Delta;
 

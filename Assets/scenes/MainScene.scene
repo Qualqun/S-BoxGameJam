@@ -311,7 +311,7 @@
           "__guid": "2ccac9a4-4081-413f-9f54-2271993ac5c7",
           "__enabled": true,
           "Flags": 0,
-          "BaseNbEnemy": 2,
+          "BaseNbEnemy": 10,
           "EnemiesPrefabs": [
             {
               "_type": "gameobject",
@@ -322,7 +322,7 @@
               "prefab": "prefabs/enemies/meleeenemy.prefab"
             }
           ],
-          "EnemyPerRound": 0,
+          "EnemyPerRound": 5,
           "ExperienceBase": 100,
           "ExperiencePerRound": 100,
           "ExperiencePrefab": {
@@ -371,7 +371,7 @@
             "go": "f8e3f4be-b2d6-4bdd-920e-b3be61f28c31"
           },
           "TimeGameOver": 5,
-          "TimePerRound": 1,
+          "TimePerRound": 5,
           "TimePerWaitingRound": 5,
           "TimeStart": 2,
           "UiManager": {
@@ -445,63 +445,17 @@
           "OnComponentUpdate": null,
           "platform": {
             "_type": "component",
-            "component_id": "b4651b1c-51ee-49b4-8dc3-6d14fac97560",
-            "go": "0953d017-a066-4b34-9d6f-462bf26337f4",
+            "component_id": "3985a2bf-0cb4-4cc9-8ea6-d5da31f9609c",
+            "go": "42aa72ec-049d-4c76-8eb5-400b1438acd6",
             "component_type": "ModelRenderer"
           },
           "platforms": [
-            "art/asset/map/props/startzone.vmdl",
-            "art/asset/map/props/startzonered.vmdl"
+            "art/asset/map/props/startzonered.vmdl",
+            "art/asset/map/props/startzone.vmdl"
           ]
         }
       ],
       "Children": [
-        {
-          "__guid": "0953d017-a066-4b34-9d6f-462bf26337f4",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "Cube",
-          "Position": "12.9182434,24.1242371,1",
-          "Rotation": "0,0,0.707106769,0.707106769",
-          "Scale": "2.80754375,1.81082988,0.0374805331",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.ModelRenderer",
-              "__guid": "b4651b1c-51ee-49b4-8dc3-6d14fac97560",
-              "__enabled": false,
-              "Flags": 0,
-              "BodyGroups": 18446744073709551615,
-              "CreateAttachments": false,
-              "LodOverride": null,
-              "MaterialGroup": null,
-              "MaterialOverride": null,
-              "Materials": null,
-              "Model": "models/dev/box.vmdl",
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "RenderOptions": {
-                "GameLayer": true,
-                "OverlayLayer": false,
-                "BloomLayer": false,
-                "AfterUILayer": false
-              },
-              "RenderType": "On",
-              "Tint": "0,1,0.98333,1"
-            }
-          ],
-          "Children": []
-        },
         {
           "__guid": "f8e3f4be-b2d6-4bdd-920e-b3be61f28c31",
           "__version": 2,
@@ -543,18 +497,6 @@
                 },
                 "Property": "Rotation",
                 "Value": "0,0,0.707106769,0.707106769"
-              },
-              {
-                "Target": {
-                  "Type": "Component",
-                  "IdValue": "1d80cffb-9c37-4f09-844c-98233f6796a4"
-                },
-                "Property": "Materials",
-                "Value": {
-                  "indexed": {
-                    "1": "art/material/emmisivered.vmat"
-                  }
-                }
               },
               {
                 "Target": {
