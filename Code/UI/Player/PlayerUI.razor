@@ -11,7 +11,7 @@
 		<div class="health-panel-container">
 			<div class="health-panel">
 				<div class="health-bar">
-					<div class="health-fill" style="width: @(HealthPercent * 100f)%"></div>
+					<div class="health-fill" style="width: @((HealthPercent * 100f).ToString("0.##", CultureInfo.InvariantCulture))%"></div>
 				</div>
 				<div class="stat-indicator health-indicator">
 					<div class="stat-icon hp-icon"></div>
@@ -23,7 +23,7 @@
 
 			<div class="xp-panel">
 				<div class="xp-bar">
-					<div class="xp-fill" style="width: @(XpPercent * 100f)%"></div>
+					<div class="xp-fill" style="width: @((XpPercent * 100f).ToString("0.##", CultureInfo.InvariantCulture))%"></div>
 				</div>
 				<div class="stat-indicator xp-indicator">
 					<div class="stat-icon xp-icon"></div>
@@ -34,7 +34,6 @@
 			</div>
 		</div>
 	}
-
 
 	@if (ShowWorldArrow && arrowVisible)
 	{
@@ -75,10 +74,10 @@
 	{
 		get
 		{
-			int max = PlayerState?.MaxExperience ?? 100;
+			float max = PlayerState?.MaxExperience ?? 100f;
 			if (max <= 0f) return 0f;
-			int current = PlayerState?.Experience ?? 0;
-			return ((float)current / max).Clamp(0f, 1f);
+			float current = PlayerState?.Experience ?? 0f;
+			return (current / max).Clamp(0f, 1f);
 		}
 	}
 
@@ -97,6 +96,22 @@
 	}
 
 	public void HideWorldArrow() => ShowWorldArrow = false;
+
+	protected override void OnUpdate()
+	{
+		base.OnUpdate();
+
+		if (!GameState.IsValid())
+		{
+			GameState = Scene.GetAllComponents<GameState>().FirstOrDefault();
+		}
+
+		if (!PlayerState.IsValid())
+		{
+			PlayerState = Scene.GetAllComponents<PlayerState>()
+				.FirstOrDefault(p => !p.IsProxy);
+		}
+	}
 
 	protected override void OnPreRender()
 	{

@@ -186,8 +186,11 @@
         "BaseBulletSpeed": 700,
         "BaseFireRate": 1,
         "DamageMultiplier": 1,
+        "Experience": 20,
         "FireRateMultiplier": 1,
+        "MaxExperience": 100,
         "MaxHp": 100,
+        "MaxLives": 5,
         "MoveSpeed": 250,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -197,7 +200,8 @@
         "OnComponentUpdate": null,
         "RewardTaken": false,
         "SizeMultiplier": 1,
-        "TimeInvulnerability": 1
+        "TimeInvulnerability": 1,
+        "XpMultiplier": 3
       },
       {
         "__type": "PlayerAnimation",
@@ -1604,12 +1608,7 @@
                 "__enabled": true,
                 "Flags": 0,
                 "CurrentHealth": 100,
-                "GameState": {
-                  "_type": "component",
-                  "component_id": "40841857-4b79-438c-b036-d1581eeedb17",
-                  "go": "6308e9fd-2ee1-40c4-aa6b-0deb242610a3",
-                  "component_type": "GameState"
-                },
+                "GameState": null,
                 "MaxHealth": 100,
                 "OnComponentDestroy": null,
                 "OnComponentDisabled": null,
@@ -1617,6 +1616,7 @@
                 "OnComponentFixedUpdate": null,
                 "OnComponentStart": null,
                 "OnComponentUpdate": null,
+                "PlayerState": null,
                 "ShowWorldArrow": false,
                 "WorldArrowEdgeMargin": 56,
                 "WorldArrowOnScreenOffset": 50,
