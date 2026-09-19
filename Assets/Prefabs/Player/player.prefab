@@ -143,14 +143,13 @@
           "_type": "gameobject",
           "go": "4da7d666-9abb-84c8-8d46-b24dfdbe0ffd"
         },
-        "mainMusic": "sounds/calm.sound",
+        "mainMusic": "audio/music/mainmusic.vsnd",
         "model": {
           "_type": "component",
           "component_id": "e5728d85-77e1-4852-a22c-6cda78821502",
           "go": "1d2f0ea9-6352-4453-bd44-3e3c7c69f0d0",
           "component_type": "SkinnedModelRenderer"
         },
-        "MusicVolume": 0.35,
         "muzzleFlash": {
           "_type": "gameobject",
           "prefab": "art/fx/prefab/musleflashplayer.prefab"
@@ -238,7 +237,7 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "shoot": "sounds/luger pistol fire.sound"
+        "shoot": "audio/sounds/shoot/shoot.sound"
       }
     ],
     "Children": [
@@ -1662,8 +1661,6 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [
-    "projectwolves.calm#233118"
-  ],
+  "__references": [],
   "__version": 2
 }

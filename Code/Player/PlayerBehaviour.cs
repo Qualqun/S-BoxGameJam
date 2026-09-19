@@ -2,7 +2,9 @@ using Sandbox;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using static Sandbox.Game;
 using static Sandbox.Sprite;
+using static Sandbox.Volumes.VolumeSystem;
 
 public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 {
@@ -27,7 +29,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	[Property, Group( "Refs" )] PlayerSound sound { get; set; }
 	[Property, Group( "Refs" )] ModelRenderer model { get; set; }
 
-	[Property, Group( "Sound" )] public SoundEvent mainMusic { get; set; }
+	[Property, Group( "Sound" )] public SoundFile mainMusic { get; set; }
 	[Sync( SyncFlags.FromHost )] public GameManager gameManager { get; set; }
 
 	bool canShoot = true;
@@ -51,7 +53,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 			ui?.SetHealth( State.Hp, State.MaxHp );
 			ui?.ShowArrowToWorldPosition( gameManager.StartZonePoint.WorldPosition );
 
-			GameObject.PlaySound( mainMusic );
+			Game.Music.Play( mainMusic, fade: 1.0f, loop: true, volume: 0.05f );
 		}
 
 		base.OnStart();
@@ -234,9 +236,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 			BulletInfo baseBullet = InitBaseBullet();
 			GameObject muzleFlash = muzzleFlash.Clone( );
 
-			muzleFlash.SetParent( gunPoint );
-			muzleFlash.LocalPosition = Vector3.Zero;
-			muzleFlash.LocalRotation = Rotation.Identity;
+			muzleFlash.WorldPosition = gunPoint.WorldPosition;
+			muzleFlash.LocalRotation = gunPoint.WorldRotation;
 			muzleFlash.NetworkSpawn();
 
 			animation.speedShoot = State.FireRate;
