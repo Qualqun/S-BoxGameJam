@@ -21,6 +21,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	[Property, Group( "Refs" )] public PlayerUI ui { get; set; }
 
+	[Property, Group( "Refs" )] GameObject muzzleFlash { get; set; }
+
 	[Property, Group( "Refs" )] MPlayerController controller { get; set; }
 	[Property, Group( "Refs" )] PlayerSound sound { get; set; }
 	[Property, Group( "Refs" )] ModelRenderer model { get; set; }
@@ -230,6 +232,12 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 			List<GunOutPut> gunModifiers = new();
 
 			BulletInfo baseBullet = InitBaseBullet();
+			GameObject muzleFlash = muzzleFlash.Clone( );
+
+			muzleFlash.SetParent( gunPoint );
+			muzleFlash.LocalPosition = Vector3.Zero;
+			muzleFlash.LocalRotation = Rotation.Identity;
+			muzleFlash.NetworkSpawn();
 
 			animation.speedShoot = State.FireRate;
 			animation.Shoot();

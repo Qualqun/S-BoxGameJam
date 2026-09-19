@@ -127,8 +127,6 @@ public sealed class BulletBehaviour : Component
 				enemyHit.Add( collideObj );
 				gameManager.EnemyTakeDamage( collideObj, bulletInfo.damage );
 				gameManager.UiManager.HitNumbers.ShowNumber( bulletInfo.damage, traceResult.HitPosition );
-
-				sound.Hit();
 			}
 
 			if ( updateNextStep )

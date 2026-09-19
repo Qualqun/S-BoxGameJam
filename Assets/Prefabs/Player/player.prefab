@@ -150,6 +150,11 @@
           "go": "1d2f0ea9-6352-4453-bd44-3e3c7c69f0d0",
           "component_type": "SkinnedModelRenderer"
         },
+        "MusicVolume": 0.35,
+        "muzzleFlash": {
+          "_type": "gameobject",
+          "prefab": "art/fx/prefab/musleflashplayer.prefab"
+        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -759,8 +764,8 @@
                                                 "__version": 2,
                                                 "Flags": 0,
                                                 "Name": "GunPoint",
-                                                "Position": "11.1748581,45,-6.67572021E-06",
-                                                "Rotation": "0,0,0,1",
+                                                "Position": "11.1748581,33.1834679,-8.58306885E-06",
+                                                "Rotation": "0.49999997,0.49999997,0.49999997,0.49999997",
                                                 "Scale": "1,1,1",
                                                 "Tags": "",
                                                 "Enabled": true,
@@ -1658,7 +1663,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "drakefruit.lugerpistolfire#91245"
+    "projectwolves.calm#233118"
   ],
   "__version": 2
 }

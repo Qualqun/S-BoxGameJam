@@ -154,7 +154,7 @@
         "ConeFar": 0,
         "ConeNear": 0,
         "Delay": 0,
-        "DestroyOnEnd": false,
+        "DestroyOnEnd": true,
         "Duration": {
           "Type": "Range",
           "Evaluation": "Seed",
