@@ -56,28 +56,13 @@
         "__Prefab": "art/prefabs/map/bullet/bulletplayer.prefab",
         "__PrefabInstancePatch": {
           "AddedObjects": [],
-          "RemovedObjects": [
-            {
-              "Id": {
-                "Type": "GameObject",
-                "IdValue": "121716ff-9978-41a8-893b-2ac17653befa"
-              }
-            },
-            {
-              "Id": {
-                "Type": "Component",
-                "IdValue": "a5a39b67-981c-44a7-a9d6-9dd1652538ea"
-              }
-            }
-          ],
+          "RemovedObjects": [],
           "PropertyOverrides": [],
           "MovedObjects": []
         },
         "__PrefabIdToInstanceId": {
           "921d48a5-04db-46af-b862-4d1d684616dd": "1a16bf6c-2685-4bcb-80de-5fb8ffbbe984",
-          "121716ff-9978-41a8-893b-2ac17653befa": "05e6b8cc-0cf9-4a94-905d-94c8904c93a9",
-          "8f2037b8-269d-4cd7-88a2-9380b23f1b3b": "cf2a172e-4ee3-4773-acde-01591c50b5d6",
-          "a5a39b67-981c-44a7-a9d6-9dd1652538ea": "c01ad97e-f469-407a-97a8-9a1226025495"
+          "8f2037b8-269d-4cd7-88a2-9380b23f1b3b": "cf2a172e-4ee3-4773-acde-01591c50b5d6"
         }
       }
     ],
