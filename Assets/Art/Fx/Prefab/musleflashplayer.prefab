@@ -201,7 +201,7 @@
         "Flags": 0,
         "__version": 2,
         "Additive": true,
-        "Alignment": "Particle",
+        "Alignment": "Object",
         "BlurAmount": 0.5,
         "BlurOpacity": 0.5,
         "BlurSpacing": 0.5,

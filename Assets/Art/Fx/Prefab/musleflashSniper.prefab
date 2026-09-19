@@ -96,7 +96,11 @@
           "Z": 0
         },
         "InitialYaw": 0,
-        "Lifetime": 2,
+        "Lifetime": {
+          "Type": "Range",
+          "Evaluation": "Seed",
+          "Constants": "0.0500000007,0.100000001,0,0"
+        },
         "LocalSpace": 0,
         "MaxParticles": 1000,
         "OnComponentDestroy": null,
@@ -197,7 +201,7 @@
         "Flags": 0,
         "__version": 2,
         "Additive": true,
-        "Alignment": "Particle",
+        "Alignment": "Object",
         "BlurAmount": 0.5,
         "BlurOpacity": 0.5,
         "BlurSpacing": 0.5,
