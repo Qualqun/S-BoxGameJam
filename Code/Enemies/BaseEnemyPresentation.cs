@@ -9,16 +9,19 @@ public struct VibrationInfo
 	public bool random { get; set; }
 }
 
-
-public class BaseVisualEnemy : Component
+public class BaseEnemyPresentation : Component
 {
-	[Property, Group( "Stats" )] protected float visualHitDuration { get; set; } = 0.2f;
-	[Property, Group( "Stats" )] protected VibrationInfo vibration { get; set; }
+	[Property, Group( "Visual hit" )] protected float visualHitDuration { get; set; } = 0.2f;
+	[Property, Group( "Visual hit" )] protected VibrationInfo vibration { get; set; }
 
-	[Property, Group( "Refs" )] protected ModelRenderer model { get; set; }
 
+
+
+	[Property] protected SkinnedModelRenderer model { get; set; }
+
+
+	bool hit;
 	Task visualHitTask = null;
-
 
 	protected override void OnStart()
 	{
@@ -30,12 +33,28 @@ public class BaseVisualEnemy : Component
 		}
 
 		model.SceneObject.Batchable = false;
+	}
 
+	protected override void OnUpdate()
+	{
+		base.OnUpdate();
+
+		AnimationUpdate();
+	}
+
+
+	protected virtual void AnimationUpdate()
+	{
+		model.Set( "EnemyHit", hit );
+
+		hit = false;
 	}
 
 	[Rpc.Broadcast]
-	public void TakeHit()
+	public virtual void TakeHit()
 	{
+		hit = true;
+
 		if ( visualHitTask == null )
 		{
 			visualHitTask = VisualTakeHit();
@@ -82,7 +101,7 @@ public class BaseVisualEnemy : Component
 		Vector3 lastPos = obj.LocalPosition;
 
 		Vector3 baseVibration = vibration.size;
-		Vector3 vibrationGoal = vibration.random ? Vector3.Random.Abs().WithZ(0) * baseVibration : baseVibration;
+		Vector3 vibrationGoal = vibration.random ? Vector3.Random.Abs().WithZ( 0 ) * baseVibration : baseVibration;
 
 		vibrationGoal += lastPos;
 

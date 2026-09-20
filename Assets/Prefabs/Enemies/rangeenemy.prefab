@@ -77,12 +77,6 @@
           "component_type": "NavMeshAgent"
         },
         "aimTime": 0.4,
-        "animation": {
-          "_type": "component",
-          "component_id": "b5e25898-1923-430a-ac77-1cc5b075daed",
-          "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
-          "component_type": "RangeEnemyAnimation"
-        },
         "bullet": {
           "_type": "gameobject",
           "prefab": "prefabs/enemies/enemybullet.prefab"
@@ -97,6 +91,12 @@
           "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
           "component_type": "CapsuleCollider"
         },
+        "enemyPresentation": {
+          "_type": "component",
+          "component_id": "796c3ef9-5862-4257-ac62-5c741dc0b976",
+          "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
+          "component_type": "RangeEnemyPresentation"
+        },
         "gunPoint": {
           "_type": "gameobject",
           "go": "0847bc44-9917-41af-a64c-d6173528996b"
@@ -105,12 +105,6 @@
         "hpPerRound": 15,
         "meleDamage": 8,
         "meleDamagePerRound": 6,
-        "model": {
-          "_type": "component",
-          "component_id": "4c3258a9-b2d9-48d6-8c2f-809bb91a3f57",
-          "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
-          "component_type": "RangeVisualEnemy"
-        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -120,17 +114,11 @@
         "range": 300,
         "reloadTime": 1.4,
         "repathDistance": 64,
-        "shootTime": 1.2,
-        "visual": {
-          "_type": "component",
-          "component_id": "4c3258a9-b2d9-48d6-8c2f-809bb91a3f57",
-          "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
-          "component_type": "RangeVisualEnemy"
-        }
+        "shootTime": 1.2
       },
       {
-        "__type": "RangeVisualEnemy",
-        "__guid": "4c3258a9-b2d9-48d6-8c2f-809bb91a3f57",
+        "__type": "RangeEnemyPresentation",
+        "__guid": "796c3ef9-5862-4257-ac62-5c741dc0b976",
         "__enabled": true,
         "Flags": 0,
         "blinkSpeed": 0.05,
@@ -159,24 +147,6 @@
           "random": true
         },
         "visualHitDuration": 0.1
-      },
-      {
-        "__type": "RangeEnemyAnimation",
-        "__guid": "b5e25898-1923-430a-ac77-1cc5b075daed",
-        "__enabled": true,
-        "Flags": 0,
-        "model": {
-          "_type": "component",
-          "component_id": "55877364-1eab-4af3-a53b-76223c029f8a",
-          "go": "28e70bda-3ad6-4279-a730-d78983df1236",
-          "component_type": "SkinnedModelRenderer"
-        },
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null
       }
     ],
     "Children": [

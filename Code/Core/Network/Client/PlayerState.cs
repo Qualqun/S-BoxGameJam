@@ -246,7 +246,7 @@ public sealed class PlayerState : Component
 				MoveSpeed += 25f;
 				break;
 			case BoostType.FireRate:
-				BaseFireRate += 1f;
+				BaseFireRate += 0.25f;
 				break;
 			case BoostType.TimeInvulnerability:
 				TimeInvulnerability += 1f;

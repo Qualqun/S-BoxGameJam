@@ -18,7 +18,7 @@ public class BaseEnemyBehaviour : Component
 	[Property, Group( "Growth stats" )] public float meleDamagePerRound { get; set; } = 6f;
 
 	[Property, Group( "Refs" )] protected NavMeshAgent agent { get; set; }
-	[Property, Group( "Refs" )] protected BaseVisualEnemy model { get; set; }
+	[Property, Group( "Refs" )] protected BaseEnemyPresentation enemyPresentation { get; set; }
 	[Property, Group( "Refs" )] protected float repathDistance { get; set; } = 64f;
 
 	protected List<PlayerBehaviour> players;
@@ -106,7 +106,7 @@ public class BaseEnemyBehaviour : Component
 	{
 		hp -= amount;
 
-		model.TakeHit();
+		enemyPresentation.TakeHit();
 
 		if ( hp <= 0f )
 		{

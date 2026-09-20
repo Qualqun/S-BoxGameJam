@@ -37,9 +37,9 @@
       "CacheToDisk": true,
       "FormatOverride": "RGBA8888"
     },
-    "compiled": null
+    "compiled": "textures/generated/imagefile/6a404e95476e1970.vtex"
   },
-  "Description": "+1 Fire Rate",
+  "Description": "+0.25 Fire Rate",
   "__references": [],
   "__version": 0
 }

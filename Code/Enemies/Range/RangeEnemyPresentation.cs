@@ -2,25 +2,31 @@ using Sandbox;
 using System.Threading;
 using System.Threading.Tasks;
 
-public sealed class RangeVisualEnemy : BaseVisualEnemy
+public class RangeEnemyPresentation : BaseEnemyPresentation
 {
-	[Property, Group( "Stats" )] float blinkSpeed { get; set; } = 0.01f;
+	[Property, Group( "Visual shoot" )] float blinkSpeed { get; set; } = 0.01f;
+	[Property, Group( "Visual shoot" )] LineRenderer laserInfo { get; set; }
 
-	[Property, Group( "Refs" )] LineRenderer laserInfo { get; set; }
+	[Sync] public bool stand { get; set; } = false;
+	bool shoot = false;
 
-	CancellationTokenSource cancellation;
+	CancellationTokenSource laserCancelationToken;
 
-	protected override void OnStart()
+	protected override void AnimationUpdate()
 	{
-		Gradient laserColor = laserInfo.Color;
-		Color[] color = new Color[1];
+		base.AnimationUpdate();
 
-		color[0] = Color.Red;
-		laserColor = Gradient.FromColors( color );
+		model.Set( "Standing", stand );
+		model.Set( "Shoot", shoot );
 
-		laserInfo.Color = laserColor;
+		shoot = false;
+	}
 
-		base.OnStart();
+
+	[Rpc.Broadcast]
+	public void Shoot()
+	{
+		shoot = true;
 	}
 
 
@@ -34,19 +40,20 @@ public sealed class RangeVisualEnemy : BaseVisualEnemy
 		};
 	}
 
+
 	[Rpc.Broadcast]
 	public void StartBlink()
 	{
-		cancellation = new CancellationTokenSource();
-		_ = LaserBlink( cancellation.Token );
+		laserCancelationToken = new CancellationTokenSource();
+		_ = LaserBlink( laserCancelationToken.Token );
 	}
 
 	[Rpc.Broadcast]
 	public void ResetLaser()
 	{
-		cancellation.Cancel();
-		cancellation.Dispose();
-		cancellation = null;
+		laserCancelationToken.Cancel();
+		laserCancelationToken.Dispose();
+		laserCancelationToken = null;
 
 		laserInfo.VectorPoints.Clear();
 	}

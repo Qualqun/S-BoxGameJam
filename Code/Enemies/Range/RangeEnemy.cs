@@ -16,9 +16,9 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 	[Property, Group( "Growth stats" )] public float bulletDamagePerRound { get; set; } = 6f;
 
-	[Property, Group( "Refs" )] RangeEnemyAnimation animation { get; set; }
+	[Property, Group( "Refs" )] new RangeEnemyPresentation enemyPresentation { get; set; }
 	[Property, Group( "Refs" )] CapsuleCollider capsuleCollider { get; set; }
-	[Property, Group( "Refs" )] public RangeVisualEnemy visual { get; set; }
+
 	[Property, Group( "Refs" )] public GameObject bullet { get; set; }
 	[Property, Group( "Refs" )] public GameObject gunPoint { get; set; }
 
@@ -55,7 +55,7 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 			}
 
-			animation.stand = canShoot || attackTask != null;
+			enemyPresentation.stand = canShoot || attackTask != null;
 
 			if ( canShoot || attackTask != null )
 			{
@@ -88,16 +88,16 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 		await Task.DelaySeconds( aimTime );
 
-		visual.UpdateLaser( gunPoint.WorldPosition, gunPoint.WorldPosition + direction * 10000f );
+		enemyPresentation.UpdateLaser( gunPoint.WorldPosition, gunPoint.WorldPosition + direction * 10000f );
 
 		await Task.DelaySeconds( shootTime / 4 * 3 );
 
-		visual.StartBlink();
+		enemyPresentation.StartBlink();
 
 		await Task.DelaySeconds( shootTime / 4 );
 
-		visual.ResetLaser();
-		animation.Shoot();
+		enemyPresentation.ResetLaser();
+		enemyPresentation.Shoot();
 
 		newBullet = bullet.Clone( gunPoint.WorldPosition );
 		bulletBehaviour = newBullet.GetComponent<EnemyBulletBehaviour>();
@@ -135,13 +135,6 @@ public class RangeEnemy : BaseEnemyBehaviour
 
 		WorldRotation = targetRotation;
 
-	}
-
-	public override void TakeDamage( float amount )
-	{
-		base.TakeDamage( amount );
-
-		animation.OnHit();
 	}
 
 	public override void InitStats( int roundNb )
