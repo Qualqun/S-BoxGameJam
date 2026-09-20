@@ -7,6 +7,9 @@ public sealed class PlayerPresentation : Component
 	[Sync] public float speedShoot { get; set; } = 1f;
 	#endregion
 
+	#region FX
+	[Property] GameObject muzzleFlash { get; set; }
+	#endregion
 
 	#region Audio
 	[Property] SoundEvent shootSound { get; set; }
@@ -50,8 +53,13 @@ public sealed class PlayerPresentation : Component
 
 
 	[Rpc.Broadcast]
-	public void Shoot()
+	public void Shoot(GameObject gunPoint)
 	{
+		GameObject muzleFlash = muzzleFlash.Clone();
+
+		muzleFlash.WorldPosition = gunPoint.WorldPosition;
+		muzleFlash.LocalRotation = gunPoint.WorldRotation;
+
 		GameObject.PlaySound( shootSound );
 		shootAnim = true;
 	}

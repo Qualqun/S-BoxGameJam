@@ -20,10 +20,9 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	[Property, Group( "Refs" )] public PlayerPresentation playerPresentation { get; set; }
 
 	[Property, Group( "Refs" )] GameObject cameraPivot { get; set; }
+	[Property, Group( "Refs" )] GameObject body { get; set; }
 	[Property, Group( "Refs" )] PlayerUI playerUI { get; set; }
 	[Property, Group( "Refs" )] MPlayerController controller { get; set; }
-
-	[Property, Group( "Refs" )] GameObject muzzleFlash { get; set; }
 	[Property, Group( "Refs" )] GameObject bullet { get; set; }
 
 	bool canShoot = true;
@@ -65,8 +64,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	BulletInfo InitBaseBullet()
 	{
-		GameObject body = GameObject.Children[0];
 		Vector3 direction = Rotation.FromYaw( body.WorldRotation.Yaw() ) * Vector3.Forward;
+
 		direction = direction.WithZ( 0 ).Normal;
 
 		BulletInfo newBulletInfo = new BulletInfo
@@ -229,14 +228,9 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 			List<GunOutPut> gunModifiers = new();
 
 			BulletInfo baseBullet = InitBaseBullet();
-			GameObject muzleFlash = muzzleFlash.Clone();
-
-			muzleFlash.WorldPosition = gunPoint.WorldPosition;
-			muzleFlash.LocalRotation = gunPoint.WorldRotation;
-			muzleFlash.NetworkSpawn();
-
+	
 			playerPresentation.speedShoot = State.FireRate;
-			playerPresentation.Shoot();
+			playerPresentation.Shoot( gunPoint );
 
 			bullets.Add( baseBullet );
 
