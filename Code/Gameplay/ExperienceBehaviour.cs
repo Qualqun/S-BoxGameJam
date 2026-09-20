@@ -22,10 +22,11 @@ public sealed class ExperienceBehaviour : Component, Component.ITriggerListener
 
 		player = other.GetComponent<PlayerBehaviour>();
 
-		player.State.AddExperience( AmountExperience );
-
-
-		GameObject.Destroy();
+		if( !player.isDead)
+		{
+			player.AddExperience( AmountExperience );
+			GameObject.Destroy();
+		}
 	}
 
 	protected override void OnStart()

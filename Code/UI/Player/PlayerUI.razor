@@ -1,6 +1,7 @@
 @using Sandbox;
 @using Sandbox.UI;
 @using System;
+@using System.Collections.Generic;
 @using System.Globalization;
 @inherits PanelComponent
 @namespace Sandbox
@@ -50,6 +51,17 @@
 			}
 		</div>
 	}
+
+	@if (GameState?.State == GameStateType.Playing)
+	{
+		@foreach (var notification in xpNotifications)
+		{
+			@if (notification.Visible)
+			{
+				<div @key="notification" class="xp-notification @(notification.IsLevelUp ? "level-up" : "")" style="@notification.Style">@notification.Text</div>
+			}
+		}
+	}
 </root>
 
 @code
@@ -67,6 +79,24 @@
 	bool hasArrowTarget;
 	bool arrowVisible;
 	string arrowStyle;
+	bool hasExperienceSnapshot;
+	int previousExperience;
+	int previousLevel;
+
+	const float XpNotificationDuration = 1f;
+	const float XpNotificationRiseDistance = 56f;
+	const float XpNotificationWorldHeight = 80f;
+	readonly List<FloatingXpNotification> xpNotifications = new();
+
+	sealed class FloatingXpNotification
+	{
+		public string Text;
+		public bool IsLevelUp;
+		public Vector3 WorldPosition;
+		public float Age;
+		public bool Visible;
+		public string Style;
+	}
 
 	public float HealthPercent => MaxHealth <= 0f ? 0f : (CurrentHealth / MaxHealth).Clamp(0f, 1f);
 
@@ -97,6 +127,19 @@
 
 	public void HideWorldArrow() => ShowWorldArrow = false;
 
+	/// <summary>
+	/// Shows a local-only XP notification. This intentionally has no RPC: PlayerUI exists only for its owner.
+	/// </summary>
+	public void ShowExperienceNotification(bool levelUp = false)
+	{
+		xpNotifications.Add(new FloatingXpNotification
+		{
+			Text = levelUp ? "+LVL UP" : "+XP",
+			IsLevelUp = levelUp,
+			WorldPosition = GameObject.WorldPosition + Vector3.Up * XpNotificationWorldHeight
+		});
+	}
+
 	protected override void OnUpdate()
 	{
 		base.OnUpdate();
@@ -116,13 +159,70 @@
 		{
 			CurrentHealth = PlayerState.Hp;
 			MaxHealth = PlayerState.MaxHp;
+
+			if (!hasExperienceSnapshot)
+			{
+				previousExperience = PlayerState.Experience;
+				previousLevel = PlayerState.XpMultiplier;
+				hasExperienceSnapshot = true;
+			}
+			else
+			{
+				if (PlayerState.XpMultiplier > previousLevel)
+					ShowExperienceNotification(levelUp: true);
+				else if (PlayerState.Experience != previousExperience)
+					ShowExperienceNotification();
+
+				previousExperience = PlayerState.Experience;
+				previousLevel = PlayerState.XpMultiplier;
+			}
 		}
 	}
 
 	protected override void OnPreRender()
 	{
 		base.OnPreRender();
+
 		UpdateWorldArrow();
+		UpdateXpNotifications();
+	}
+
+	void UpdateXpNotifications()
+	{
+		for (int i = xpNotifications.Count - 1; i >= 0; i--)
+		{
+			FloatingXpNotification notification = xpNotifications[i];
+			notification.Age += Time.Delta;
+
+			if (notification.Age >= XpNotificationDuration)
+			{
+				xpNotifications.RemoveAt(i);
+				continue;
+			}
+
+			CameraComponent camera = Scene.Camera;
+			notification.Visible = camera.IsValid()
+				&& Vector3.Dot(notification.WorldPosition - camera.WorldPosition, camera.WorldRotation.Forward) > 0f;
+
+			if (!notification.Visible)
+				continue;
+
+			Vector2 screen = camera.PointToScreenNormal(notification.WorldPosition);
+			if (!float.IsFinite(screen.x) || !float.IsFinite(screen.y))
+			{
+				notification.Visible = false;
+				continue;
+			}
+
+			float progress = notification.Age / XpNotificationDuration;
+			float opacity = 1f - ((progress - 0.6f) / 0.4f).Clamp(0f, 1f);
+			float rise = XpNotificationRiseDistance * progress;
+			notification.Style = FormattableString.Invariant(
+				$"left: {screen.x * 100f:0.###}%; top: {screen.y * 100f:0.###}%; margin-top: {-rise:0.###}px; opacity: {opacity:0.###};");
+		}
+
+		if (xpNotifications.Count > 0)
+			StateHasChanged();
 	}
 
 	void UpdateWorldArrow()
@@ -190,4 +290,11 @@
 			arrowStyle
 		)
 	);
+
+	protected override void OnDisabled()
+	{
+		xpNotifications.Clear();
+		hasExperienceSnapshot = false;
+		base.OnDisabled();
+	}
 }

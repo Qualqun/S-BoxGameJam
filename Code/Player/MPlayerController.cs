@@ -78,7 +78,7 @@ public sealed class MPlayerController : Component
 
 		if ( Input.Down( "Jump" ) && velocity != Vector3.Zero && dashTask == null && !playerBehaviour.isDead )
 		{
-			playerBehaviour.animation.Dash();
+			playerBehaviour.playerPresentation.Dash();
 			dashTask = Dash( velocity.Normal );
 		}
 
@@ -86,7 +86,7 @@ public sealed class MPlayerController : Component
 		{
 			localMove = visual.WorldRotation.Inverse * velocity;
 
-			playerBehaviour.animation.move = new Vector2(
+			playerBehaviour.playerPresentation.move = new Vector2(
 				localMove.y.Clamp( -1f, 1f ),
 				localMove.x.Clamp( -1f, 1f )
 			);
@@ -99,7 +99,7 @@ public sealed class MPlayerController : Component
 	{
 		rigidbody.Velocity = velocity * dashSpeed;
 		dashEnd = false;
-		playerBehaviour.SetInvulnerability( true );
+		playerBehaviour.SetInvulnerability( true , true);
 
 		await Task.DelaySeconds( dashDuration );
 

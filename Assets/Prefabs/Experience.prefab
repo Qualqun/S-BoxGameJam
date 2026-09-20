@@ -35,7 +35,7 @@
         "OnObjectTriggerExit": null,
         "OnTriggerEnter": null,
         "OnTriggerExit": null,
-        "Radius": 10,
+        "Radius": 35,
         "RollingResistance": null,
         "Static": false,
         "Surface": null,

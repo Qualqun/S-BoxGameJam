@@ -124,7 +124,7 @@ public sealed class PlayerState : Component
 	}
 
 	
-	public void AddExperience( int amount )
+	public bool AddExperience( int amount )
 	{
 		Experience += amount;
 
@@ -132,7 +132,10 @@ public sealed class PlayerState : Component
 		{
 			Experience -= MaxExperience;
 			XpMultiplier += 1;
+			return true;
 		}
+
+		return false;
 	}
 
 	[Rpc.Host]

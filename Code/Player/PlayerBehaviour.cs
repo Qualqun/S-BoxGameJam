@@ -13,47 +13,41 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	[Sync( SyncFlags.FromHost )] public bool isPermanentlyDead { get; set; } = false;
 	[Sync( SyncFlags.FromHost )] public bool mustDevilPact { get; set; } = false;
 	[Sync( SyncFlags.FromHost )] public bool isInStartZone { get; set; } = false;
+	[Sync( SyncFlags.FromHost )] public GameManager gameManager { get; set; }
 
-	[Property, Group( "Refs" )] public PlayerAnimation animation { get; set; }
 	[Property, Group( "Refs" )] public PlayerState State { get; set; }
 	[Property, Group( "Refs" )] public GameObject gunPoint { get; set; }
+	[Property, Group( "Refs" )] public PlayerPresentation playerPresentation { get; set; }
 
-	[Property, Group( "Refs" )] GameObject bullet { get; set; }
 	[Property, Group( "Refs" )] GameObject cameraPivot { get; set; }
-
-	[Property, Group( "Refs" )] public PlayerUI ui { get; set; }
+	[Property, Group( "Refs" )] PlayerUI playerUI { get; set; }
+	[Property, Group( "Refs" )] MPlayerController controller { get; set; }
 
 	[Property, Group( "Refs" )] GameObject muzzleFlash { get; set; }
-
-	[Property, Group( "Refs" )] MPlayerController controller { get; set; }
-	[Property, Group( "Refs" )] PlayerSound sound { get; set; }
-	[Property, Group( "Refs" )] ModelRenderer model { get; set; }
-
-	[Property, Group( "Sound" )] public SoundFile mainMusic { get; set; }
-	[Sync( SyncFlags.FromHost )] public GameManager gameManager { get; set; }
+	[Property, Group( "Refs" )] GameObject bullet { get; set; }
 
 	bool canShoot = true;
 	CancellationTokenSource cancellation;
 
 	protected override void OnStart()
 	{
-		if ( State == null ) 
+		if ( State == null )
 			State = Components.Get<PlayerState>();
 
-		
+
 		if ( IsProxy )
 		{
 			cameraPivot.Destroy();
 			controller.Destroy();
-			ui.Destroy();
+			playerUI.Destroy();
 		}
 		else
 		{
-			ui.GameState = gameManager.GameState;
-			ui?.SetHealth( State.Hp, State.MaxHp );
-			ui?.ShowArrowToWorldPosition( gameManager.StartZonePoint.WorldPosition );
+			playerUI.GameState = gameManager.GameState;
+			playerUI?.SetHealth( State.Hp, State.MaxHp );
+			playerUI?.ShowArrowToWorldPosition( gameManager.StartZonePoint.WorldPosition );
 
-			Game.Music.Play( mainMusic, fade: 1.0f, loop: true, volume: 0.05f );
+
 		}
 
 		base.OnStart();
@@ -63,15 +57,16 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	{
 		base.OnUpdate();
 
-		if( gameManager.GameState.State == GameStateType.Playing)
+		if ( gameManager.GameState.State == GameStateType.Playing )
 		{
-			ui?.HideWorldArrow();
+			playerUI?.HideWorldArrow();
 		}
 	}
 
 	BulletInfo InitBaseBullet()
 	{
-		Vector3 direction = Rotation.FromYaw( model.WorldRotation.Yaw()) * Vector3.Forward;
+		GameObject body = GameObject.Children[0];
+		Vector3 direction = Rotation.FromYaw( body.WorldRotation.Yaw() ) * Vector3.Forward;
 		direction = direction.WithZ( 0 ).Normal;
 
 		BulletInfo newBulletInfo = new BulletInfo
@@ -125,8 +120,8 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	public void OnCollisionStart( Collision collision )
 	{
-		if ( IsProxy ) 
-			return; 
+		if ( IsProxy )
+			return;
 
 		GameObject otherObj = collision.Other.Collider.GameObject;
 
@@ -136,10 +131,10 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	public void Server_TakeHit( float amount )
 	{
-		if ( !Networking.IsHost ) 
+		if ( !Networking.IsHost )
 			return;
 
-		if ( isDead || isInvulnerable ) 
+		if ( isDead || isInvulnerable )
 			return;
 
 		State.Hp = MathF.Max( 0f, State.Hp - amount );
@@ -152,14 +147,14 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		else
 		{
 			SetInvulnerability( true );
-			_ = TimerHit();          
+			_ = TimerHit();
 		}
 	}
 
 	[Rpc.Broadcast]
 	public void Broadcast_RefreshHealth( float hp, float maxHp )
 	{
-		ui?.SetHealth( hp, maxHp );
+		playerUI?.SetHealth( hp, maxHp );
 	}
 
 	public void Server_Die()
@@ -222,7 +217,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	[Rpc.Broadcast]
 	public void Broadcast_SetDead( bool permanent )
 	{
-		SetDead( permanent ); 
+		SetDead( permanent );
 	}
 
 	public void Fire()
@@ -234,15 +229,14 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 			List<GunOutPut> gunModifiers = new();
 
 			BulletInfo baseBullet = InitBaseBullet();
-			GameObject muzleFlash = muzzleFlash.Clone( );
+			GameObject muzleFlash = muzzleFlash.Clone();
 
 			muzleFlash.WorldPosition = gunPoint.WorldPosition;
 			muzleFlash.LocalRotation = gunPoint.WorldRotation;
 			muzleFlash.NetworkSpawn();
 
-			animation.speedShoot = State.FireRate;
-			animation.Shoot();
-			sound.Shoot();
+			playerPresentation.speedShoot = State.FireRate;
+			playerPresentation.Shoot();
 
 			bullets.Add( baseBullet );
 
@@ -293,13 +287,19 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 	public void SetDead( bool permanent = false )
 	{
-		Color colorTint = permanent ? Color.Black : Color.Blue;
-		colorTint.a = permanent ? 0.3f : 0.5f;
+		playerPresentation.DeadTint( permanent );
 
-		model.Tint = colorTint;
 		Tags.Add( "invulnerability" );
 
 		canShoot = false;
+	}
+
+	public void AddExperience( int amount )
+	{
+		bool levelUp = State.AddExperience( amount );
+		playerUI.ShowExperienceNotification( levelUp );
+
+		Log.Info( "Add experience" );
 	}
 
 	[Rpc.Broadcast]
@@ -308,11 +308,9 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		canShoot = true;
 		Tags.Remove( "invulnerability" );
 
-		Color colorTint = Color.White;
-		colorTint.a = 1f;
-		model.Tint = colorTint;
+		playerPresentation.ResetTint();
 
-		ui?.SetHealth( hp, maxHp );
+		playerUI?.SetHealth( hp, maxHp );
 	}
 
 	[Rpc.Broadcast]
@@ -321,9 +319,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		canShoot = true;
 		Tags.Remove( "invulnerability" );
 
-		Color colorTint = Color.White;
-		colorTint.a = 1f;
-		model.Tint = colorTint;
+		playerPresentation.ResetTint();
 
 		if ( !IsProxy )
 		{
@@ -337,33 +333,29 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 				body.AngularVelocity = Vector3.Zero;
 			}
 
-			ui?.SetHealth( State.SpawnMaxHp, State.SpawnMaxHp );
+			playerUI?.SetHealth( State.SpawnMaxHp, State.SpawnMaxHp );
 
 			if ( gameManager?.StartZonePoint != null )
-				ui?.ShowArrowToWorldPosition( gameManager.StartZonePoint.WorldPosition );
+				playerUI?.ShowArrowToWorldPosition( gameManager.StartZonePoint.WorldPosition );
 		}
 	}
 
 	[Rpc.Broadcast]
-	public void SetInvulnerability( bool mode )
+	public void SetInvulnerability( bool mode , bool dash = false)
 	{
 		if ( !isDead )
 		{
-			Color colorTint = model.Tint;
+			playerPresentation.InvulnerabilityTint( mode , dash );
+			isInvulnerable = mode;
 
 			if ( mode )
 			{
-				colorTint.a = 0.35f;
-				isInvulnerable = true;
 				Tags.Add( "invulnerability" );
 			}
 			else
 			{
-				colorTint.a = 1f;
-				isInvulnerable = false;
 				Tags.Remove( "invulnerability" );
 			}
-			model.Tint = colorTint;
 		}
 	}
 
