@@ -79,9 +79,6 @@
 	bool hasArrowTarget;
 	bool arrowVisible;
 	string arrowStyle;
-	bool hasExperienceSnapshot;
-	int previousExperience;
-	int previousLevel;
 
 	const float XpNotificationDuration = 1f;
 	const float XpNotificationRiseDistance = 56f;
@@ -159,23 +156,6 @@
 		{
 			CurrentHealth = PlayerState.Hp;
 			MaxHealth = PlayerState.MaxHp;
-
-			if (!hasExperienceSnapshot)
-			{
-				previousExperience = PlayerState.Experience;
-				previousLevel = PlayerState.XpMultiplier;
-				hasExperienceSnapshot = true;
-			}
-			else
-			{
-				if (PlayerState.XpMultiplier > previousLevel)
-					ShowExperienceNotification(levelUp: true);
-				else if (PlayerState.Experience != previousExperience)
-					ShowExperienceNotification();
-
-				previousExperience = PlayerState.Experience;
-				previousLevel = PlayerState.XpMultiplier;
-			}
 		}
 	}
 
@@ -294,7 +274,6 @@
 	protected override void OnDisabled()
 	{
 		xpNotifications.Clear();
-		hasExperienceSnapshot = false;
 		base.OnDisabled();
 	}
 }

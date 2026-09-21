@@ -1,5 +1,6 @@
 using Sandbox;
 using System;
+using System.Diagnostics.Metrics;
 
 public sealed class ExperienceBehaviour : Component, Component.ITriggerListener
 {
@@ -18,13 +19,19 @@ public sealed class ExperienceBehaviour : Component, Component.ITriggerListener
 	{
 		PlayerBehaviour player;
 
-		if ( !other.Tags.Has( "player" ) || IsProxy ) return;
+		if ( !other.Tags.Has( "player" ) ) return;
 
 		player = other.GetComponent<PlayerBehaviour>();
 
 		if( !player.isDead)
 		{
-			player.AddExperience( AmountExperience );
+			Connection owner = player.GameObject.Network.Owner;
+
+			using (Rpc.FilterInclude( c => c == owner ) )
+			{
+				player.Broadcast_AddExperience( AmountExperience );
+			}
+
 			GameObject.Destroy();
 		}
 	}
@@ -34,6 +41,11 @@ public sealed class ExperienceBehaviour : Component, Component.ITriggerListener
 		base.OnStart();
 
 		timerLevitate = Game.Random.Float( -1f, 1f );
+
+		if( IsProxy )
+		{
+			Destroy();
+		}
 	}
 
 

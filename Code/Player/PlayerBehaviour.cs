@@ -45,8 +45,6 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 			playerUI.GameState = gameManager.GameState;
 			playerUI?.SetHealth( State.Hp, State.MaxHp );
 			playerUI?.ShowArrowToWorldPosition( gameManager.StartZonePoint.WorldPosition );
-
-
 		}
 
 		base.OnStart();
@@ -228,7 +226,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 			List<GunOutPut> gunModifiers = new();
 
 			BulletInfo baseBullet = InitBaseBullet();
-	
+
 			playerPresentation.speedShoot = State.FireRate;
 			playerPresentation.Shoot( gunPoint );
 
@@ -288,12 +286,16 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		canShoot = false;
 	}
 
-	public void AddExperience( int amount )
+	[Rpc.Broadcast]
+	public void Broadcast_AddExperience( int amount )
 	{
 		bool levelUp = State.AddExperience( amount );
+
+		Log.Info( "exp" );
+
 		playerUI.ShowExperienceNotification( levelUp );
 
-		Log.Info( "Add experience" );
+
 	}
 
 	[Rpc.Broadcast]
@@ -335,11 +337,11 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	}
 
 	[Rpc.Broadcast]
-	public void SetInvulnerability( bool mode , bool dash = false)
+	public void SetInvulnerability( bool mode, bool dash = false )
 	{
 		if ( !isDead )
 		{
-			playerPresentation.InvulnerabilityTint( mode , dash );
+			playerPresentation.InvulnerabilityTint( mode, dash );
 			isInvulnerable = mode;
 
 			if ( mode )

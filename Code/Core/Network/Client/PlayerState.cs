@@ -36,10 +36,10 @@ public sealed class PlayerState : Component
 	[Sync( SyncFlags.FromHost )] public float Hp { get; set; } = 100f;
 	[Property, Sync] public int MaxLives { get; set; } = 5;
 	[Sync( SyncFlags.FromHost )] public int Lives { get; set; } = 5;
-	[Property, Sync( SyncFlags.FromHost )] public int Experience { get; set; } = 0;
+	[Property, Sync] public int Experience { get; set; } = 0;
 	[Property, Sync] public bool Dead { get; set; } = false;
 	[Property, Sync] public int MaxExperience { get; set; } = 100;
-	[Property, Sync( SyncFlags.FromHost )] public int XpMultiplier { get; set; } = 3;
+	[Property, Sync] public int XpMultiplier { get; set; } = 3;
 	[Property, Sync] public float MoveSpeed { get; set; } = 250f;
 	[Property, Sync] public float TimeInvulnerability { get; set; } = 1f;
 	[Property, Sync] public float BaseFireRate { get; set; } = 4f;
