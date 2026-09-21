@@ -3,7 +3,7 @@
     "__guid": "0b94640e-1bc1-44cb-9f28-fd9a7e7f469d",
     "__version": 2,
     "Flags": 0,
-    "Name": "experience",
+    "Name": "bonus",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
@@ -42,12 +42,35 @@
         "SurfaceVelocity": "0,0,0"
       },
       {
-        "__type": "ExperienceBehaviour",
-        "__guid": "268178bf-b22f-478c-875b-f03e6b89ee21",
+        "__type": "BonusBehaviour",
+        "__guid": "f60dfb0e-d741-4fe6-8fbe-7653be8027b2",
         "__enabled": true,
         "Flags": 0,
+        "bonusRate": [
+          {
+            "type": "XP",
+            "percent": 70,
+            "matAssociate": "art/asset/materiaux/experiencemat.vmat"
+          },
+          {
+            "type": "LVL_UP",
+            "percent": 20,
+            "matAssociate": "art/asset/materiaux/levelupmat.vmat"
+          },
+          {
+            "type": "LIFE_UP",
+            "percent": 10,
+            "matAssociate": "art/asset/materiaux/hpupmat.vmat"
+          }
+        ],
         "levitateAmount": 10,
         "levitateSpeed": 2,
+        "modelRenderer": {
+          "_type": "component",
+          "component_id": "7bf6cbc9-580c-49a8-821c-26144e9bd500",
+          "go": "4f3cbebc-f9c7-4598-be23-e828b1aeb34c",
+          "component_type": "ModelRenderer"
+        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,

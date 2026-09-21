@@ -75,7 +75,7 @@ public class BaseEnemyBehaviour : Component
 		if (Networking.IsHost)
 		{
 			gameManager?.GameState?.Enemies.Remove( GameObject );
-			gameManager?.SpawnExperience( WorldPosition );
+			gameManager?.SpawnBonus( WorldPosition );
 		}
 	}
 
@@ -98,6 +98,9 @@ public class BaseEnemyBehaviour : Component
 
 	public virtual void InitStats( int roundNb )
 	{
+
+		roundNb -= 1;
+
 		hp += hpPerRound * roundNb;
 		meleDamage += meleDamagePerRound * roundNb;
 	}

@@ -101,8 +101,8 @@
           "_type": "gameobject",
           "go": "0847bc44-9917-41af-a64c-d6173528996b"
         },
-        "hp": 25,
-        "hpPerRound": 15,
+        "hp": 30,
+        "hpPerRound": 6,
         "meleDamage": 8,
         "meleDamagePerRound": 6,
         "OnComponentDestroy": null,

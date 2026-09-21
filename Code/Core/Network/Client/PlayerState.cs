@@ -118,6 +118,11 @@ public sealed class PlayerState : Component
 		Hp -= amount;
 	}
 
+	public void WinLife()
+	{
+		Lives++;
+	}
+
 	public void LoseLife()
 	{
 		Lives = System.Math.Max( 0, Lives - 1 );
@@ -138,6 +143,7 @@ public sealed class PlayerState : Component
 		return false;
 	}
 
+	
 	[Rpc.Host]
 	public void Host_LoseLife()
 	{

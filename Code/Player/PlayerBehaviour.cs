@@ -291,12 +291,17 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	{
 		bool levelUp = State.AddExperience( amount );
 
-		Log.Info( "exp" );
-
 		playerUI.ShowExperienceNotification( levelUp );
-
-
 	}
+
+	[Rpc.Broadcast]
+	public void Broadcast_ShowLifeUP( )
+	{
+		//bool levelUp = State.AddExperience( amount );
+
+		playerUI.ShowLifeNotification( );
+	}
+
 
 	[Rpc.Broadcast]
 	public void Broadcast_Revive( float hp, float maxHp )

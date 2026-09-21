@@ -52,16 +52,14 @@
 		</div>
 	}
 
-	@if (GameState?.State == GameStateType.Playing)
+	@foreach (var notification in xpNotifications)
 	{
-		@foreach (var notification in xpNotifications)
-		{
 			@if (notification.Visible)
 			{
-				<div @key="notification" class="xp-notification @(notification.IsLevelUp ? "level-up" : "")" style="@notification.Style">@notification.Text</div>
-			}
+				<div @key="notification" class="xp-notification @(notification.IsLife ? "life" : notification.IsLevelUp ? "level-up" : "")" style="@notification.Style">@notification.Text</div>
 		}
 	}
+
 </root>
 
 @code
@@ -89,6 +87,7 @@
 	{
 		public string Text;
 		public bool IsLevelUp;
+		public bool IsLife;
 		public Vector3 WorldPosition;
 		public float Age;
 		public bool Visible;
@@ -133,6 +132,19 @@
 		{
 			Text = levelUp ? "+LVL UP" : "+XP",
 			IsLevelUp = levelUp,
+			WorldPosition = GameObject.WorldPosition + Vector3.Up * XpNotificationWorldHeight
+		});
+	}
+
+	/// <summary>
+	/// Shows a local-only life notification above the player.
+	/// </summary>
+	public void ShowLifeNotification()
+	{
+		xpNotifications.Add(new FloatingXpNotification
+		{
+			Text = "+LIFE",
+			IsLife = true,
 			WorldPosition = GameObject.WorldPosition + Vector3.Up * XpNotificationWorldHeight
 		});
 	}

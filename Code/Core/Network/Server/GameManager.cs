@@ -31,7 +31,7 @@ public sealed class GameManager : Component
 
 	[Description( "Number of enemy in one second" )]
 	[Property, Group( "Stats" )] public int BaseNbEnemy { get; set; } = 10;
-	[Property, Group( "Stats" )] public int EnemyPerRound { get; set; } = 20;
+	[Property, Group( "Stats" )] public float factorEnemyPerRound { get; set; } = 1.4f;
 	[Property, Group( "Stats" )] public int ExperienceBase { get; set; } = 100;
 	[Property, Group( "Stats" )] public int ExperiencePerRound { get; set; } = 100;
 	[Property, Group( "Stats" )] public float ExperienceSpawnDist { get; set; } = 32f;
@@ -39,7 +39,7 @@ public sealed class GameManager : Component
 	[Property, Group( "Refs" )] public GameState GameState { get; set; }
 
 	[Property, Group( "Refs" )] GameObject PlayerPrefab { get; set; }
-	[Property, Group( "Refs" )] GameObject ExperiencePrefab { get; set; }
+	[Property, Group( "Refs" )] GameObject BonusPrefab { get; set; }
 
 	[Property, Group( "Refs" )] public GameObject StartZonePoint { get; set; }
 	[Property, Group( "Refs" )] public UIManager UiManager { get; set; }
@@ -50,7 +50,7 @@ public sealed class GameManager : Component
 	CancellationTokenSource Cancellation;
 	bool enemyCountShown;
 
-	int NbPlayerThisRound => BaseNbEnemy + (EnemyPerRound * GameState.CurrentRound);
+	int NbPlayerThisRound => (int)(BaseNbEnemy * MathF.Pow( factorEnemyPerRound, GameState.CurrentRound - 1 ));
 	int AmountExperienceThisRound => ExperienceBase + (ExperiencePerRound * GameState.CurrentRound);
 
 	protected override void OnStart()
@@ -551,7 +551,7 @@ public sealed class GameManager : Component
 		if ( !Networking.IsHost )
 			return;
 
-		foreach ( var experience in Scene.GetAllComponents<ExperienceBehaviour>().ToList() )
+		foreach ( var experience in Scene.GetAllComponents<BonusBehaviour>().ToList() )
 		{
 			if ( experience != null && experience.IsValid() )
 				experience.GameObject.Destroy();
@@ -625,12 +625,14 @@ public sealed class GameManager : Component
 	async Task RoundSpawner( CancellationToken token )
 	{
 		float spawnDelay = TimePerRound / NbPlayerThisRound;
-
+		
 		while ( !token.IsCancellationRequested )
 		{
+			SpawnEnemy();
+
 			await Task.DelaySeconds( spawnDelay );
 			if ( token.IsCancellationRequested ) break;
-			SpawnEnemy();
+
 		}
 	}
 
@@ -661,7 +663,7 @@ public sealed class GameManager : Component
 	[Rpc.Host]
 	public void EnemyTakeDamage( GameObject enemyObj, float amount )
 	{
-		if ( !enemyObj.IsValid ) return;
+		if ( enemyObj == null && !enemyObj.IsValid ) return;
 
 		BaseEnemyBehaviour enemy = enemyObj.GetComponent<BaseEnemyBehaviour>();
 
@@ -675,13 +677,13 @@ public sealed class GameManager : Component
 
 	#region Experience methods
 
-	public void SpawnExperience( Vector3 spawnPoint )
+	public void SpawnBonus( Vector3 spawnPoint )
 	{
 		int nbPlayer;
 		Vector3 offSet;
 		float angle;
 
-		if ( !Networking.IsHost || ExperiencePrefab == null ) return;
+		if ( !Networking.IsHost || BonusPrefab == null ) return;
 
 		if ( GameState == null || GameState.State != GameStateType.Playing ) return;
 
@@ -694,14 +696,16 @@ public sealed class GameManager : Component
 		for ( int i = 0; i < nbPlayer; i++ )
 		{
 			GameObject xpObject;
-			ExperienceBehaviour xpBehaviour;
+			BonusBehaviour xpBehaviour;
 
 			offSet = Rotation.FromYaw( angle ) * offSet;
 
-			xpObject = ExperiencePrefab.Clone( spawnPoint + offSet );
-			xpBehaviour = xpObject.GetComponent<ExperienceBehaviour>();
+			xpObject = BonusPrefab.Clone( spawnPoint + offSet );
+			xpBehaviour = xpObject.GetComponent<BonusBehaviour>();
 
-			xpBehaviour.AmountExperience = AmountExperienceThisRound / NbPlayerThisRound;
+
+			xpBehaviour.InitBonus();
+			xpBehaviour.amountExperience = AmountExperienceThisRound / NbPlayerThisRound;
 			xpBehaviour.offset = ExperienceSpawnDist;
 			xpBehaviour.center = spawnPoint;
 			xpBehaviour.angle = angle * i;

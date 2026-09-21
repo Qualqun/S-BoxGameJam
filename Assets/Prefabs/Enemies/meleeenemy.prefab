@@ -82,8 +82,8 @@
           "go": "550d6052-1a2e-4f07-8865-e53e4716cea7",
           "component_type": "BaseEnemyPresentation"
         },
-        "hp": 25,
-        "hpPerRound": 25,
+        "hp": 30,
+        "hpPerRound": 12,
         "meleDamage": 8,
         "meleDamagePerRound": 6,
         "OnComponentDestroy": null,

@@ -311,7 +311,11 @@
           "__guid": "2ccac9a4-4081-413f-9f54-2271993ac5c7",
           "__enabled": true,
           "Flags": 0,
-          "BaseNbEnemy": 10,
+          "BaseNbEnemy": 5,
+          "BonusPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/bonus.prefab"
+          },
           "EnemiesPrefabs": [
             {
               "_type": "gameobject",
@@ -322,14 +326,10 @@
               "prefab": "prefabs/enemies/meleeenemy.prefab"
             }
           ],
-          "EnemyPerRound": 5,
-          "ExperienceBase": 100,
+          "ExperienceBase": 200,
           "ExperiencePerRound": 50,
-          "ExperiencePrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/experience.prefab"
-          },
           "ExperienceSpawnDist": 32,
+          "factorEnemyPerRound": 1.4,
           "GameState": {
             "_type": "component",
             "component_id": "40841857-4b79-438c-b036-d1581eeedb17",
