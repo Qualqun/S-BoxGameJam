@@ -7271,7 +7271,7 @@
                   "OnComponentStart": null,
                   "OnComponentUpdate": null,
                   "Strength": 0.3,
-                  "Threshold": 1.935,
+                  "Threshold": 1,
                   "Tint": "1,1,1,1"
                 },
                 {
