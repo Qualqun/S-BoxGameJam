@@ -43,13 +43,17 @@
       "DefaultPower": 1.5,
       "Identifier": "1",
       "Position": "-504,-120",
-      "HandleOffsets": {}
+      "HandleOffsets": {},
+      "Power": {
+        "Identifier": "8",
+        "Output": "Result"
+      }
     },
     {
       "_class": "Float4",
       "Value": "0.06215,0.30345,0.78605,1",
       "Name": "Color",
-      "IsAttribute": true,
+      "IsAttribute": false,
       "UI": {
         "Type": "Color",
         "Step": 0,
@@ -86,10 +90,10 @@
     {
       "_class": "Float",
       "Min": 0,
-      "Max": 1,
+      "Max": 150,
       "Value": 7,
       "Name": "RmissionIntensity",
-      "IsAttribute": true,
+      "IsAttribute": false,
       "UI": {
         "Type": "Default",
         "Step": 0,
@@ -129,7 +133,7 @@
       "Max": 1,
       "Value": 0.1,
       "Name": "CenterColor",
-      "IsAttribute": true,
+      "IsAttribute": false,
       "UI": {
         "Type": "Default",
         "Step": 0,
@@ -162,6 +166,30 @@
         "Identifier": "2",
         "Output": "Result"
       }
+    },
+    {
+      "_class": "Float",
+      "Min": 0,
+      "Max": 15,
+      "Value": 1.5,
+      "Name": "Power",
+      "IsAttribute": false,
+      "UI": {
+        "Type": "Default",
+        "Step": 0,
+        "Priority": 0,
+        "PrimaryGroup": {
+          "Name": null,
+          "Priority": 0
+        },
+        "SecondaryGroup": {
+          "Name": null,
+          "Priority": 0
+        }
+      },
+      "Identifier": "8",
+      "Position": "-684,-72",
+      "HandleOffsets": {}
     }
   ]
 }

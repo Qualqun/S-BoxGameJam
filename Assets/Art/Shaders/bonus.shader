@@ -75,9 +75,10 @@ PS
 	#include "common/pixel.hlsl"
 	RenderState( CullMode, F_RENDER_BACKFACES ? NONE : DEFAULT );
 		
-	float g_flCenterColor < Attribute( "CenterColor" ); Default1( 0.1 ); >;
-	float4 g_vColor < Attribute( "Color" ); Default4( 0.06, 0.30, 0.79, 1.00 ); >;
-	float g_flRmissionIntensity < Attribute( "RmissionIntensity" ); Default1( 7 ); >;
+	float g_flCenterColor < UiGroup( ",0/,0/0" ); Default1( 0.1 ); Range1( 0, 1 ); >;
+	float4 g_vColor < UiType( Color ); UiGroup( ",0/,0/0" ); Default4( 0.06, 0.30, 0.79, 1.00 ); >;
+	float g_flPower < UiGroup( ",0/,0/0" ); Default1( 1.5 ); Range1( 0, 15 ); >;
+	float g_flRmissionIntensity < UiGroup( ",0/,0/0" ); Default1( 7 ); Range1( 0, 150 ); >;
 	
 	float4 MainPs( PixelInput i ) : SV_Target0
 	{
@@ -96,13 +97,14 @@ PS
 		float l_0 = g_flCenterColor;
 		float4 l_1 = g_vColor;
 		float4 l_2 = float4( l_0, l_0, l_0, l_0 ) * l_1;
-		float3 l_3 = pow( 1.0 - dot( normalize( i.vNormalWs ), normalize( CalculatePositionToCameraDirWs( i.vPositionWithOffsetWs.xyz + g_vHighPrecisionLightingOffsetWs.xyz ) ) ), 1.5 );
-		float4 l_4 = float4( l_3, 0 ) * l_1;
-		float l_5 = g_flRmissionIntensity;
-		float4 l_6 = l_4 * float4( l_5, l_5, l_5, l_5 );
+		float l_3 = g_flPower;
+		float3 l_4 = pow( 1.0 - dot( normalize( i.vNormalWs ), normalize( CalculatePositionToCameraDirWs( i.vPositionWithOffsetWs.xyz + g_vHighPrecisionLightingOffsetWs.xyz ) ) ), l_3 );
+		float4 l_5 = float4( l_4, 0 ) * l_1;
+		float l_6 = g_flRmissionIntensity;
+		float4 l_7 = l_5 * float4( l_6, l_6, l_6, l_6 );
 		
 		m.Albedo = l_2.xyz;
-		m.Emission = l_6.xyz;
+		m.Emission = l_7.xyz;
 		m.Opacity = 1;
 		m.Roughness = 1;
 		m.Metalness = 0;
