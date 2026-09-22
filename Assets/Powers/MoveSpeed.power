@@ -37,9 +37,9 @@
       "CacheToDisk": true,
       "FormatOverride": "RGBA8888"
     },
-    "compiled": null
+    "compiled": "textures/generated/imagefile/cef1eba8256501be.vtex"
   },
-  "Description": "Test speed",
+  "Description": "+25 Speed",
   "__references": [],
   "__version": 0
 }

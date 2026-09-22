@@ -23,8 +23,9 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 	[Property, Group( "Refs" )] GameObject body { get; set; }
 	[Property, Group( "Refs" )] PlayerUI playerUI { get; set; }
 	[Property, Group( "Refs" )] MPlayerController controller { get; set; }
-	[Property, Group( "Refs" )] GameObject bullet { get; set; }
 
+
+	public PoolManager poolManager { get; set; }
 	bool canShoot = true;
 	CancellationTokenSource cancellation;
 
@@ -33,7 +34,7 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 		if ( State == null )
 			State = Components.Get<PlayerState>();
 
-
+		
 		if ( IsProxy )
 		{
 			cameraPivot.Destroy();
@@ -265,10 +266,13 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 			foreach ( BulletInfo bulletInfo in bullets )
 			{
-				GameObject newBullet = bullet.Clone( gunPoint.WorldPosition );
+				GameObject newBullet = poolManager.GetBullet();
 				BulletBehaviour bulletBehaviour = newBullet.GetComponent<BulletBehaviour>();
 
+				newBullet.WorldPosition = gunPoint.WorldPosition;
+
 				bulletBehaviour.InitBall( bulletInfo, gameManager );
+				bulletBehaviour.poolManager = poolManager;
 				newBullet.NetworkSpawn();
 			}
 

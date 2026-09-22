@@ -123,10 +123,6 @@
           "_type": "gameobject",
           "go": "096b6c54-8ae0-450b-aa8c-eac944f61ffc"
         },
-        "bullet": {
-          "_type": "gameobject",
-          "prefab": "prefabs/player/playerbullet.prefab"
-        },
         "cameraPivot": {
           "_type": "gameobject",
           "go": "283c792e-45c3-426f-8b83-20a9e9218b9f"

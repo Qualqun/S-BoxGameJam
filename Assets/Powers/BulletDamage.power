@@ -37,9 +37,9 @@
       "CacheToDisk": true,
       "FormatOverride": "RGBA8888"
     },
-    "compiled": null
+    "compiled": "textures/generated/imagefile/53361f500c996297.vtex"
   },
-  "Description": "+10 Bullet Damage",
+  "Description": "+5 Bullet Damage",
   "__references": [],
   "__version": 0
 }

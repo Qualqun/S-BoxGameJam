@@ -63,20 +63,17 @@ public sealed class BulletBehaviour : Component
 	public BulletInfo bulletInfo { get; set; }
 	public GameManager gameManager { get; set; }
 	public List<GameObject> enemyHit = new List<GameObject>();
+	public PoolManager poolManager { get; set; }
 
-	protected override void OnStart()
-	{
-		base.OnStart();
-
-		if ( IsProxy )
-		{
-			Destroy();
-		}
-	}
 
 
 	protected override void OnUpdate()
 	{
+		if ( IsProxy )
+		{
+			return;
+		}
+
 		ModifiersBehaviour();
 	}
 
@@ -102,28 +99,40 @@ public sealed class BulletBehaviour : Component
 
 		if ( traceResult.Hit )
 		{
+			GameObject collideObj = traceResult.Collider.GameObject;
+
+
 			bool destroyBullet = true;
 			bool updateNextStep = false;
 
-			GameObject collideObj = traceResult.Collider.GameObject;
+			bool isEnemy = traceResult.HasTag( "enemy" );
+			bool alreadyHitEnemy = enemyHit.Contains( collideObj );
+			bool canExecuteEndBehaviour = (isEnemy && !alreadyHitEnemy) || !isEnemy;
 
-			if ( bulletInfo.endModifiers != null && bulletInfo.endModifiers.Count > 0 )
+
+
+			if ( bulletInfo.endModifiers != null && bulletInfo.endModifiers.Count > 0  )
 			{
 				foreach ( EndModifier modifier in bulletInfo.endModifiers )
 				{
 					bool isDestroyBullet = modifier.EndBehaviour( traceResult, this, out bool isUpdateNextStep );
 
 					if ( !isDestroyBullet )
+					{
 						destroyBullet = false;
+					}
 
 					if ( isUpdateNextStep )
+					{
 						updateNextStep = true;
+					}
 
 				}
 			}
 
-			if ( traceResult.HasTag( "enemy" ) && !enemyHit.Contains( collideObj ) )
+			if ( isEnemy && !alreadyHitEnemy )
 			{
+				Log.Info( "hit" );
 				enemyHit.Add( collideObj );
 				gameManager.EnemyTakeDamage( collideObj, bulletInfo.damage );
 				gameManager.UiManager.HitNumbers.ShowNumber( bulletInfo.damage, traceResult.HitPosition );
@@ -136,7 +145,7 @@ public sealed class BulletBehaviour : Component
 
 			if ( destroyBullet )
 			{
-				GameObject.Destroy();
+				poolManager.DisposeBullet( GameObject );
 				return;
 			}
 		}
@@ -154,6 +163,8 @@ public sealed class BulletBehaviour : Component
 	{
 		BulletInfo newInfo = baseinfo;
 
+		enemyHit.Clear();
+
 		bulletInfo = newInfo;
 		gameManager = manager;
 
@@ -170,7 +181,6 @@ public sealed class BulletBehaviour : Component
 
 		bulletInfo = newInfo;
 		WorldRotation = Rotation.LookAt( bulletInfo.direction );
-
 	}
 
 	protected override void DrawGizmos()

@@ -37,9 +37,9 @@
       "CacheToDisk": true,
       "FormatOverride": "RGBA8888"
     },
-    "compiled": null
+    "compiled": "textures/generated/imagefile/cef1eba8256501be.vtex"
   },
-  "Description": "Fire 40% slower, deal 100% more damage. +500 Bullet Speed",
+  "Description": "Fire 60% slower, deal 90% more damage. +100 Bullet Speed",
   "__references": [],
   "__version": 0
 }

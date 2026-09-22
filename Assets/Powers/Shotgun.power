@@ -37,9 +37,9 @@
       "CacheToDisk": true,
       "FormatOverride": "RGBA8888"
     },
-    "compiled": null
+    "compiled": "textures/generated/imagefile/72d900d40c546025.vtex"
   },
-  "Description": "Fire 20% slower, deal 10% less damage, and fire 3 bullets in a shotgun spread.",
+  "Description": "Fire 25% slower, deal 25% less damage, and fire 3 more bullets in a shotgun spread.",
   "__references": [],
   "__version": 0
 }

@@ -42,7 +42,7 @@ public class HomingShot : OnAirModifier
 			Vector3 bulletPos = bullet.WorldPosition;
 
 			float targetDist = float.MaxValue;
-			float powerHoming = level * 3 * Time.Delta;
+			float powerHoming = level * Time.Delta;
 
 			foreach ( SceneTraceResult result in allResults )
 			{

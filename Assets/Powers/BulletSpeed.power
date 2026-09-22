@@ -37,9 +37,9 @@
       "CacheToDisk": true,
       "FormatOverride": "RGBA8888"
     },
-    "compiled": null
+    "compiled": "textures/generated/imagefile/b2ba4210df862dcb.vtex"
   },
-  "Description": "+150 Bullet Speed",
+  "Description": "+100 Bullet Speed",
   "__references": [],
   "__version": 0
 }

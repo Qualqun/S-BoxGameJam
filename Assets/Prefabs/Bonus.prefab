@@ -49,17 +49,17 @@
         "bonusRate": [
           {
             "type": "XP",
-            "percent": 70,
+            "percent": 95,
             "matAssociate": "art/asset/materiaux/experiencemat.vmat"
           },
           {
             "type": "LVL_UP",
-            "percent": 20,
+            "percent": 4,
             "matAssociate": "art/asset/materiaux/levelupmat.vmat"
           },
           {
             "type": "LIFE_UP",
-            "percent": 10,
+            "percent": 1,
             "matAssociate": "art/asset/materiaux/hpupmat.vmat"
           }
         ],

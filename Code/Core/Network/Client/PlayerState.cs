@@ -258,26 +258,26 @@ public sealed class PlayerState : Component
 				TimeInvulnerability += 1f;
 				break;
 			case BoostType.BulletDamage:
-				BaseBulletDamage += 15f;
+				BaseBulletDamage += 5f;
 				break;
 			case BoostType.BulletSpeed:
-				BaseBulletSpeed += 150f;
+				BaseBulletSpeed += 100f;
 				break;
 
 			case BoostType.Shotgun:
-				FireRateMultiplier *= 0.8f;
-				DamageMultiplier *= 0.9f;
+				FireRateMultiplier *= 0.75f;
+				DamageMultiplier *= 0.75f;
 				AddModifier( ModifierType.Shotgun );
 				break;
 			case BoostType.Uzi:
 				FireRateMultiplier *= 2f;
-				DamageMultiplier *= 0.6f;
+				DamageMultiplier *= 0.4f;
 				AddModifier( ModifierType.Uzi );
 				break;
 			case BoostType.Sniper:
-				FireRateMultiplier *= 0.6f;
-				DamageMultiplier *= 2f;
-				BaseBulletSpeed += 500f;
+				FireRateMultiplier *= 0.4f;
+				DamageMultiplier *= 1.9f;
+				BaseBulletSpeed += 100f;
 				AddModifier( ModifierType.Sniper );
 				AddModifier( ModifierType.Percing );
 				break;

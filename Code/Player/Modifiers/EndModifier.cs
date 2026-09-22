@@ -74,7 +74,6 @@ public class Bounce : EndModifier
 public class Percing : EndModifier
 {
 	int nbPercing = 1;
-	List<GameObject> enemyEncountered = new List<GameObject>();
 
 	public Percing()
 	{
@@ -84,11 +83,10 @@ public class Percing : EndModifier
 	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet, out bool updateNextStep )
 	{
 		GameObject collisionObj = traceResult.Collider.GameObject;
-		bool alreadyEncountered = enemyEncountered.Contains( collisionObj );
+		bool alreadyEncountered = bullet.enemyHit.Contains( collisionObj );
 
 		if ( traceResult.HasTag( "enemy" ) )
 		{
-			enemyEncountered.Add( collisionObj );
 			updateNextStep = true;
 
 
@@ -134,28 +132,42 @@ public class EndExplosion : EndModifier
 
 	public override bool EndBehaviour( SceneTraceResult traceResult, BulletBehaviour bullet, out bool updateNextStep )
 	{
+		GameObject collisionObj = traceResult.Collider.GameObject;
 		GameObject bulletObj = bullet.GameObject;
 		BulletInfo bulletInfo = bullet.bulletInfo;
 
-		int nbBullets = 8;
-		int anglePerBullet = 360 / nbBullets;
+		bool alreadyEncountered = bullet.enemyHit.Contains( collisionObj );
 
-		bulletInfo.damage = bulletInfo.damage / 4f * level; 
-		bulletInfo.endModifiers = null;
-		bulletInfo.size /= 2f;
-		bulletInfo.direction = Vector3.Forward;
 
-		for ( int i = 0; i < nbBullets; i++ )
+		if ( !alreadyEncountered )
 		{
-			GameObject newBullet = bulletObj.Clone( bulletObj.WorldPosition );
-			BulletBehaviour bulletBehaviour = newBullet.GetComponent<BulletBehaviour>();
+			int nbBullets = 8;
+			int anglePerBullet = 360 / nbBullets;
 
-			bulletBehaviour.InitBall( bulletInfo, bullet.gameManager );
-			bulletInfo.direction = Rotation.FromYaw( anglePerBullet ) * bulletInfo.direction;
-			newBullet.NetworkSpawn();
+			bulletInfo.damage = (bulletInfo.damage / 10f * level).Clamp( 0.5f, float.MaxValue );
+			bulletInfo.endModifiers = null;
+			bulletInfo.size /= 2f;
+			bulletInfo.direction = Vector3.Forward;
+
+			for ( int i = 0; i < nbBullets; i++ )
+			{
+				GameObject newBullet = bullet.poolManager.GetBullet();
+				BulletBehaviour bulletBehaviour = newBullet.GetComponent<BulletBehaviour>();
+
+				newBullet.WorldPosition = bulletObj.WorldPosition;
+
+				bulletBehaviour.InitBall( bulletInfo, bullet.gameManager );
+				bulletBehaviour.poolManager = bullet.poolManager;
+
+				bulletInfo.direction = Rotation.FromYaw( anglePerBullet ) * bulletInfo.direction;
+
+				newBullet.NetworkSpawn();
+			}
+
 		}
 
 		updateNextStep = false;
+
 		return true;
 	}
 

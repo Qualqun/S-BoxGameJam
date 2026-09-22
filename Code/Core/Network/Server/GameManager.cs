@@ -17,8 +17,7 @@ public struct StatsPerRound
 
 public sealed class GameManager : Component
 {
-	[Property, Group( "Refs" )]
-	public BoxCollider StartZone { get; set; }
+
 
 	[Description( "Phases timer values" )]
 	[Property, Group( "Timers" )] public float TimePerRound { get; private set; }
@@ -37,12 +36,13 @@ public sealed class GameManager : Component
 	[Property, Group( "Stats" )] public float ExperienceSpawnDist { get; set; } = 32f;
 
 	[Property, Group( "Refs" )] public GameState GameState { get; set; }
+	[Property, Group( "Refs" )] public UIManager UiManager { get; set; }
+	[Property, Group( "Refs" )] public PoolManager PoolManager { get; set; }
+
+	[Property, Group( "Refs" )] public GameObject StartZonePoint { get; set; }
 
 	[Property, Group( "Refs" )] GameObject PlayerPrefab { get; set; }
 	[Property, Group( "Refs" )] GameObject BonusPrefab { get; set; }
-
-	[Property, Group( "Refs" )] public GameObject StartZonePoint { get; set; }
-	[Property, Group( "Refs" )] public UIManager UiManager { get; set; }
 
 	[Property, Group( "List Refs" )] public List<GameObject> EnemiesPrefabs { get; set; }
 
@@ -228,7 +228,9 @@ public sealed class GameManager : Component
 		PlayerBehaviour playerBehaviour = player.GetComponent<PlayerBehaviour>();
 
 		GameState.Server_AddPlayer( playerBehaviour );
+
 		playerBehaviour.gameManager = this;
+		playerBehaviour.poolManager = PoolManager;
 
 		player.NetworkSpawn( connection );
 		Log.Info( $"[GameManager] Spawned player for {connection.DisplayName}" );
