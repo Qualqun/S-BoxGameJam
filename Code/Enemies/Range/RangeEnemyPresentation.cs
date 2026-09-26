@@ -14,7 +14,6 @@ public class RangeEnemyPresentation : BaseEnemyPresentation
 
 	protected override void AnimationUpdate()
 	{
-		base.AnimationUpdate();
 
 		model.Set( "Standing", stand );
 		model.Set( "Shoot", shoot );

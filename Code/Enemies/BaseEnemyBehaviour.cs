@@ -48,6 +48,12 @@ public class BaseEnemyBehaviour : Component
 				{
 					players.RemoveAt( i );
 					i--;
+
+					noTarget = true;
+					target = null;
+					targetDist = float.MaxValue;
+
+					continue;
 				}
 				else
 				{
@@ -57,6 +63,10 @@ public class BaseEnemyBehaviour : Component
 					{
 						noTarget = false;
 						target = players[i];
+						targetDist = dist;
+					}
+					else if ( target == players[i])
+					{
 						targetDist = dist;
 					}
 				}
@@ -72,7 +82,7 @@ public class BaseEnemyBehaviour : Component
 	{
 		base.OnDestroy();
 
-		if (Networking.IsHost)
+		if ( Networking.IsHost )
 		{
 			gameManager?.GameState?.Enemies.Remove( GameObject );
 			gameManager?.SpawnBonus( WorldPosition );
@@ -120,5 +130,5 @@ public class BaseEnemyBehaviour : Component
 	{
 		players = new List<PlayerBehaviour>( allPlayers );
 	}
-	
+
 }

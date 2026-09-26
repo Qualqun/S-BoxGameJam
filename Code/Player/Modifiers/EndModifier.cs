@@ -141,7 +141,7 @@ public class EndExplosion : EndModifier
 
 		if ( !alreadyEncountered )
 		{
-			int nbBullets = 8;
+			int nbBullets = 4;
 			int anglePerBullet = 360 / nbBullets;
 
 			bulletInfo.damage = (bulletInfo.damage / 10f * level).Clamp( 0.5f, float.MaxValue );

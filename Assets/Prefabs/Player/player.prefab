@@ -196,7 +196,10 @@
         "__guid": "2fe5adce-5473-44df-94dd-41d88f6887d2",
         "__enabled": true,
         "Flags": 0,
-        "mainMusic": "audio/music/mainmusic.vsnd",
+        "mainMusic": {
+          "Id": "1aba62bd-04d5-41df-bd99-4eb948d8cd08",
+          "Path": "audio/music/mainmusic.vsnd"
+        },
         "model": {
           "_type": "component",
           "component_id": "e5728d85-77e1-4852-a22c-6cda78821502",
@@ -213,7 +216,10 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "shootSound": "audio/sounds/shoot/shoot.sound"
+        "shootSound": {
+          "Id": "67ce7985-1b8c-4324-94e9-b019d93dcf2e",
+          "Path": "audio/sounds/shoot/shoot.sound"
+        }
       }
     ],
     "Children": [
@@ -255,7 +261,10 @@
                 "__guid": "e5728d85-77e1-4852-a22c-6cda78821502",
                 "__enabled": true,
                 "Flags": 0,
-                "AnimationGraph": "animgraphs/player.vanmgrph",
+                "AnimationGraph": {
+                  "Id": "6aed5cfd-190e-46f2-9cb2-f06709d0025a",
+                  "Path": "animgraphs/player.vanmgrph"
+                },
                 "BodyGroups": 18446744073709551615,
                 "BoneMergeTarget": null,
                 "CreateAttachments": false,
@@ -264,7 +273,10 @@
                 "MaterialGroup": null,
                 "MaterialOverride": null,
                 "Materials": null,
-                "Model": "art/asset/player/player.vmdl",
+                "Model": {
+                  "Id": "166ffb82-a292-43d7-9662-c1aa514e8d9c",
+                  "Path": "art/asset/player/player.vmdl"
+                },
                 "Morphs": {},
                 "OnComponentDestroy": null,
                 "OnComponentDisabled": null,
@@ -1601,7 +1613,10 @@
                 "ShowWorldArrow": false,
                 "WorldArrowEdgeMargin": 56,
                 "WorldArrowOnScreenOffset": 50,
-                "WorldArrowTexture": "art/asset/arrow.vtex"
+                "WorldArrowTexture": {
+                  "Id": "4761f95a-a297-4f83-ab90-4a173fe36cb9",
+                  "Path": "art/asset/arrow.vtex"
+                }
               }
             ],
             "Children": []

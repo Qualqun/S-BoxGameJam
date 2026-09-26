@@ -23,7 +23,7 @@ public class ShotgunOutPut : GunOutPut
 
 	public override void OutPutBehaviour( BulletInfo baseInfo, List<BulletInfo> bullets )
 	{
-		int nbBullets = level * 3;
+		int nbBullets = 2 + level;
 		int degRange = 120;
 
 		BulletInfo bulletInfo = baseInfo;

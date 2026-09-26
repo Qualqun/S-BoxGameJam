@@ -1,4 +1,5 @@
 using Sandbox;
+using System.Net.NetworkInformation;
 
 public class OnAirModifier
 {
@@ -23,19 +24,26 @@ public class OnAirModifier
 
 public class HomingShot : OnAirModifier
 {
+	GameManager manager = null;
+
+
 	public HomingShot()
 	{
 		modifierType = ModifierType.HomingShot;
+
 	}
 
 	public override Vector3 GetNewDirection( Vector3 baseDirection, BulletBehaviour bullet )
 	{
 		Vector3 newDirection = baseDirection;
 		Scene scene = bullet.GameObject.Scene;
-		List<SceneTraceResult> allResults =
-			scene.Trace.Sphere( 1000f, bullet.WorldPosition, bullet.WorldPosition + Vector3.Forward ).WithAllTags( "enemy" ).RunAll().ToList();
 
-		if ( allResults != null && allResults.Count > 0 )
+		if ( manager == null )
+		{
+			manager = bullet.gameManager;
+		}
+
+		if ( manager.GameState.Enemies.Count > 0 )
 		{
 			Vector3 directionToEnemy;
 			Vector3 targetPos = Vector3.Zero;
@@ -44,9 +52,9 @@ public class HomingShot : OnAirModifier
 			float targetDist = float.MaxValue;
 			float powerHoming = level * Time.Delta;
 
-			foreach ( SceneTraceResult result in allResults )
+			foreach ( GameObject enemyObj in manager.GameState.Enemies )
 			{
-				Vector3 enemyPos = result.Collider.WorldPosition;
+				Vector3 enemyPos = enemyObj.WorldPosition;
 				float distance = Vector3.DistanceBetween( enemyPos, bulletPos );
 
 				if ( distance < targetDist )

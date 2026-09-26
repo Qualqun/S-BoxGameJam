@@ -271,7 +271,7 @@ public sealed class PlayerState : Component
 				break;
 			case BoostType.Uzi:
 				FireRateMultiplier *= 2f;
-				DamageMultiplier *= 0.4f;
+				DamageMultiplier *= 0.6f;
 				AddModifier( ModifierType.Uzi );
 				break;
 			case BoostType.Sniper:

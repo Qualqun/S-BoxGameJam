@@ -273,7 +273,6 @@ public sealed class PlayerBehaviour : Component, Component.ICollisionListener
 
 				bulletBehaviour.InitBall( bulletInfo, gameManager );
 				bulletBehaviour.poolManager = poolManager;
-				newBullet.NetworkSpawn();
 			}
 
 			cancellation = new CancellationTokenSource();
